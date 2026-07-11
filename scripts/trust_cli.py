@@ -10,8 +10,17 @@ import shutil
 import subprocess
 import sys
 import tempfile
-import tomllib
 from typing import Any
+import uuid
+
+try:
+    import tomllib
+except ImportError:
+    try:
+        import tomli as tomllib
+    except ImportError:
+        print("fledge trust: Python 3.11+ or the 'tomli' package is required", file=sys.stderr)
+        raise SystemExit(1)
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -149,6 +158,8 @@ def load_config(path: Path) -> TrustConfig:
     if provenance_mode not in {"soft", "enforce", "off"}:
         raise TrustError("provenance.mode must be soft, enforce, or off")
     policy = text(provenance.get("policy", ".attest.json"), "provenance.policy")
+    if provenance_mode != "off" and not policy:
+        raise TrustError("provenance.policy must be nonempty when provenance is enabled")
     provenance_reason = text(provenance.get("skip_reason", ""), "provenance.skip_reason").strip()
     if provenance_mode == "off" and not provenance_reason:
         raise TrustError("disabled provenance layer requires provenance.skip_reason")
@@ -230,9 +241,14 @@ def detected_fledge(root: Path) -> str:
         tasks = {'test': 'pytest', 'lint': 'ruff check .', 'fmt': 'ruff format --check .'}
     elif package_json.is_file():
         try:
-            scripts = json.loads(package_json.read_text(encoding="utf-8")).get("scripts", {})
+            package = json.loads(package_json.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as error:
             raise TrustError(f"cannot inspect package.json: {error}") from error
+        if not isinstance(package, dict):
+            raise TrustError("cannot inspect package.json: root value must be an object")
+        scripts = package.get("scripts", {})
+        if not isinstance(scripts, dict):
+            raise TrustError("cannot inspect package.json: scripts must be an object")
         runner = "bun run" if (root / "bun.lock").exists() or (root / "bun.lockb").exists() else "npm run"
         tasks = {name: f"{runner} {name}" for name in ("fmt", "lint", "test", "build") if name in scripts}
     else:
@@ -306,6 +322,7 @@ def validate_generated_files(writes: dict[Path, str]) -> None:
 def atomic_writes(writes: dict[Path, str]) -> None:
     originals: dict[Path, bytes | None] = {}
     written: list[Path] = []
+    temporary: Path | None = None
     try:
         for path, content in writes.items():
             originals[path] = path.read_bytes() if path.exists() else None
@@ -314,8 +331,11 @@ def atomic_writes(writes: dict[Path, str]) -> None:
                 stream.write(content)
                 temporary = Path(stream.name)
             os.replace(temporary, path)
+            temporary = None
             written.append(path)
     except Exception:
+        if temporary is not None:
+            temporary.unlink(missing_ok=True)
         for path in reversed(written):
             original = originals[path]
             if original is None:
@@ -328,6 +348,7 @@ def atomic_writes(writes: dict[Path, str]) -> None:
 def adopt(arguments: argparse.Namespace) -> int:
     root = git_root(arguments.root)
     profile = arguments.profile
+    trust_path = root / ".trust.toml"
     fledge_path = root / "fledge.toml"
     if fledge_path.exists():
         fledge_content = fledge_path.read_text(encoding="utf-8")
@@ -335,33 +356,37 @@ def adopt(arguments: argparse.Namespace) -> int:
         fledge_content = detected_fledge(root)
     validate_fledge(fledge_content)
 
-    config_content = render_config(profile, arguments.no_specs or "", arguments.no_attest or "", arguments.no_atlas or "")
+    if trust_path.exists() and not arguments.force:
+        config_content = trust_path.read_text(encoding="utf-8")
+    else:
+        config_content = render_config(profile, arguments.no_specs or "", arguments.no_attest or "", arguments.no_atlas or "")
     with tempfile.NamedTemporaryFile("w", suffix=".toml", delete=False) as stream:
         stream.write(config_content)
         config_temp = Path(stream.name)
     try:
-        load_config(config_temp)
+        adoption_config = load_config(config_temp)
     finally:
         config_temp.unlink(missing_ok=True)
 
     existing_agents = (root / "AGENTS.md").read_text(encoding="utf-8") if (root / "AGENTS.md").exists() else ""
     writes: dict[Path, str] = {
-        root / ".trust.toml": config_content,
         root / "AGENTS.md": managed_agents(existing_agents),
         root / ".github/workflows/trust.yml": (TEMPLATES / "trust.yml").read_text(encoding="utf-8"),
     }
+    if arguments.force or not trust_path.exists():
+        writes[trust_path] = config_content
     if not fledge_path.exists():
         writes[fledge_path] = fledge_content
-    if not arguments.no_specs:
+    if adoption_config.contract_enabled:
         writes[root / ".specsync/config.toml"] = (TEMPLATES / "specsync.toml").read_text(encoding="utf-8")
     writes[root / ".augur.toml"] = (TEMPLATES / "augur.toml").read_text(encoding="utf-8")
-    if not arguments.no_attest:
+    if adoption_config.effective_provenance_mode != "off":
         writes[root / ".attest.json"] = (TEMPLATES / "attest.json").read_text(encoding="utf-8")
-    if not arguments.no_atlas:
+    if adoption_config.atlas_enabled:
         writes[root / ".atlasignore"] = (TEMPLATES / "atlasignore").read_text(encoding="utf-8")
 
     if not arguments.force:
-        protected = {path: content for path, content in writes.items() if path.exists() and path.name not in {"AGENTS.md", ".trust.toml"}}
+        protected = {path: content for path, content in writes.items() if path.exists() and path.name != "AGENTS.md"}
         for path in protected:
             writes.pop(path)
 
@@ -384,6 +409,8 @@ def apply_overrides(config: TrustConfig, profile: str | None, threshold: str | N
             raise TrustError("profile override must be standard or strict")
         if config.strict and profile != "strict":
             raise TrustError("workflow or CLI override cannot weaken strict profile")
+        if profile == "strict" and (not config.contract_enabled or config.provenance_mode == "off"):
+            raise TrustError("strict profile override requires enabled contract and provenance layers")
         values["profile"] = profile
     if threshold:
         if threshold not in RISK_ORDER:
@@ -435,12 +462,14 @@ def action_range(root: Path, explicit: str | None) -> tuple[str, str, str]:
 
 def write_github_outputs(values: dict[str, str]) -> None:
     output_path = os.environ.get("GITHUB_OUTPUT")
-    rendered = "".join(f"{key}={value}\n" for key, value in values.items())
     if output_path:
         with Path(output_path).open("a", encoding="utf-8") as stream:
-            stream.write(rendered)
+            for key, value in values.items():
+                delimiter = f"TRUST_{uuid.uuid4().hex}"
+                stream.write(f"{key}<<{delimiter}\n{value}\n{delimiter}\n")
     else:
-        print(rendered, end="")
+        for key, value in values.items():
+            print(f"{key}={value}")
 
 
 def action_resolve(arguments: argparse.Namespace) -> int:
@@ -522,6 +551,25 @@ def doctor(arguments: argparse.Namespace) -> int:
     return 0 if healthy else 1
 
 
+def status(arguments: argparse.Namespace) -> int:
+    root = git_root(arguments.root)
+    document, _ = status_document(root, root / arguments.config)
+    if arguments.json:
+        print(json.dumps(document, indent=2, sort_keys=True))
+    else:
+        print(f"CorvidLabs Trust: {'healthy' if document['healthy'] else 'unhealthy'}")
+        for error in document["errors"]:
+            print(f"  x {error}")
+    return 0
+
+
+def action_lifecycle(arguments: argparse.Namespace) -> int:
+    root = Path(arguments.working_directory).resolve()
+    config = load_config(root / arguments.config)
+    run(config.lifecycle_command, cwd=root)
+    return 0
+
+
 def fetch_notes(root: Path, mode: str) -> None:
     remote = run(["git", "remote", "get-url", "origin"], cwd=root, check=False, capture=True)
     if remote.returncode != 0:
@@ -596,7 +644,7 @@ def parser() -> argparse.ArgumentParser:
         command_parser.add_argument("--root")
         command_parser.add_argument("--config", default=".trust.toml")
         command_parser.add_argument("--json", action="store_true")
-        command_parser.set_defaults(handler=doctor)
+        command_parser.set_defaults(handler=status if name == "status" else doctor)
     verify_parser = commands.add_parser("verify", help="Run the Trust gate")
     verify_parser.add_argument("--root")
     verify_parser.add_argument("--config", default=".trust.toml")
@@ -611,6 +659,10 @@ def parser() -> argparse.ArgumentParser:
     action_parser.add_argument("--profile", default="")
     action_parser.add_argument("--threshold", default="")
     action_parser.set_defaults(handler=action_resolve)
+    lifecycle_parser = commands.add_parser("action-lifecycle", help=argparse.SUPPRESS)
+    lifecycle_parser.add_argument("--working-directory", default=".")
+    lifecycle_parser.add_argument("--config", default=".trust.toml")
+    lifecycle_parser.set_defaults(handler=action_lifecycle)
     return root_parser
 
 

@@ -81,7 +81,9 @@ runs:
         INSTALL_ROOT: ${{ runner.temp }}/corvid-trust-fledge
       run: |
         set -euo pipefail
-        cargo install fledge --locked --version 1.7.0 --root "$INSTALL_ROOT"
+        if [ ! -x "$INSTALL_ROOT/bin/fledge" ]; then
+          cargo install fledge --locked --version 1.7.0 --root "$INSTALL_ROOT"
+        fi
         echo "$INSTALL_ROOT/bin" >> "$GITHUB_PATH"
 
     - name: Lifecycle verification
@@ -92,13 +94,9 @@ runs:
         TRUST_CONFIG: ${{ inputs.config }}
       run: |
         set -euo pipefail
-        python3 - <<'PY'
-        import subprocess, tomllib
-        import os
-        with open(os.environ['TRUST_CONFIG'], 'rb') as stream:
-            command = tomllib.load(stream)['lifecycle']['command']
-        raise SystemExit(subprocess.call(command))
-        PY
+        python3 "$GITHUB_ACTION_PATH/scripts/trust_cli.py" action-lifecycle \
+          --working-directory . \
+          --config "$TRUST_CONFIG"
 
     # SpecSync action code at v4.7.1 (binary is also pinned to 4.7.1).
     - name: Contract gate

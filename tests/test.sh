@@ -50,7 +50,7 @@ mkdir -p "$isolated_bin"
 ln -s "$(command -v python3)" "$isolated_bin/python3"
 status_code=0
 status_json="$(cd "$repo" && PATH="$isolated_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
-[ "$status_code" -ne 0 ] || fail "status with missing tools returned success"
+[ "$status_code" -eq 0 ] || fail "status diagnostic returned failure"
 STATUS_JSON="$status_json" python3 -c 'import json, os; json.loads(os.environ["STATUS_JSON"])'
 contains "$status_json" '"schemaVersion": 1'
 contains "$status_json" '"healthy": false'
@@ -62,6 +62,19 @@ cp "$repo/fledge.toml" "$skip_repo/fledge.toml"
 grep -Fq 'skip_reason = "content only"' "$skip_repo/.trust.toml" || fail "spec skip reason was not recorded"
 grep -Fq 'skip_reason = "CI only"' "$skip_repo/.trust.toml" || fail "attest skip reason was not recorded"
 [ ! -e "$skip_repo/.specsync/config.toml" ] || fail "disabled specs were installed"
+if "$TRUST" action-resolve --working-directory "$skip_repo" --range HEAD~1..HEAD --profile strict >/dev/null 2>&1; then
+  fail "strict override accepted a disabled contract layer"
+fi
+
+preserve_repo="$TMP/preserve-policy"
+cp -R "$repo" "$preserve_repo"
+sed -i.bak 's/threshold = "block"/threshold = "review"/' "$preserve_repo/.trust.toml"
+rm -f "$preserve_repo/.trust.toml.bak"
+preserved="$(cat "$preserve_repo/.trust.toml")"
+(cd "$preserve_repo" && "$TRUST" adopt >/dev/null)
+[ "$(cat "$preserve_repo/.trust.toml")" = "$preserved" ] || fail "adopt overwrote committed Trust policy"
+(cd "$preserve_repo" && "$TRUST" adopt --force >/dev/null)
+grep -Fq 'threshold = "block"' "$preserve_repo/.trust.toml" || fail "force did not replace Trust policy"
 
 fresh="$TMP/fresh-python"
 make_repo "$fresh"
@@ -140,19 +153,19 @@ outputs="$TMP/action-outputs"
 printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$head" > "$event"
 GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
   "$TRUST" action-resolve --working-directory "$event_repo"
-grep -Fq "range=$base..$head" "$outputs" || fail "pull request range was not resolved"
+grep -Fxq "$base..$head" "$outputs" || fail "pull request range was not resolved"
 
 : > "$outputs"
 printf '{"before":"%s","after":"%s"}\n' "$base" "$head" > "$event"
 GITHUB_EVENT_NAME=push GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
   "$TRUST" action-resolve --working-directory "$event_repo"
-grep -Fq "range=$base..$head" "$outputs" || fail "push range was not resolved"
+grep -Fxq "$base..$head" "$outputs" || fail "push range was not resolved"
 
 : > "$outputs"
 printf '{"before":"0000000000000000000000000000000000000000","after":"%s"}\n' "$head" > "$event"
 GITHUB_EVENT_NAME=push GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
   "$TRUST" action-resolve --working-directory "$event_repo"
-grep -Fq "attest_target=commit" "$outputs" || fail "initial push did not select commit verification"
-grep -Fq "attest_value=$head" "$outputs" || fail "initial push selected the wrong commit"
+grep -Fxq "commit" "$outputs" || fail "initial push did not select commit verification"
+grep -Fxq "$head" "$outputs" || fail "initial push selected the wrong commit"
 
 echo "trust tests passed"
