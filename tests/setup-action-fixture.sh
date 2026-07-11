@@ -97,6 +97,29 @@ No external dependencies.
 | 1 | Initial fixture. |
 EOF
 
+cat > "$root/specs/example/requirements.md" <<'EOF'
+---
+spec: example.spec.md
+---
+
+## User Stories
+
+- As a consumer, I want a deterministic greeting so the Trust fixture can verify an exported API.
+
+## Acceptance Criteria
+
+- `greet` returns a string containing the supplied name.
+- The lifecycle verification command compiles the source file.
+
+## Constraints
+
+- The fixture has no external runtime dependencies.
+
+## Out of Scope
+
+- Input validation beyond the string type annotation.
+EOF
+
 git -C "$root" add .
 git -C "$root" commit -qm initial
 printf '\n# second commit\n' >> "$root/src/example.py"
