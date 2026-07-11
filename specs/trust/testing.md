@@ -20,6 +20,7 @@ spec: trust.spec.md
 | Self-adoption | Trust's own policy, workflow, risk configuration, and managed rules pass doctor and verify. |
 | Action matrix | Standard, strict, provenance, and fatal paths run on Linux and macOS fixture repositories. |
 | Atlas opt-in | Default adoption records Atlas off; explicit adoption verifies reports and renders publication assets. |
+| Windows plugin | The complete manifest and plugin behavior suite runs under Git Bash on `windows-latest`. |
 
 ## Manual Release Checks
 
