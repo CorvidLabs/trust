@@ -10,17 +10,18 @@ Trust keeps the underlying tools independent and composes them into one gate:
 4. **attest** verifies signed provenance recorded in git notes.
 5. **atlas** optionally publishes the result as a living coverage map.
 
-## Install
+## Install the pre-release plugin
 
-The supported installation brings in Trust and its pinned fledge, spec-sync,
-augur, and attest toolchain:
+Until the first tagged Trust release and Homebrew bundle are published, install
+the plugin from the repository:
 
 ```bash
-brew install CorvidLabs/tap/corvid-trust
+fledge plugins install CorvidLabs/trust
 ```
 
-Homebrew installs `fledge-trust` on `PATH`, where Fledge discovers it without
-writing plugin registration state into your home directory.
+Trust verification also requires the independently distributed `specsync`,
+`augur`, and `attest` commands locally. The composite GitHub Action installs its
+own pinned tool versions.
 
 ## Adopt the gate
 
@@ -64,7 +65,7 @@ history because Augur and Attest inspect commits and git notes.
 
 ```yaml
 steps:
-  - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+  - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
     with:
       fetch-depth: 0
 
@@ -82,6 +83,7 @@ ordering or versions.
 | `fledge trust verify` | Run lifecycle, contract, risk, and provenance gates in order. |
 | `fledge trust status` | Report installed tools and wired repository layers. |
 | `fledge trust doctor` | Fail when required tools or configuration are missing. |
+| `fledge trust --version` | Report the installed Trust plugin version. |
 
 ## Design boundary
 

@@ -4,9 +4,9 @@
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
     "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
     "specs/trust/requirements.md": "458b8ba199ef95a3447444161766433fbf2a211f2a3b4b7dbf588015285034ae",
-    "specs/trust/tasks.md": "ab7e3ec6af5c50b8f3cd683a714e572a8114d01dc367b4306988d59ef165db8d",
-    "specs/trust/testing.md": "7d2858634d759971486cbf4c727c2447b225e4d632640d5f42b5dc1d0b7d3970",
-    "specs/trust/trust.spec.md": "4ad31f029c4a32e8f1253a3a5ae15576e203edd1b223a6b7182e8bb2211af246",
+    "specs/trust/tasks.md": "6c8cb91e24ad7081f8b9977de5456e0645339cbde31e97130faf354d2f1be953",
+    "specs/trust/testing.md": "c2aa34d65a2df9f6a69e7f0af6d1d85093e669ca7021d77acd11337a98a716f0",
+    "specs/trust/trust.spec.md": "facd9b363df67b8977fbe13bb0258a90d00dc697339dcf9e0b9e8c97cdec20d7",
     "templates/trust.yml": "04f3bdff71b7737e07c355a5ac3ac69dd15665630ed692c0a2cee03cb57f05f2"
   }
 }

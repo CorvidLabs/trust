@@ -13,13 +13,13 @@ spec: trust.spec.md
 - [x] Adopt Trust into its own repository and run the local gate against itself.
 - [x] Make forced spec checks leave the tracked cache deterministic.
 - [x] Separate Trust's lifecycle lane from its composed SpecSync contract gate.
+- [x] Add an end-to-end Action smoke matrix against fixture repositories.
+- [x] Replace an older managed rules block without touching surrounding AGENTS.md content.
 
 ## Next
 
 - [ ] Add a Homebrew `corvid-trust` bundle after the first tagged release.
-- [ ] Add an end-to-end action smoke test against a fixture repository.
 - [ ] Add optional Atlas publication to the composite workflow.
-- [ ] Add managed-block updates that replace an older block without touching surrounding AGENTS.md content.
 - [ ] Add Windows plugin behavior coverage.
 - [ ] Promote the spec from review to active after spec-sync can match dotted YAML Public API symbols.
 - [ ] Upgrade the Action and release validation to spec-sync 5.0.0 before Trust 1.0.0.

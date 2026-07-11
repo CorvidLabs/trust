@@ -48,6 +48,21 @@ mkdir -p "$repo/nested/package"
 (cd "$repo/nested/package" && "$TRUST" adopt >/dev/null)
 [ "$(grep -c 'CorvidLabs trust toolchain: BEGIN' "$repo/AGENTS.md")" = 1 ] || fail "managed block duplicated"
 
+python3 - "$repo/AGENTS.md" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+begin = "<!-- CorvidLabs trust toolchain: BEGIN (managed, do not edit inside) -->"
+end = "<!-- CorvidLabs trust toolchain: END -->"
+path.write_text(f"Project preface\n\n{begin}\nobsolete managed rules\n{end}\n\nProject suffix\n", encoding="utf-8")
+PY
+(cd "$repo" && "$TRUST" adopt >/dev/null)
+grep -Fq 'Project preface' "$repo/AGENTS.md" || fail "managed update removed AGENTS.md prefix"
+grep -Fq 'Project suffix' "$repo/AGENTS.md" || fail "managed update removed AGENTS.md suffix"
+if grep -Fq 'obsolete managed rules' "$repo/AGENTS.md"; then fail "managed update preserved obsolete block"; fi
+[ "$(grep -c 'CorvidLabs trust toolchain: BEGIN' "$repo/AGENTS.md")" = 1 ] || fail "managed update duplicated block"
+
 isolated_bin="$TMP/isolated-bin"
 mkdir -p "$isolated_bin"
 ln -s "$(command -v python3)" "$isolated_bin/python3"

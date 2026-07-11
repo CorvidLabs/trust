@@ -13,6 +13,7 @@
 - Normalize the SpecSync cache after forced verification and pin generated checkout steps to v7.0.0.
 - Pin the validation dependency in both CI and the repository self-dogfood workflow.
 - Keep SpecSync out of the lifecycle lane so the composite Action owns contract installation and verification order.
+- Correct the contract and installation documentation to match the pre-release Action and plugin surfaces.
 
 ## [0.1.0] - 2026-07-10
 
