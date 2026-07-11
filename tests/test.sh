@@ -49,6 +49,51 @@ if fallback != ["/usr/bin/bash", "-c", 'exec "$@"', "trust", "tool", "arg with s
     raise AssertionError(f"unexpected Windows Bash fallback: {fallback}")
 PY
 
+python3 - "$ROOT" <<'PY'
+import importlib.util
+from pathlib import Path
+import sys
+
+root = Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location("release_channel", root / "scripts" / "release_channel.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load release_channel")
+release_channel = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = release_channel
+spec.loader.exec_module(release_channel)
+
+cases = [
+    ("v0.1.0", ["v0.1.0", "v0.2.0"], False, "v0"),
+    ("v0.3.0-rc.1", ["v0.2.0", "v0.3.0-rc.1"], True, "v0"),
+    ("v0.3.0", ["v0.3.0-rc.1", "v0.3.0"], True, "v0"),
+    ("v1.0.0-rc.1", ["v1.0.0-rc.1"], False, "v1"),
+    ("v1.0.0", ["v1.0.0", "v1.1.0-rc.1"], True, "v1"),
+    ("v1.0.0", ["v1.0.0", "v1.1.0"], False, "v1"),
+]
+for target, tags, expected, major in cases:
+    result = release_channel.decision(target, tags)
+    if result["promote"] is not expected or result["major"] != major:
+        raise AssertionError(f"unexpected release-channel decision for {target}: {result}")
+try:
+    release_channel.decision("not-a-version", [])
+except ValueError:
+    pass
+else:
+    raise AssertionError("invalid release tag was accepted")
+try:
+    release_channel.decision("v1.0.0+rebuilt", [])
+except ValueError:
+    pass
+else:
+    raise AssertionError("ambiguous build-metadata release tag was accepted")
+for invalid in ("v01.0.0", "v1.0.0-01", "v1.0.0-rc..1"):
+    try:
+        release_channel.decision(invalid, [])
+    except ValueError:
+        continue
+    raise AssertionError(f"invalid semantic release tag was accepted: {invalid}")
+PY
+
 repo="$TMP/repo with spaces"
 make_repo "$repo"
 repo="$(cd "$repo" && pwd -P)"

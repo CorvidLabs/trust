@@ -47,3 +47,5 @@ channel. Keep dependency Action code pinned to immutable commits and pair each
 pin with its matching binary version before the final release rehearsal.
 The same tag workflow publishes 1.0.0 as a stable GitHub release and advances
 `v1`; a 1.0.0 release candidate does not move that stable channel.
+Major channels move monotonically: publishing or replaying an older release
+cannot roll `v0` or `v1` backward.

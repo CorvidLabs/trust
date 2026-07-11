@@ -7,6 +7,7 @@ files:
   - scripts/trust_cli.py
   - scripts/validate.py
   - scripts/normalize_specsync_cache.py
+  - scripts/release_channel.py
   - action.yml
   - plugin.toml
   - templates/trust.yml

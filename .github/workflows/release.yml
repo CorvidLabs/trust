@@ -25,10 +25,7 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          if ! [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]; then
-            echo "::error::Expected a semantic release tag like v0.2.0, got '$REF_NAME'."
-            exit 1
-          fi
+          printf '%s\n' "$REF_NAME" | python3 scripts/release_channel.py "$REF_NAME" >/dev/null
           version="$(python3 -c 'import tomllib; print(tomllib.load(open("plugin.toml", "rb"))["plugin"]["version"])')"
           if [ "$REF_NAME" != "v$version" ]; then
             echo "::error::Tag $REF_NAME does not match plugin.toml version $version."
@@ -161,9 +158,10 @@ jobs:
           REF_NAME: ${{ github.ref_name }}
         run: |
           set -euo pipefail
-          major="${REF_NAME%%.*}"
-          if [[ "$REF_NAME" == *-* && "$major" != v0 ]]; then
-            echo "Leaving $major unchanged for prerelease $REF_NAME."
+          decision="$(git tag -l | python3 scripts/release_channel.py "$REF_NAME")"
+          major="$(jq -r .major <<< "$decision")"
+          if [ "$(jq -r .promote <<< "$decision")" != true ]; then
+            jq -r .reason <<< "$decision"
             exit 0
           fi
           git tag -f "$major" "$GITHUB_SHA"

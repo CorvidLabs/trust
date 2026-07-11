@@ -108,7 +108,7 @@ for required in (
     'fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD',
     "needs: exact-tag-dogfood",
     "args=(release create",
-    'major="${REF_NAME%%.*}"',
+    'python3 scripts/release_channel.py "$REF_NAME"',
     'git tag -f "$major"',
 ):
     if required not in release_workflow:
