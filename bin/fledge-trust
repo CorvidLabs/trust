@@ -1,0 +1,284 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SOURCE="${BASH_SOURCE[0]:-$0}"
+while [ -L "$SOURCE" ]; do
+  LINK_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$LINK_DIR/$SOURCE"
+done
+BIN_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+ROOT_DIR="$(cd "$BIN_DIR/.." >/dev/null 2>&1 && pwd)"
+TEMPLATE_DIR="$ROOT_DIR/templates"
+
+usage() {
+  cat <<'EOF'
+fledge trust - one gate for contracts, verification, risk, and provenance
+
+USAGE:
+  fledge trust <COMMAND> [OPTIONS]
+
+COMMANDS:
+  adopt     Add the trust toolchain to the current repository
+  verify    Run the configured trust gate in order
+  status    Show installed and wired trust layers
+  doctor    Validate that required tools and configuration are present
+
+Run `fledge trust <COMMAND> --help` for command-specific options.
+EOF
+}
+
+fail() {
+  echo "fledge trust: $*" >&2
+  exit 1
+}
+
+has_command() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+has_text() {
+  local file="$1" text="$2"
+  [ -f "$file" ] && grep -Fq "$text" "$file"
+}
+
+bool_json() {
+  if "$1"; then printf 'true'; else printf 'false'; fi
+}
+
+print_status() {
+  local json="${1:-false}"
+  local fledge_installed=false specsync_installed=false augur_installed=false attest_installed=false atlas_installed=false
+  local lifecycle_wired=false specs_wired=false augur_wired=false attest_wired=false workflow_wired=false rules_wired=false atlas_wired=false
+
+  has_command fledge && fledge_installed=true
+  has_command specsync && specsync_installed=true
+  has_command augur && augur_installed=true
+  has_command attest && attest_installed=true
+  { has_command fledge-atlas || has_command atlas; } && atlas_installed=true
+
+  has_text fledge.toml "[lanes.verify]" && lifecycle_wired=true
+  [ -f .specsync/config.toml ] && specs_wired=true
+  [ -f .augur.toml ] && augur_wired=true
+  [ -f .attest.json ] && attest_wired=true
+  [ -f .github/workflows/trust.yml ] && workflow_wired=true
+  has_text AGENTS.md "CorvidLabs trust toolchain: BEGIN" && rules_wired=true
+  [ -f .atlasignore ] && atlas_wired=true
+
+  if [ "$json" = true ]; then
+    printf '{\n'
+    printf '  "schemaVersion": 1,\n'
+    printf '  "installed": {"fledge": %s, "specsync": %s, "augur": %s, "attest": %s, "atlas": %s},\n' \
+      "$fledge_installed" "$specsync_installed" "$augur_installed" "$attest_installed" "$atlas_installed"
+    printf '  "wired": {"lifecycle": %s, "specs": %s, "risk": %s, "provenance": %s, "workflow": %s, "rules": %s, "atlas": %s}\n' \
+      "$lifecycle_wired" "$specs_wired" "$augur_wired" "$attest_wired" "$workflow_wired" "$rules_wired" "$atlas_wired"
+    printf '}\n'
+    return
+  fi
+
+  echo "CorvidLabs Trust"
+  printf '  %-12s installed=%-5s wired=%s\n' "lifecycle" "$fledge_installed" "$lifecycle_wired"
+  printf '  %-12s installed=%-5s wired=%s\n' "contract" "$specsync_installed" "$specs_wired"
+  printf '  %-12s installed=%-5s wired=%s\n' "risk" "$augur_installed" "$augur_wired"
+  printf '  %-12s installed=%-5s wired=%s\n' "provenance" "$attest_installed" "$attest_wired"
+  printf '  %-12s installed=%-5s wired=%s\n' "atlas" "$atlas_installed" "$atlas_wired"
+  printf '  %-12s wired=%s\n' "workflow" "$workflow_wired"
+  printf '  %-12s wired=%s\n' "agent rules" "$rules_wired"
+}
+
+copy_template() {
+  local source="$1" destination="$2" dry_run="$3" force="$4"
+  if [ -e "$destination" ] && [ "$force" != true ]; then
+    echo "skip  $destination (already exists)"
+    return
+  fi
+  if [ "$dry_run" = true ]; then
+    echo "write $destination"
+    return
+  fi
+  mkdir -p "$(dirname "$destination")"
+  cp "$TEMPLATE_DIR/$source" "$destination"
+  echo "wrote $destination"
+}
+
+append_agent_rules() {
+  local dry_run="$1"
+  if has_text AGENTS.md "CorvidLabs trust toolchain: BEGIN"; then
+    echo "skip  AGENTS.md (managed rules already present)"
+    return
+  fi
+  if [ "$dry_run" = true ]; then
+    echo "append AGENTS.md managed trust rules"
+    return
+  fi
+  [ -f AGENTS.md ] && printf '\n' >> AGENTS.md
+  sed 's/^+//' "$TEMPLATE_DIR/agents-rules.md" >> AGENTS.md
+  echo "updated AGENTS.md"
+}
+
+adopt() {
+  local dry_run=false force=false no_specs="" no_attest="" no_atlas=""
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --dry-run) dry_run=true; shift ;;
+      --force) force=true; shift ;;
+      --no-specs) [ $# -ge 2 ] || fail "--no-specs requires a reason"; no_specs="$2"; shift 2 ;;
+      --no-attest) [ $# -ge 2 ] || fail "--no-attest requires a reason"; no_attest="$2"; shift 2 ;;
+      --no-atlas) [ $# -ge 2 ] || fail "--no-atlas requires a reason"; no_atlas="$2"; shift 2 ;;
+      -h|--help)
+        cat <<'EOF'
+USAGE:
+  fledge trust adopt [--dry-run] [--force]
+                     [--no-specs REASON] [--no-attest REASON] [--no-atlas REASON]
+
+Creates missing trust configuration without overwriting existing files.
+`--force` replaces managed standalone files, but never replaces AGENTS.md.
+EOF
+        return ;;
+      *) fail "unknown adopt option '$1'" ;;
+    esac
+  done
+
+  git rev-parse --is-inside-work-tree >/dev/null 2>&1 || fail "adopt must run inside a git repository"
+
+  if [ ! -f fledge.toml ]; then
+    if [ "$dry_run" = true ]; then
+      echo "run   fledge run --init"
+    elif has_command fledge; then
+      fledge run --init
+    else
+      copy_template fledge.toml fledge.toml false "$force"
+    fi
+  fi
+
+  if [ -f fledge.toml ] && ! has_text fledge.toml "[lanes.verify]"; then
+    echo "note  fledge.toml needs a [lanes.verify] lane before verify can run"
+  fi
+
+  if [ -z "$no_specs" ]; then
+    copy_template specsync.toml .specsync/config.toml "$dry_run" "$force"
+  else
+    echo "skip  spec-sync ($no_specs)"
+  fi
+
+  copy_template augur.toml .augur.toml "$dry_run" "$force"
+
+  if [ -z "$no_attest" ]; then
+    copy_template attest.json .attest.json "$dry_run" "$force"
+  else
+    echo "skip  attest ($no_attest)"
+  fi
+
+  if [ -z "$no_atlas" ]; then
+    copy_template atlasignore .atlasignore "$dry_run" "$force"
+  else
+    echo "skip  atlas ($no_atlas)"
+  fi
+
+  copy_template trust.yml .github/workflows/trust.yml "$dry_run" "$force"
+  append_agent_rules "$dry_run"
+
+  if [ "$dry_run" = true ]; then
+    echo "dry run complete; no files changed"
+  else
+    echo "trust adoption complete; run: fledge trust doctor"
+  fi
+}
+
+verify() {
+  local range="origin/main..HEAD" threshold="block" policy=".attest.json"
+  local no_lifecycle=false no_specs=false no_attest=false
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --range) [ $# -ge 2 ] || fail "--range requires a value"; range="$2"; shift 2 ;;
+      --threshold) [ $# -ge 2 ] || fail "--threshold requires a value"; threshold="$2"; shift 2 ;;
+      --policy) [ $# -ge 2 ] || fail "--policy requires a value"; policy="$2"; shift 2 ;;
+      --no-lifecycle) no_lifecycle=true; shift ;;
+      --no-specs) no_specs=true; shift ;;
+      --no-attest) no_attest=true; shift ;;
+      -h|--help)
+        cat <<'EOF'
+USAGE:
+  fledge trust verify [--range RANGE] [--threshold VERDICT] [--policy PATH]
+                      [--no-lifecycle] [--no-specs] [--no-attest]
+EOF
+        return ;;
+      *) fail "unknown verify option '$1'" ;;
+    esac
+  done
+
+  if [ "$no_lifecycle" != true ]; then
+    has_command fledge || fail "fledge is not installed"
+    has_text fledge.toml "[lanes.verify]" || fail "fledge.toml has no [lanes.verify] lane"
+    echo "== lifecycle =="
+    fledge lanes run verify
+  fi
+
+  if [ "$no_specs" != true ] && [ -f .specsync/config.toml ]; then
+    has_command specsync || fail "specsync is not installed"
+    echo "== contract =="
+    specsync check
+  fi
+
+  has_command augur || fail "augur is not installed"
+  echo "== risk =="
+  augur gate --range "$range" --threshold "$threshold"
+
+  if [ "$no_attest" != true ] && [ -f "$policy" ]; then
+    has_command attest || fail "attest is not installed"
+    echo "== provenance =="
+    attest verify --range "$range" --policy "$policy"
+  fi
+
+  echo "trust gate passed"
+}
+
+doctor() {
+  local json=false failed=false
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --json) json=true; shift ;;
+      -h|--help) echo "USAGE: fledge trust doctor [--json]"; return ;;
+      *) fail "unknown doctor option '$1'" ;;
+    esac
+  done
+
+  if [ "$json" = true ]; then
+    print_status true
+    return
+  fi
+
+  print_status false
+  for command in fledge specsync augur attest; do
+    if ! has_command "$command"; then
+      echo "missing required command: $command" >&2
+      failed=true
+    fi
+  done
+  has_text fledge.toml "[lanes.verify]" || { echo "missing [lanes.verify] in fledge.toml" >&2; failed=true; }
+  [ -f .github/workflows/trust.yml ] || { echo "missing .github/workflows/trust.yml" >&2; failed=true; }
+  has_text AGENTS.md "CorvidLabs trust toolchain: BEGIN" || { echo "missing managed trust rules in AGENTS.md" >&2; failed=true; }
+  [ "$failed" = false ] || exit 1
+  echo "trust toolchain healthy"
+}
+
+if [ $# -eq 0 ]; then
+  usage
+  exit 64
+fi
+
+COMMAND="$1"
+shift
+case "$COMMAND" in
+  adopt) adopt "$@" ;;
+  verify) verify "$@" ;;
+  status)
+    if [ "${1:-}" = "--json" ]; then print_status true
+    elif [ $# -eq 0 ]; then print_status false
+    else fail "unknown status option '$1'"
+    fi
+    ;;
+  doctor) doctor "$@" ;;
+  -h|--help|help) usage ;;
+  *) fail "unknown command '$COMMAND'" ;;
+esac

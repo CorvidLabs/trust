@@ -1,0 +1,16 @@
+[plugin]
+name = "trust"
+version = "0.1.0"
+description = "One trust gate for contracts, verification, risk, and signed provenance"
+author = "CorvidLabs"
+license = "MIT"
+
+[[commands]]
+name = "trust"
+description = "Adopt, verify, and inspect the CorvidLabs trust toolchain"
+binary = "bin/fledge-trust"
+
+[capabilities]
+exec = false
+store = false
+metadata = false

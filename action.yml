@@ -1,0 +1,141 @@
+name: "CorvidLabs Trust"
+description: "One CI gate for lifecycle verification, spec contracts, deterministic risk, and signed provenance"
+author: "CorvidLabs"
+
+branding:
+  icon: "shield"
+  color: "purple"
+
+inputs:
+  profile:
+    description: "Adoption profile: standard or strict. Strict requires full spec coverage and provenance."
+    required: false
+    default: "standard"
+  range:
+    description: "Git range assessed by augur and attest. Checkout with fetch-depth: 0."
+    required: false
+    default: "origin/main..HEAD"
+  working-directory:
+    description: "Repository directory containing fledge.toml and trust configuration."
+    required: false
+    default: "."
+  verify-command:
+    description: "Lifecycle command run before the contract, risk, and provenance gates. Empty disables it."
+    required: false
+    default: "fledge lanes run verify"
+  fledge-version:
+    description: "Pinned fledge crate version installed when fledge is absent."
+    required: false
+    default: "1.7.0"
+  spec-sync-version:
+    description: "SpecSync action version."
+    required: false
+    default: "4.7.1"
+  spec-mode:
+    description: "Contract mode: enforce, soft, or off."
+    required: false
+    default: "enforce"
+  require-coverage:
+    description: "Minimum spec file coverage percentage."
+    required: false
+    default: "0"
+  augur-threshold:
+    description: "Risk verdict at or above which the gate fails."
+    required: false
+    default: "block"
+  attest-mode:
+    description: "Provenance mode: enforce, soft, or off."
+    required: false
+    default: "soft"
+  attest-policy:
+    description: "Path to the attest policy."
+    required: false
+    default: ".attest.json"
+
+outputs:
+  verdict:
+    description: "Augur verdict."
+    value: ${{ steps.augur.outputs.verdict }}
+  risk:
+    description: "Augur risk score."
+    value: ${{ steps.augur.outputs.risk }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Validate trust inputs
+      shell: bash
+      env:
+        PROFILE: ${{ inputs.profile }}
+        SPEC_MODE: ${{ inputs.spec-mode }}
+        ATTEST_MODE: ${{ inputs.attest-mode }}
+      run: |
+        set -euo pipefail
+        case "$PROFILE" in standard|strict) ;; *) echo "::error::profile must be standard or strict"; exit 64;; esac
+        case "$SPEC_MODE" in enforce|soft|off) ;; *) echo "::error::spec-mode must be enforce, soft, or off"; exit 64;; esac
+        case "$ATTEST_MODE" in enforce|soft|off) ;; *) echo "::error::attest-mode must be enforce, soft, or off"; exit 64;; esac
+        if [ "$PROFILE" = strict ] && { [ "$SPEC_MODE" = off ] || [ "$ATTEST_MODE" = off ]; }; then
+          echo "::error::strict profile cannot disable the contract or provenance gates"
+          exit 64
+        fi
+
+    - name: Install fledge
+      if: inputs.verify-command != ''
+      shell: bash
+      env:
+        FLEDGE_VERSION: ${{ inputs.fledge-version }}
+      run: |
+        set -euo pipefail
+        if command -v fledge >/dev/null 2>&1; then
+          fledge --version
+          exit 0
+        fi
+        cargo install fledge --locked --version "$FLEDGE_VERSION"
+
+    - name: Lifecycle verification
+      if: inputs.verify-command != ''
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        VERIFY_COMMAND: ${{ inputs.verify-command }}
+      run: |
+        set -euo pipefail
+        read -r -a command <<< "$VERIFY_COMMAND"
+        "${command[@]}"
+
+    - name: Contract gate
+      if: inputs.spec-mode != 'off'
+      id: specs
+      uses: CorvidLabs/spec-sync@v4
+      continue-on-error: ${{ inputs.spec-mode == 'soft' && inputs.profile != 'strict' }}
+      with:
+        version: ${{ inputs.spec-sync-version }}
+        root: ${{ inputs.working-directory }}
+        strict: ${{ inputs.profile == 'strict' }}
+        require-coverage: ${{ inputs.profile == 'strict' && '100' || inputs.require-coverage }}
+
+    - name: Risk gate
+      id: augur
+      uses: CorvidLabs/augur@v1
+      with:
+        range: ${{ inputs.range }}
+        threshold: ${{ inputs.augur-threshold }}
+        working-directory: ${{ inputs.working-directory }}
+
+    - name: Fetch provenance ledger
+      if: inputs.attest-mode != 'off'
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set -euo pipefail
+        git fetch origin "+refs/notes/attest:refs/notes/attest" 2>/dev/null || \
+          echo "No remote attestation ledger exists yet."
+
+    - name: Provenance gate
+      if: inputs.attest-mode != 'off'
+      uses: CorvidLabs/attest@v1
+      continue-on-error: ${{ inputs.attest-mode == 'soft' && inputs.profile != 'strict' }}
+      with:
+        range: ${{ inputs.range }}
+        policy: ${{ inputs.attest-policy }}
+        working-directory: ${{ inputs.working-directory }}

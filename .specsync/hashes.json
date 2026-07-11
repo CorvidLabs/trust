@@ -1,0 +1,12 @@
+{
+  "hashes": {
+    "bin/fledge-trust": "198e6a315140d2f3b8ac009dc467b501da991ff19006210a6c18db9750ce5382",
+    "specs/trust/tasks.md": "c4b6386a224313ccab17ed4b368112d1c7a93ae4584b09e3ba26ce5869695358",
+    "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
+    "specs/trust/requirements.md": "48b9852824b340a0583d8c0841f3e40ae3a5d65df0b16f129c0b63d56d99c132",
+    "specs/trust/testing.md": "48609e67165fa4fc5e6cf8a2b99f1cb6b0a9e2722ae94ac1c88b30605ec30dcb",
+    "specs/trust/trust.spec.md": "9f266e0f096711fe78c7e256a27360bc34a8fb5d3b4f3c1de70c479327527839",
+    "templates/trust.yml": "bb6dcedb2c67d01fb556c0132eee57e748c86e74a51fe6494b2dc01d4ee35271",
+    "action.yml": "7c763d509cf58aa03bbf7033320bdf9d6d20045539c7998a89618be489bfb5f1"
+  }
+}

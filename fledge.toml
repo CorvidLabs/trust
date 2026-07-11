@@ -1,0 +1,9 @@
+[tasks]
+fmt = "bash -n bin/fledge-trust tests/test.sh"
+lint = "python3 scripts/validate.py"
+test = "bash tests/test.sh"
+spec = "specsync check --force --strict"
+
+[lanes.verify]
+description = "Validate the Trust action, plugin, templates, and specs"
+steps = ["fmt", "lint", "test", "spec"]

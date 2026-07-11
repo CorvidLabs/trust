@@ -1,0 +1,22 @@
+name: trust
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  trust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - uses: CorvidLabs/trust@v1
+        with:
+          profile: standard
+          range: origin/main..HEAD
