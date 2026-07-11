@@ -6,11 +6,11 @@
     "scripts/normalize_specsync_cache.py": "2ce7b47fcabdd67fa75b72c635731767ffc1de0c17e30fc7ab80d03e301e406e",
     "scripts/release_channel.py": "62cfa84ac0d1c31e2f24a0f08711566c5e7d74fe3e00346f7bc519356f43252b",
     "scripts/trust_cli.py": "0cea5f64745db937c0a0a1beb0e8600976bb2ab26f7c1ffcb58c3158aec8e63a",
-    "scripts/validate.py": "96cc465d63bfe87918b0c8ff7aecf438fbae5044d20343e58e1d4d8597ccfca7",
+    "scripts/validate.py": "ca023a9305b19ec510ea1added506e00a7b7c70e3d94f856a6e82aa9e50b3c84",
     "specs/trust/context.md": "f4b4b8a3ea723385a904e58a9370115b6140d8f9123ab16eacdf6e9b5bd0d94a",
     "specs/trust/requirements.md": "39e2211094a6162c36264a87a0d6fb2b55edf79bcf43c7efe59f6811bef7acdf",
-    "specs/trust/tasks.md": "db7e64c1468b0377db42534523827d8382e6d87d8d662432b758720c2fac97ae",
-    "specs/trust/testing.md": "cee0351a5e4c6c0ed38ead4959873e85a65eb6eff7c6b0158501c50e60da2e8d",
+    "specs/trust/tasks.md": "2f58dad30e95cc30ddb0c7d632ba323538ca7e30966be5b3880839babcedf138",
+    "specs/trust/testing.md": "3b0364027eb08eee170ad3b605eec1ec027d80393f526b03ad898130d8173079",
     "specs/trust/trust.spec.md": "248e51dccd6f319e20dfdb4c8561a577b32cf31e84cdd482b63cae806eea447b",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }

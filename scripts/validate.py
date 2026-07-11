@@ -109,7 +109,8 @@ for required in (
     "needs: exact-tag-dogfood",
     "args=(release create",
     'python3 scripts/release_channel.py "$REF_NAME"',
-    'git tag -f "$major"',
+    "Protected channel promotion",
+    "GITHUB_STEP_SUMMARY",
 ):
     if required not in release_workflow:
         fail(f"release workflow is missing gated publication behavior: {required}")

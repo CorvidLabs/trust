@@ -129,7 +129,7 @@ jobs:
           fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD
 
   publish:
-    name: Publish release and move major channel
+    name: Publish release and select major channel
     needs: exact-tag-dogfood
     runs-on: ubuntu-latest
     permissions:
@@ -153,7 +153,7 @@ jobs:
             fi
             gh "${args[@]}"
           fi
-      - name: Move supported major Action channel
+      - name: Record supported major Action channel candidate
         env:
           REF_NAME: ${{ github.ref_name }}
         run: |
@@ -164,6 +164,10 @@ jobs:
             jq -r .reason <<< "$decision"
             exit 0
           fi
-          git tag -f "$major" "$GITHUB_SHA"
-          git push origin -f "refs/tags/$major"
-          echo "$major now points at $GITHUB_SHA from $REF_NAME"
+          {
+            echo "## Protected channel promotion"
+            echo
+            echo "Exact-tag verification passed. An organization administrator may move \`$major\` to \`$REF_NAME\`."
+            echo
+            echo "The repository tag ruleset intentionally prevents this workflow token from force-updating the channel."
+          } >> "$GITHUB_STEP_SUMMARY"

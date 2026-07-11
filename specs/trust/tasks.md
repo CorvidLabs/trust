@@ -19,7 +19,7 @@ spec: trust.spec.md
 - [x] Run the complete plugin behavior suite on Windows and resolve Git Bash command and path portability.
 - [x] Add a release lane that composes code verification with the spec contract gate.
 - [x] Dogfood immutable commit installation through Fledge in a disposable governed repository.
-- [x] Gate tagged releases on exact-tag installation, real component verification, and safe major-channel promotion.
+- [x] Gate tagged releases on exact-tag installation, real component verification, and monotonic channel selection.
 
 ## Next
 
@@ -28,4 +28,5 @@ spec: trust.spec.md
 - [ ] Promote the spec from review to active after spec-sync can match dotted YAML Public API symbols.
 - [ ] Upgrade the Action and release validation to spec-sync 5.0.0 before Trust 1.0.0.
 - [ ] Enable and publish the Trust repository's provenance ledger before Trust 1.0.0.
+- [ ] Add a maintainer-managed `v1` tag ruleset before promoting the stable Action channel.
 - [ ] Cut Trust 1.0.0 and move the supported composite Action channel from `v0` to `v1`.
