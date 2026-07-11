@@ -18,9 +18,11 @@ spec: trust.spec.md
 
 ## Next
 
+- [ ] Tag and dogfood a pre-1.0 release through the supported plugin installation path.
 - [ ] Add a Homebrew `corvid-trust` bundle after the first tagged release.
 - [ ] Add optional Atlas publication to the composite workflow.
 - [ ] Add Windows plugin behavior coverage.
 - [ ] Promote the spec from review to active after spec-sync can match dotted YAML Public API symbols.
 - [ ] Upgrade the Action and release validation to spec-sync 5.0.0 before Trust 1.0.0.
 - [ ] Enable and publish the Trust repository's provenance ledger before Trust 1.0.0.
+- [ ] Cut Trust 1.0.0 and move the supported composite Action channel from `v0` to `v1`.
