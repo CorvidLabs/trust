@@ -36,7 +36,7 @@ def action_references(value: object) -> list[str]:
     return references
 
 
-yaml_documents: dict[str, object] = {}
+yaml_documents: dict[str, dict[str, object]] = {}
 for relative in (
     "action.yml",
     "templates/trust.yml",
@@ -126,7 +126,12 @@ for dependency in dependencies:
     if dependency not in action:
         fail(f"action.yml does not compose {dependency}")
 
-action_steps = yaml_documents["action.yml"].get("runs", {}).get("steps", [])
+action_runs = yaml_documents["action.yml"].get("runs")
+if not isinstance(action_runs, dict):
+    fail("action.yml runs must be a YAML object")
+action_steps = action_runs.get("steps")
+if not isinstance(action_steps, list):
+    fail("action.yml runs.steps must be a YAML list")
 for step in action_steps:
     if not isinstance(step, dict) or step.get("uses") not in dependencies:
         continue

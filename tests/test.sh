@@ -18,8 +18,62 @@ make_repo() {
   git -C "$repo" config user.name Test
 }
 
-plugin_version="$(python3 -c 'import sys, tomllib; print(tomllib.load(open(sys.argv[1], "rb"))["plugin"]["version"])' "$ROOT/plugin.toml")"
+plugin_version="$(python3 - "$ROOT/plugin.toml" <<'PY'
+import sys
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
+
+with open(sys.argv[1], "rb") as stream:
+    print(tomllib.load(stream)["plugin"]["version"])
+PY
+)"
 [ "$("$TRUST" --version)" = "fledge trust $plugin_version" ] || fail "version output does not match plugin manifest"
+
+python3 - "$ROOT" "$TMP" <<'PY'
+import importlib.util
+import json
+from pathlib import Path
+import sys
+
+root = Path(sys.argv[1])
+temporary = Path(sys.argv[2])
+spec = importlib.util.spec_from_file_location(
+    "normalize_specsync_cache",
+    root / "scripts" / "normalize_specsync_cache.py",
+)
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load normalize_specsync_cache")
+normalizer = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = normalizer
+spec.loader.exec_module(normalizer)
+
+cache = temporary / "hashes.json"
+cache.write_text('{"hashes":{"z":"2","a":"1"}}', encoding="utf-8")
+normalizer.normalize(cache)
+if cache.read_text(encoding="utf-8") != '{\n  "hashes": {\n    "a": "1",\n    "z": "2"\n  }\n}\n':
+    raise AssertionError("spec-sync cache was not sorted with a trailing newline")
+
+invalid_cases = [
+    (temporary / "missing.json", "cannot read spec-sync cache"),
+    (temporary / "corrupt.json", "cannot read spec-sync cache"),
+    (temporary / "array.json", "root must be an object"),
+    (temporary / "invalid-map.json", "hashes must be a string map"),
+]
+(temporary / "corrupt.json").write_text("{", encoding="utf-8")
+(temporary / "array.json").write_text("[]", encoding="utf-8")
+(temporary / "invalid-map.json").write_text(json.dumps({"hashes": {"path": 1}}), encoding="utf-8")
+for path, expected in invalid_cases:
+    try:
+        normalizer.normalize(path)
+    except SystemExit as error:
+        if expected not in str(error):
+            raise AssertionError(f"unexpected cache error for {path}: {error}") from error
+    else:
+        raise AssertionError(f"invalid cache was accepted: {path}")
+PY
 
 python3 - "$ROOT" <<'PY'
 import importlib.util
