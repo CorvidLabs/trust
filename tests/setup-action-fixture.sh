@@ -46,8 +46,9 @@ cat > "$root/.attest.json" <<'EOF'
 EOF
 
 cat > "$root/.augur.toml" <<'EOF'
-[weights]
-diffSize = 1.0
+[thresholds]
+review = 35
+block = 65
 EOF
 
 cat > "$root/.specsync/config.toml" <<'EOF'
