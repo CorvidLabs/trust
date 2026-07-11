@@ -145,17 +145,84 @@ runs:
         git fetch origin "+refs/notes/attest:refs/notes/attest"
         echo "available=true" >> "$GITHUB_OUTPUT"
 
-    # Attest action code and binary at release 1.0.0.
-    - name: Provenance gate
+    - name: Prepare Attest installation probe
       if: steps.config.outputs.provenance_mode != 'off' && steps.ledger.outputs.available == 'true'
-      id: attest
+      id: attest_probe
+      shell: bash
+      env:
+        PROBE_POLICY: ${{ runner.temp }}/corvid-trust-attest-probe.json
+      run: |
+        set -euo pipefail
+        printf '%s\n' '{"requireAttestation":false}' > "$PROBE_POLICY"
+        echo "policy=$PROBE_POLICY" >> "$GITHUB_OUTPUT"
+
+    # Attest action code and binary at release 1.0.0. It first verifies a
+    # generated permissive policy so installation/runtime failures stay fatal.
+    - name: Install pinned Attest 1.0.0
+      if: steps.config.outputs.provenance_mode != 'off' && steps.ledger.outputs.available == 'true'
+      id: attest_install
       uses: CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2
-      continue-on-error: ${{ steps.config.outputs.provenance_mode == 'soft' }}
       with:
         version: "1.0.0"
-        range: ${{ steps.config.outputs.attest_value }}
-        policy: ${{ steps.config.outputs.provenance_policy }}
+        range: ${{ steps.config.outputs.range }}
+        policy: ${{ steps.attest_probe.outputs.policy }}
         working-directory: ${{ inputs.working-directory }}
+
+    - name: Provenance gate
+      if: steps.config.outputs.provenance_mode != 'off' && steps.ledger.outputs.available == 'true'
+      id: provenance
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        ATTEST: ${{ steps.attest_install.outputs.binary }}
+        ATTEST_TARGET: ${{ steps.config.outputs.attest_target }}
+        ATTEST_VALUE: ${{ steps.config.outputs.attest_value }}
+        MODE: ${{ steps.config.outputs.provenance_mode }}
+        POLICY: ${{ steps.config.outputs.provenance_policy }}
+        REPORT: ${{ runner.temp }}/corvid-trust-attest-report.json
+        REPORT_ERROR: ${{ runner.temp }}/corvid-trust-attest-report.err
+      run: |
+        set -euo pipefail
+        args=(verify --policy "$POLICY" --json)
+        if [ "$ATTEST_TARGET" = commit ]; then args+=(--commit "$ATTEST_VALUE")
+        else args+=(--range "$ATTEST_VALUE")
+        fi
+        set +e
+        "$ATTEST" "${args[@]}" > "$REPORT" 2> "$REPORT_ERROR"
+        verify_code=$?
+        set -e
+        classification="$(python3 - "$REPORT" "$verify_code" <<'PY'
+        import json
+        from pathlib import Path
+        import sys
+
+        try:
+            report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise SystemExit(f"Attest did not produce a valid verification report: {error}")
+        if not isinstance(report, dict) or not isinstance(report.get("passed"), bool):
+            raise SystemExit("Attest verification report is missing boolean passed")
+        code = int(sys.argv[2])
+        if report["passed"] and code == 0:
+            print("satisfied")
+        elif not report["passed"] and code != 0 and isinstance(report.get("violations"), list):
+            print("unsatisfied")
+        else:
+            raise SystemExit("Attest report and exit status disagree")
+        PY
+        )" || {
+          cat "$REPORT_ERROR" >&2
+          exit 1
+        }
+        if [ "$classification" = unsatisfied ]; then
+          cat "$REPORT"
+          if [ "$MODE" = soft ]; then
+            echo "status=soft-failed" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          exit 1
+        fi
+        echo "status=success" >> "$GITHUB_OUTPUT"
 
     - name: Summarize Trust gate
       if: always()
@@ -168,7 +235,9 @@ runs:
         RISK: ${{ steps.augur.outcome }}
         PROVENANCE_MODE: ${{ steps.config.outputs.provenance_mode }}
         LEDGER_AVAILABLE: ${{ steps.ledger.outputs.available }}
-        PROVENANCE: ${{ steps.attest.outcome }}
+        ATTEST_INSTALL: ${{ steps.attest_install.outcome }}
+        PROVENANCE_OUTCOME: ${{ steps.provenance.outcome }}
+        PROVENANCE: ${{ steps.provenance.outputs.status }}
       run: |
         set -euo pipefail
         lifecycle_status="${LIFECYCLE:-failed}"
@@ -176,14 +245,23 @@ runs:
         risk_status="${RISK:-failed}"
         provenance_status="off"
         if [ "$PROVENANCE_MODE" != off ]; then
-          if [ "${LEDGER_AVAILABLE:-false}" != true ]; then provenance_status="soft-failed"
-          else provenance_status="${PROVENANCE:-failed}"
+          if [ "${LEDGER_AVAILABLE:-false}" != true ]; then
+            if [ "$PROVENANCE_MODE" = soft ]; then provenance_status="soft-failed"
+            else provenance_status="failed"
+            fi
+          elif [ "${ATTEST_INSTALL:-skipped}" != success ] || [ "${PROVENANCE_OUTCOME:-skipped}" != success ]; then
+            provenance_status="failed"
+          else
+            provenance_status="${PROVENANCE:-failed}"
           fi
         fi
         status="passed"
-        if [ "$provenance_status" = soft-failed ] || { [ "$PROVENANCE_MODE" = soft ] && [ "$provenance_status" = failure ]; }; then
+        if [ "$lifecycle_status" != success ] || [ "$risk_status" != success ] || \
+           { [ "$CONTRACT_ENABLED" = true ] && [ "$contract_status" != success ]; } || \
+           [ "$provenance_status" = failed ]; then
+          status="failed"
+        elif [ "$provenance_status" = soft-failed ]; then
           status="degraded"
-          provenance_status="soft-failed"
         fi
         {
           echo "status=$status"

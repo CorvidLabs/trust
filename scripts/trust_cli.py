@@ -255,6 +255,54 @@ def validate_fledge(content: str) -> None:
         raise TrustError("fledge.toml must define a nonempty [lanes.verify] lane")
 
 
+def validate_toml_file(path: Path, label: str) -> None:
+    if not path.is_file():
+        raise TrustError(f"missing {label} configuration: {path.relative_to(path.parent.parent)}")
+    try:
+        with path.open("rb") as stream:
+            document = tomllib.load(stream)
+    except (OSError, tomllib.TOMLDecodeError) as error:
+        raise TrustError(f"invalid {label} configuration {path}: {error}") from error
+    if not isinstance(document, dict) or not document:
+        raise TrustError(f"invalid {label} configuration {path}: expected a nonempty TOML table")
+
+
+def validate_layer_files(root: Path, config: TrustConfig) -> None:
+    validate_toml_file(root / ".augur.toml", "Augur")
+    if config.contract_enabled:
+        validate_toml_file(root / ".specsync/config.toml", "SpecSync")
+    if config.effective_provenance_mode != "off":
+        policy = root / config.provenance_policy
+        if not policy.is_file():
+            raise TrustError(f"provenance policy is missing: {config.provenance_policy}")
+        try:
+            document = json.loads(policy.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise TrustError(f"invalid provenance policy {policy}: {error}") from error
+        if not isinstance(document, dict) or not document:
+            raise TrustError(f"invalid provenance policy {policy}: expected a nonempty JSON object")
+    if config.atlas_enabled and not (root / ".atlasignore").is_file():
+        raise TrustError("Atlas is enabled but .atlasignore is missing")
+
+
+def validate_generated_files(writes: dict[Path, str]) -> None:
+    for path, content in writes.items():
+        if path.name in {"fledge.toml", "config.toml", ".augur.toml"}:
+            try:
+                document = tomllib.loads(content)
+            except tomllib.TOMLDecodeError as error:
+                raise TrustError(f"generated configuration is invalid for {path}: {error}") from error
+            if not isinstance(document, dict) or not document:
+                raise TrustError(f"generated configuration is empty for {path}")
+        elif path.suffix == ".json":
+            try:
+                document = json.loads(content)
+            except json.JSONDecodeError as error:
+                raise TrustError(f"generated configuration is invalid for {path}: {error}") from error
+            if not isinstance(document, dict) or not document:
+                raise TrustError(f"generated configuration is empty for {path}")
+
+
 def atomic_writes(writes: dict[Path, str]) -> None:
     originals: dict[Path, bytes | None] = {}
     written: list[Path] = []
@@ -316,6 +364,8 @@ def adopt(arguments: argparse.Namespace) -> int:
         protected = {path: content for path, content in writes.items() if path.exists() and path.name not in {"AGENTS.md", ".trust.toml"}}
         for path in protected:
             writes.pop(path)
+
+    validate_generated_files(writes)
 
     for path in writes:
         print(f"{'write' if not path.exists() else 'update'} {path.relative_to(root)}")
@@ -433,10 +483,10 @@ def status_document(root: Path, config_path: Path) -> tuple[dict[str, Any], bool
             validate_fledge((root / "fledge.toml").read_text(encoding="utf-8"))
         except (OSError, TrustError) as error:
             errors.append(str(error))
-        if config.contract_enabled and not (root / ".specsync/config.toml").is_file():
-            errors.append("contract is enabled but .specsync/config.toml is missing")
-        if config.effective_provenance_mode != "off" and not (root / config.provenance_policy).is_file():
-            errors.append(f"provenance is enabled but {config.provenance_policy} is missing")
+        try:
+            validate_layer_files(root, config)
+        except TrustError as error:
+            errors.append(str(error))
         required = ["fledge", "augur"]
         if config.contract_enabled:
             required.append("specsync")
@@ -493,6 +543,7 @@ def fetch_notes(root: Path, mode: str) -> None:
 def verify(arguments: argparse.Namespace) -> int:
     root = git_root(arguments.root)
     config = apply_overrides(load_config(root / arguments.config), arguments.profile, arguments.threshold)
+    validate_layer_files(root, config)
     comparison = derive_range(root, arguments.range)
     print(f"trust range: {comparison}")
     print("== lifecycle ==")

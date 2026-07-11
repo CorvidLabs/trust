@@ -107,4 +107,52 @@ cp -R "$repo" "$doctor_repo"
 rm "$doctor_repo/.attest.json"
 if (cd "$doctor_repo" && "$TRUST" doctor --json >/dev/null); then fail "unhealthy JSON doctor returned success"; fi
 
+printf '%s\n' '{' > "$doctor_repo/.attest.json"
+if (cd "$doctor_repo" && "$TRUST" doctor --json >/dev/null); then fail "malformed policy returned success"; fi
+
+risk_repo="$TMP/missing-risk"
+cp -R "$repo" "$risk_repo"
+rm "$risk_repo/.augur.toml"
+if (cd "$risk_repo" && "$TRUST" doctor --json >/dev/null); then fail "missing Augur config returned success"; fi
+
+override_repo="$TMP/overrides"
+cp -R "$repo" "$override_repo"
+sed -i.bak 's/profile = "standard"/profile = "strict"/' "$override_repo/.trust.toml"
+rm -f "$override_repo/.trust.toml.bak"
+if "$TRUST" action-resolve --working-directory "$override_repo" --range HEAD~1..HEAD --profile standard >/dev/null 2>&1; then
+  fail "workflow override downgraded strict profile"
+fi
+sed -i.bak 's/profile = "strict"/profile = "standard"/; s/threshold = "block"/threshold = "review"/' "$override_repo/.trust.toml"
+rm -f "$override_repo/.trust.toml.bak"
+if "$TRUST" action-resolve --working-directory "$override_repo" --range HEAD~1..HEAD --threshold block >/dev/null 2>&1; then
+  fail "workflow override weakened Augur threshold"
+fi
+if "$TRUST" action-resolve --working-directory "$override_repo" >/dev/null 2>&1; then
+  fail "manual Action resolution without range or upstream succeeded"
+fi
+
+event_repo="$TMP/event-ranges"
+"$ROOT/tests/setup-action-fixture.sh" "$event_repo"
+base="$(git -C "$event_repo" rev-parse HEAD~1)"
+head="$(git -C "$event_repo" rev-parse HEAD)"
+event="$TMP/event.json"
+outputs="$TMP/action-outputs"
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$head" > "$event"
+GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
+  "$TRUST" action-resolve --working-directory "$event_repo"
+grep -Fq "range=$base..$head" "$outputs" || fail "pull request range was not resolved"
+
+: > "$outputs"
+printf '{"before":"%s","after":"%s"}\n' "$base" "$head" > "$event"
+GITHUB_EVENT_NAME=push GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
+  "$TRUST" action-resolve --working-directory "$event_repo"
+grep -Fq "range=$base..$head" "$outputs" || fail "push range was not resolved"
+
+: > "$outputs"
+printf '{"before":"0000000000000000000000000000000000000000","after":"%s"}\n' "$head" > "$event"
+GITHUB_EVENT_NAME=push GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
+  "$TRUST" action-resolve --working-directory "$event_repo"
+grep -Fq "attest_target=commit" "$outputs" || fail "initial push did not select commit verification"
+grep -Fq "attest_value=$head" "$outputs" || fail "initial push selected the wrong commit"
+
 echo "trust tests passed"

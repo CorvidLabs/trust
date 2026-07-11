@@ -57,3 +57,107 @@ jobs:
           else
             [ "$OUTCOME" = failure ]
           fi
+
+  action-provenance:
+    name: Action provenance (strict pass, ${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+      - name: Create fixture and remote ledger
+        env:
+          FIXTURE: ${{ runner.temp }}/trust-provenance
+          ORIGIN: ${{ runner.temp }}/trust-origin.git
+          PROBE_POLICY: ${{ runner.temp }}/attest-probe.json
+        run: |
+          set -euo pipefail
+          bash tests/setup-action-fixture.sh "$FIXTURE"
+          git init --bare -q "$ORIGIN"
+          git -C "$FIXTURE" remote add origin "$ORIGIN"
+          git -C "$FIXTURE" push -q -u origin HEAD:main
+          printf '%s\n' '{"requireAttestation":false}' > "$PROBE_POLICY"
+      - name: Install pinned Attest for fixture setup
+        id: bootstrap-attest
+        uses: CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2 # 1.0.0
+        with:
+          version: "1.0.0"
+          range: HEAD~1..HEAD
+          policy: ${{ runner.temp }}/attest-probe.json
+          working-directory: ${{ runner.temp }}/trust-provenance
+      - name: Record and publish valid provenance
+        env:
+          ATTEST: ${{ steps.bootstrap-attest.outputs.binary }}
+          FIXTURE: ${{ runner.temp }}/trust-provenance
+        run: |
+          set -euo pipefail
+          "$ATTEST" sign -C "$FIXTURE" --commit HEAD --reviewer agent:ci --confidence 1 --tests-passed
+          git -C "$FIXTURE" push -q origin refs/notes/attest
+      - name: Run strict Trust with provenance
+        id: trust
+        uses: ./
+        with:
+          working-directory: ${{ runner.temp }}/trust-provenance
+          range: HEAD~1..HEAD
+          profile: strict
+      - name: Assert strict success
+        env:
+          STATUS: ${{ steps.trust.outputs.status }}
+          PROVENANCE: ${{ steps.trust.outputs.provenance-status }}
+        run: |
+          [ "$STATUS" = passed ]
+          [ "$PROVENANCE" = success ]
+
+  action-fatal-paths:
+    name: Action fatal path (${{ matrix.case }})
+    strategy:
+      fail-fast: false
+      matrix:
+        case: [contract-drift, invalid-input, malformed-policy, fetch-failure]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+      - name: Create failing fixture
+        env:
+          CASE: ${{ matrix.case }}
+          FIXTURE: ${{ runner.temp }}/trust-fatal
+        run: |
+          set -euo pipefail
+          bash tests/setup-action-fixture.sh "$FIXTURE"
+          case "$CASE" in
+            contract-drift) rm "$FIXTURE/specs/example/example.spec.md" ;;
+            invalid-input) sed -i 's/schema_version = 1/schema_version = 2/' "$FIXTURE/.trust.toml" ;;
+            malformed-policy)
+              origin="$RUNNER_TEMP/trust-malformed-origin.git"
+              git init --bare -q "$origin"
+              git -C "$FIXTURE" remote add origin "$origin"
+              git -C "$FIXTURE" push -q -u origin HEAD:main
+              git -C "$FIXTURE" notes --ref=attest add -m '{}' HEAD
+              git -C "$FIXTURE" push -q origin refs/notes/attest
+              printf '%s\n' '{' > "$FIXTURE/.attest.json"
+              ;;
+            fetch-failure)
+              sed -i 's/mode = "soft"/mode = "enforce"/' "$FIXTURE/.trust.toml"
+              git -C "$FIXTURE" remote add origin "$RUNNER_TEMP/does-not-exist.git"
+              ;;
+          esac
+      - name: Run Trust fatal path
+        id: trust
+        continue-on-error: true
+        uses: ./
+        with:
+          working-directory: ${{ runner.temp }}/trust-fatal
+          range: HEAD~1..HEAD
+      - name: Assert fatal result
+        env:
+          OUTCOME: ${{ steps.trust.outcome }}
+          STATUS: ${{ steps.trust.outputs.status }}
+        run: |
+          [ "$OUTCOME" = failure ]
+          [ "$STATUS" = failed ]
