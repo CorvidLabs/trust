@@ -40,11 +40,15 @@ root, validates every generated file, and writes only after preflight succeeds.
 When it cannot infer a real verification lane, it stops without changing the
 repository.
 
-Optional layers can be skipped with a recorded reason:
+Atlas publication is opt-in and requires GitHub Pages to use GitHub Actions as
+its source:
 
 ```bash
-fledge trust adopt --no-specs "content-only repository" --no-atlas "Pages is disabled"
+fledge trust adopt --atlas
 ```
+
+Other optional layers can be skipped with a recorded reason, for example
+`fledge trust adopt --no-specs "content-only repository"`.
 
 The decision is stored in `.trust.toml`, the canonical policy used by both the
 local plugin and GitHub Action. Workflow overrides may strengthen that policy,
@@ -55,7 +59,8 @@ but cannot weaken it.
 Standard mode enforces lifecycle verification, SpecSync, and Augur. Attest is
 progressive: an unavailable or unsatisfied provenance ledger is reported as
 degraded while the repository adopts signed provenance. Strict mode forces
-100% contract coverage and enforced provenance.
+100% contract coverage and enforced provenance. Atlas is disabled unless
+adoption explicitly opts into Pages publication with `--atlas`.
 
 ## GitHub Actions
 

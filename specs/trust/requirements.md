@@ -19,6 +19,8 @@ spec: trust.spec.md
 - The composite action exposes Augur verdict and risk outputs.
 - Status JSON is versioned and valid.
 - CLI and status output report the plugin manifest version.
+- Atlas publication is explicit opt-in and never runs for pull request events.
+- Enabled Atlas policy is verified locally and published by the generated workflow on pushes.
 
 ## Constraints
 

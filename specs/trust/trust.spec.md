@@ -4,6 +4,9 @@ version: 1
 status: review
 files:
   - bin/fledge-trust
+  - scripts/trust_cli.py
+  - scripts/validate.py
+  - scripts/normalize_specsync_cache.py
   - action.yml
   - plugin.toml
   - templates/trust.yml
@@ -29,6 +32,7 @@ forcing them into a shared release cycle.
 | `fledge trust status` | Report installed tools and wired repository layers. |
 | `fledge trust doctor` | Fail when required commands or repository configuration are missing. |
 | `fledge trust --version` | Report the installed Trust plugin version. |
+| `fledge trust adopt --atlas` | Opt into Atlas verification and Pages publication. |
 | `CorvidLabs/trust@v0` | Composite GitHub Action exposing the unified CI gate. |
 | `name` | Human-readable action name. |
 | `description` | Marketplace action summary. |
@@ -48,6 +52,7 @@ forcing them into a shared release cycle.
 | `outputs.contract-status` | Expose the contract gate status. |
 | `outputs.risk-status` | Expose the deterministic risk gate status. |
 | `outputs.provenance-status` | Expose the provenance gate status. |
+| `outputs.atlas-enabled` | Expose the committed Atlas publication decision. |
 | `outputs.verdict` | Expose the Augur verdict. |
 | `outputs.risk` | Expose the Augur risk score. |
 | `on` | Events used by the generated workflow. |
@@ -61,13 +66,15 @@ forcing them into a shared release cycle.
 1. Trust orchestrates existing tools and does not reimplement their engines.
 2. Adoption never overwrites an existing project file unless the caller passes `--force`.
 3. Adoption preserves surrounding `AGENTS.md` content while appending or updating one uniquely marked managed block.
-4. Verification runs lifecycle, contract, risk, and provenance in that order.
+4. Verification runs lifecycle, contract, risk, provenance, and optional Atlas in that order.
 5. An Augur block verdict is fatal and cannot be softened by a Trust profile.
 6. Optional layers require explicit modes or skip reasons.
 7. Machine-readable status includes `schemaVersion: 1`.
 8. The strict profile cannot disable contract or provenance enforcement.
 9. CI fetches the remote attestation ledger before provenance verification.
 10. Status JSON reports the Trust plugin version from `plugin.toml`.
+11. Atlas is disabled by default and requires explicit adoption plus a recorded `.atlasignore`.
+12. Generated workflows publish Atlas only for pushes and isolate Pages write permissions to the deployment job.
 
 ## Behavioral Examples
 

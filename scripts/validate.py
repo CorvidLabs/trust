@@ -5,9 +5,12 @@ import json
 from pathlib import Path
 import re
 import sys
+import tomllib
 
 import yaml
 
+
+__all__ = []
 
 ROOT = Path(__file__).resolve().parent.parent
 FULL_ACTION_SHA = re.compile(r"^[^@\s]+@[0-9a-f]{40}$")
@@ -55,6 +58,27 @@ for relative in (".github/workflows/ci.yml", ".github/workflows/trust.yml"):
     if validation_install not in workflow:
         fail(f"{relative} must install the pinned validation dependency")
 
+template = (ROOT / "templates/trust.yml").read_text(encoding="utf-8")
+for dependency in (
+    "CorvidLabs/fledge-plugin-atlas@bfae900492615c6263c5ef431d1326eabb8b0406",
+    "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9",
+    "actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128",
+):
+    if dependency not in template:
+        fail(f"templates/trust.yml does not compose {dependency}")
+if "github.event_name == 'push'" not in template:
+    fail("templates/trust.yml must limit Atlas publication to push events")
+if "pages: write" not in template or "id-token: write" not in template:
+    fail("templates/trust.yml must scope Pages deployment permissions")
+
+with (ROOT / "templates/trust.toml").open("rb") as stream:
+    template_policy = tomllib.load(stream)
+if template_policy.get("atlas") != {
+    "enabled": False,
+    "skip_reason": "Atlas publication was not enabled during adoption",
+}:
+    fail("templates/trust.toml must keep Atlas disabled by default")
+
 with (ROOT / "templates/attest.json").open(encoding="utf-8") as stream:
     policy = json.load(stream)
 if policy.get("requireAttestation") is not True:
@@ -65,6 +89,8 @@ if 'name = "trust"' not in plugin or 'binary = "bin/fledge-trust"' not in plugin
     fail("plugin.toml does not expose the trust command")
 
 action = (ROOT / "action.yml").read_text(encoding="utf-8")
+if "atlas-enabled:" not in action:
+    fail("action.yml must expose the committed Atlas publication decision")
 dependencies = {
     "CorvidLabs/spec-sync@7f20c62288e4850c5ea271d148b0c49fba96e188": "4.8.0",
     "CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0": "1.0.0",

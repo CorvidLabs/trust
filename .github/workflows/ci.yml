@@ -112,6 +112,50 @@ jobs:
           [ "$STATUS" = passed ]
           [ "$PROVENANCE" = success ]
 
+  action-atlas:
+    name: Action Atlas opt-in
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Create Atlas fixture
+        env:
+          FIXTURE: ${{ runner.temp }}/trust-atlas-fixture
+        run: |
+          set -euo pipefail
+          bash tests/setup-action-fixture.sh "$FIXTURE"
+          sed -i '/^\[atlas\]/,/^$/ { s/enabled = false/enabled = true/; s/skip_reason = .*/skip_reason = ""/; }' \
+            "$FIXTURE/.trust.toml"
+          cp templates/atlasignore "$FIXTURE/.atlasignore"
+      - name: Resolve enabled Atlas policy through Trust
+        id: trust
+        uses: ./
+        with:
+          working-directory: ${{ runner.temp }}/trust-atlas-fixture
+          range: HEAD~1..HEAD
+      - name: Assert Atlas policy output
+        env:
+          ATLAS_ENABLED: ${{ steps.trust.outputs['atlas-enabled'] }}
+        run: '[ "$ATLAS_ENABLED" = true ]'
+      - name: Render Atlas publication
+        uses: CorvidLabs/fledge-plugin-atlas@bfae900492615c6263c5ef431d1326eabb8b0406 # v1.3.1
+        with:
+          path: ${{ runner.temp }}/trust-atlas-fixture
+          output-dir: ${{ runner.temp }}/trust-atlas-output
+          components: coverage langmix treemap sunburst calendar
+          version: bfae900492615c6263c5ef431d1326eabb8b0406
+      - name: Render and inspect interactive Atlas
+        env:
+          FIXTURE: ${{ runner.temp }}/trust-atlas-fixture
+          OUTPUT: ${{ runner.temp }}/trust-atlas-output
+        run: |
+          set -euo pipefail
+          fledge-atlas "$FIXTURE" --out "$OUTPUT/index.html"
+          test -s "$OUTPUT/index.html"
+          test -s "$OUTPUT/atlas.json"
+          test -s "$OUTPUT/coverage.svg"
+
   action-fatal-paths:
     name: Action fatal path (${{ matrix.case }})
     strategy:

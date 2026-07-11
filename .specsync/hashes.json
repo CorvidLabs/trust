@@ -1,13 +1,16 @@
 {
   "hashes": {
-    "action.yml": "063f5394cd010924a7221fa224293c12ca17b43c827b9c03c4bb077a7742d896",
+    "action.yml": "dfde30a5a698d42a87683bd43a21c4dcff4dfee370e8e0dfb353e043ae75277d",
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
     "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
+    "scripts/normalize_specsync_cache.py": "01bff3b346138e46cd772abd6958285524eefc1dadb45951286e8dc95660d0c4",
+    "scripts/trust_cli.py": "00d8f330fad4981d07658171b3c5144888d8405abeb3f9530d71020db05d62e5",
+    "scripts/validate.py": "e8f9be0f0aa0250218558be3efe10c8ff6ab8e36769ea4b6d327c19c2c353d26",
     "specs/trust/context.md": "8749b206c3483dcc1f767c27662fbf73b09d7f38a6b174645403709aa5dd631c",
-    "specs/trust/requirements.md": "458b8ba199ef95a3447444161766433fbf2a211f2a3b4b7dbf588015285034ae",
+    "specs/trust/requirements.md": "39e2211094a6162c36264a87a0d6fb2b55edf79bcf43c7efe59f6811bef7acdf",
     "specs/trust/tasks.md": "1b3d0df709b333fbb803b814ec8b31fc19b1beacc894a237385912fb3b4a92bd",
-    "specs/trust/testing.md": "c2aa34d65a2df9f6a69e7f0af6d1d85093e669ca7021d77acd11337a98a716f0",
-    "specs/trust/trust.spec.md": "facd9b363df67b8977fbe13bb0258a90d00dc697339dcf9e0b9e8c97cdec20d7",
-    "templates/trust.yml": "04f3bdff71b7737e07c355a5ac3ac69dd15665630ed692c0a2cee03cb57f05f2"
+    "specs/trust/testing.md": "5f763933d624a9704a25484e29090dd55a8301a01de5e03dfed8e2a938cc0afe",
+    "specs/trust/trust.spec.md": "40dfc6e93576efe150086f300ed83ca03af3279bc85972480f5ef0ae54680e1f",
+    "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }
 }

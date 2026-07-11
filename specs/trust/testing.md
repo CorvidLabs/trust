@@ -19,6 +19,7 @@ spec: trust.spec.md
 | Version identity | CLI and status output match the plugin manifest version. |
 | Self-adoption | Trust's own policy, workflow, risk configuration, and managed rules pass doctor and verify. |
 | Action matrix | Standard, strict, provenance, and fatal paths run on Linux and macOS fixture repositories. |
+| Atlas opt-in | Default adoption records Atlas off; explicit adoption verifies reports and renders publication assets. |
 
 ## Manual Release Checks
 

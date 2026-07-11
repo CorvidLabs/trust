@@ -13,6 +13,9 @@ import tempfile
 from typing import Any
 import uuid
 
+
+__all__ = []
+
 try:
     import tomllib
 except ImportError:
@@ -29,6 +32,7 @@ BEGIN = "<!-- CorvidLabs trust toolchain: BEGIN (managed, do not edit inside) --
 END = "<!-- CorvidLabs trust toolchain: END -->"
 RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
 PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
+DEFAULT_ATLAS_SKIP_REASON = "Atlas publication was not enabled during adoption"
 
 
 class TrustError(RuntimeError):
@@ -215,7 +219,13 @@ def load_config(path: Path) -> TrustConfig:
     )
 
 
-def render_config(profile: str, no_specs: str, no_attest: str, no_atlas: str) -> str:
+def render_config(
+    profile: str,
+    no_specs: str,
+    no_attest: str,
+    atlas_enabled: bool,
+    atlas_skip_reason: str,
+) -> str:
     return f'''schema_version = 1
 profile = "{profile}"
 
@@ -236,8 +246,8 @@ policy = ".attest.json"
 skip_reason = {json.dumps(no_attest)}
 
 [atlas]
-enabled = {str(not bool(no_atlas)).lower()}
-skip_reason = {json.dumps(no_atlas)}
+enabled = {str(atlas_enabled).lower()}
+skip_reason = {json.dumps("" if atlas_enabled else atlas_skip_reason)}
 '''
 
 
@@ -390,7 +400,14 @@ def adopt(arguments: argparse.Namespace) -> int:
     if trust_path.exists() and not arguments.force:
         config_content = trust_path.read_text(encoding="utf-8")
     else:
-        config_content = render_config(profile, arguments.no_specs or "", arguments.no_attest or "", arguments.no_atlas or "")
+        atlas_reason = arguments.no_atlas or DEFAULT_ATLAS_SKIP_REASON
+        config_content = render_config(
+            profile,
+            arguments.no_specs or "",
+            arguments.no_attest or "",
+            arguments.atlas,
+            atlas_reason,
+        )
     with tempfile.NamedTemporaryFile("w", suffix=".toml", delete=False) as stream:
         stream.write(config_content)
         config_temp = Path(stream.name)
@@ -576,6 +593,7 @@ def action_resolve(arguments: argparse.Namespace) -> int:
         "risk_threshold": config.risk_threshold,
         "provenance_mode": config.effective_provenance_mode,
         "provenance_policy": config.provenance_policy,
+        "atlas_enabled": str(config.atlas_enabled).lower(),
         "range": comparison,
         "attest_target": attest_target,
         "attest_value": attest_value,
@@ -591,9 +609,14 @@ def status_document(root: Path, config_path: Path) -> tuple[dict[str, Any], bool
     except TrustError as error:
         config = None
         errors.append(str(error))
-    tools: dict[str, bool] = {}
-    for command in ("fledge", "specsync", "augur", "attest"):
-        tools[command] = command_exists(command)
+    tool_commands = {
+        "fledge": "fledge",
+        "specsync": "specsync",
+        "augur": "augur",
+        "attest": "attest",
+        "atlas": "fledge-atlas",
+    }
+    tools = {name: command_exists(command) for name, command in tool_commands.items()}
     files = {
         "fledge": (root / "fledge.toml").is_file(),
         "workflow": (root / ".github/workflows/trust.yml").is_file(),
@@ -613,6 +636,8 @@ def status_document(root: Path, config_path: Path) -> tuple[dict[str, Any], bool
             required.append("specsync")
         if config.effective_provenance_mode != "off":
             required.append("attest")
+        if config.atlas_enabled:
+            required.append("atlas")
         for command in required:
             if not tools[command]:
                 errors.append(f"required command is not installed: {command}")
@@ -736,6 +761,19 @@ def verify(arguments: argparse.Namespace) -> int:
                 print("provenance degraded: policy is not satisfied")
             else:
                 raise TrustError("provenance policy is not satisfied")
+    if config.atlas_enabled:
+        print("== atlas ==")
+        result = run(["fledge-atlas", str(root), "--json"], cwd=root, capture=True)
+        try:
+            atlas = json.loads(result.stdout or "")
+        except json.JSONDecodeError as error:
+            raise TrustError("Atlas execution failed: malformed JSON report") from error
+        verdict = atlas.get("verdict") if isinstance(atlas, dict) else None
+        if not isinstance(verdict, str) or not verdict:
+            raise TrustError("Atlas execution failed: report is missing verdict")
+        print(f"atlas: {verdict}")
+    else:
+        print(f"== atlas: off ({config.atlas_skip_reason}) ==")
     print("trust gate passed" if mode != "soft" else "trust gate passed (progressive provenance)")
     return 0
 
@@ -754,7 +792,9 @@ def parser() -> argparse.ArgumentParser:
     adopt_parser.add_argument("--force", action="store_true")
     adopt_parser.add_argument("--no-specs", metavar="REASON")
     adopt_parser.add_argument("--no-attest", metavar="REASON")
-    adopt_parser.add_argument("--no-atlas", metavar="REASON")
+    atlas_group = adopt_parser.add_mutually_exclusive_group()
+    atlas_group.add_argument("--atlas", action="store_true", help="Enable Atlas publication")
+    atlas_group.add_argument("--no-atlas", metavar="REASON", help="Record a custom reason for leaving Atlas disabled")
     adopt_parser.set_defaults(handler=adopt)
     for name in ("status", "doctor"):
         command_parser = commands.add_parser(name, help=f"{name.title()} Trust configuration")

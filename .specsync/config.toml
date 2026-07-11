@@ -1,6 +1,6 @@
 # spec-sync v4 configuration
 specs_dir = "specs"
-source_dirs = ["bin"]
+source_dirs = ["bin", "scripts"]
 exclude_dirs = []
 required_sections = ["Purpose", "Public API", "Invariants", "Behavioral Examples", "Error Cases", "Dependencies", "Change Log"]
 enforcement = "strict"

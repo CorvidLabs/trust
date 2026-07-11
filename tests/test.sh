@@ -39,9 +39,11 @@ contains "$dry_output" "dry run complete"
 
 adopt_output="$(cd "$repo" && "$TRUST" adopt)"
 contains "$adopt_output" "trust adoption complete"
-for file in .trust.toml .specsync/config.toml .augur.toml .attest.json .atlasignore .github/workflows/trust.yml AGENTS.md; do
+for file in .trust.toml .specsync/config.toml .augur.toml .attest.json .github/workflows/trust.yml AGENTS.md; do
   assert_file "$repo/$file"
 done
+[ ! -e "$repo/.atlasignore" ] || fail "default adoption enabled Atlas without opt-in"
+grep -Fq 'enabled = false' "$repo/.trust.toml" || fail "default adoption did not record Atlas disabled"
 [ "$(cat "$repo/fledge.toml")" = "$expected_fledge" ] || fail "adopt replaced fledge.toml"
 
 mkdir -p "$repo/nested/package"
@@ -84,6 +86,17 @@ grep -Fq 'skip_reason = "CI only"' "$skip_repo/.trust.toml" || fail "attest skip
 if "$TRUST" action-resolve --working-directory "$skip_repo" --range HEAD~1..HEAD --profile strict >/dev/null 2>&1; then
   fail "strict override accepted a disabled contract layer"
 fi
+
+atlas_repo="$TMP/atlas-opt-in"
+make_repo "$atlas_repo"
+cp "$repo/fledge.toml" "$atlas_repo/fledge.toml"
+(cd "$atlas_repo" && "$TRUST" adopt --atlas >/dev/null)
+assert_file "$atlas_repo/.atlasignore"
+grep -Fq 'enabled = true' "$atlas_repo/.trust.toml" || fail "Atlas opt-in was not recorded"
+atlas_outputs="$TMP/atlas-action-outputs"
+GITHUB_OUTPUT="$atlas_outputs" "$TRUST" action-resolve \
+  --working-directory "$atlas_repo" --range HEAD~1..HEAD
+grep -Fxq 'true' "$atlas_outputs" || fail "Action resolution did not expose enabled Atlas"
 
 preserve_repo="$TMP/preserve-policy"
 cp -R "$repo" "$preserve_repo"
@@ -128,11 +141,25 @@ for command in fledge specsync augur; do
 done
 printf '#!/usr/bin/env bash\necho "attest $*" >> "%s"\ncase "$*" in *unknown-policy.json*) echo "unknown policy key" >&2; exit 2;; esac\necho '\''{"checkedCommits":1,"passed":true,"violations":[]}'\''\n' "$log" > "$fake/attest"
 chmod +x "$fake/attest"
+printf '#!/usr/bin/env bash\necho "fledge-atlas $*" >> "%s"\necho '\''{"verdict":"all governed","stats":{"coverage_pct":100}}'\''\n' "$log" > "$fake/fledge-atlas"
+chmod +x "$fake/fledge-atlas"
 verify_output="$(cd "$repo" && PATH="$fake:$PATH" "$TRUST" verify --range main..HEAD)"
 contains "$verify_output" "progressive provenance"
 expected="$(printf 'fledge lanes run verify\nspecsync check\naugur gate --range main..HEAD --threshold block\nattest verify --range main..HEAD --policy %s/.attest.json --json' "$repo")"
 actual="$(cat "$log")"
 [ "$actual" = "$expected" ] || { printf 'expected:\n%s\nactual:\n%s\n' "$expected" "$actual" >&2; fail "verification order or arguments differ"; }
+
+atlas_verify_repo="$TMP/atlas-verify"
+cp -R "$repo" "$atlas_verify_repo"
+sed -i.bak '/^\[atlas\]/,/^$/ { s/enabled = false/enabled = true/; s/skip_reason = .*/skip_reason = ""/; }' \
+  "$atlas_verify_repo/.trust.toml"
+rm -f "$atlas_verify_repo/.trust.toml.bak"
+cp "$ROOT/templates/atlasignore" "$atlas_verify_repo/.atlasignore"
+: > "$log"
+atlas_verify_output="$(cd "$atlas_verify_repo" && PATH="$fake:$PATH" "$TRUST" verify --range main..HEAD)"
+contains "$atlas_verify_output" "atlas: all governed"
+contains "$(cat "$log")" "fledge-atlas "
+contains "$(cat "$log")" " --json"
 
 attest_runtime_repo="$TMP/attest-runtime"
 cp -R "$repo" "$attest_runtime_repo"

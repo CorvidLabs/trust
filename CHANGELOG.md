@@ -14,6 +14,7 @@
 - Pin the validation dependency in both CI and the repository self-dogfood workflow.
 - Keep SpecSync out of the lifecycle lane so the composite Action owns contract installation and verification order.
 - Correct the contract and installation documentation to match the pre-release Action and plugin surfaces.
+- Make Atlas explicit opt-in, verify its local report, and add push-only Pages publication to generated workflows.
 
 ## [0.1.0] - 2026-07-10
 

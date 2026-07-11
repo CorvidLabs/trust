@@ -47,6 +47,9 @@ outputs:
   provenance-status:
     description: "Provenance gate status."
     value: ${{ steps.summary.outputs.provenance_status }}
+  atlas-enabled:
+    description: "Whether the committed policy enables Atlas publication."
+    value: ${{ steps.config.outputs.atlas_enabled }}
   verdict:
     description: "Augur verdict."
     value: ${{ steps.augur.outputs.verdict }}
