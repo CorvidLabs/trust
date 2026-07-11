@@ -45,9 +45,15 @@ mkdir -p "$repo/nested/package"
 (cd "$repo/nested/package" && "$TRUST" adopt >/dev/null)
 [ "$(grep -c 'CorvidLabs trust toolchain: BEGIN' "$repo/AGENTS.md")" = 1 ] || fail "managed block duplicated"
 
-status_json="$(cd "$repo" && "$TRUST" status --json)"
+isolated_bin="$TMP/isolated-bin"
+mkdir -p "$isolated_bin"
+ln -s "$(command -v python3)" "$isolated_bin/python3"
+status_code=0
+status_json="$(cd "$repo" && PATH="$isolated_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
+[ "$status_code" -ne 0 ] || fail "status with missing tools returned success"
 STATUS_JSON="$status_json" python3 -c 'import json, os; json.loads(os.environ["STATUS_JSON"])'
 contains "$status_json" '"schemaVersion": 1'
+contains "$status_json" '"healthy": false'
 
 skip_repo="$TMP/skip"
 make_repo "$skip_repo"
