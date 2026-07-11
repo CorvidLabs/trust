@@ -28,6 +28,7 @@ TEMPLATES = ROOT / "templates"
 BEGIN = "<!-- CorvidLabs trust toolchain: BEGIN (managed, do not edit inside) -->"
 END = "<!-- CorvidLabs trust toolchain: END -->"
 RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
+PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
 
 
 class TrustError(RuntimeError):
@@ -113,6 +114,12 @@ def boolean(value: Any, field: str) -> bool:
     return value
 
 
+def reject_unknown_keys(section: dict[str, Any], name: str, allowed: set[str]) -> None:
+    unknown = sorted(set(section) - allowed)
+    if unknown:
+        raise TrustError(f"unknown [{name}] key(s): {', '.join(unknown)}")
+
+
 def load_config(path: Path) -> TrustConfig:
     if not path.is_file():
         raise TrustError(f"missing Trust configuration: {path}")
@@ -135,11 +142,13 @@ def load_config(path: Path) -> TrustConfig:
         raise TrustError("profile must be standard or strict")
 
     lifecycle = table(document, "lifecycle")
+    reject_unknown_keys(lifecycle, "lifecycle", {"command"})
     command = lifecycle.get("command")
     if not isinstance(command, list) or not command or not all(isinstance(item, str) and item for item in command):
         raise TrustError("lifecycle.command must be a nonempty string array")
 
     contract = table(document, "contract")
+    reject_unknown_keys(contract, "contract", {"enabled", "require_coverage", "skip_reason"})
     contract_enabled = boolean(contract.get("enabled", True), "contract.enabled")
     coverage = contract.get("require_coverage", 0)
     if not isinstance(coverage, int) or isinstance(coverage, bool) or not 0 <= coverage <= 100:
@@ -149,11 +158,13 @@ def load_config(path: Path) -> TrustConfig:
         raise TrustError("disabled contract layer requires contract.skip_reason")
 
     risk = table(document, "risk")
+    reject_unknown_keys(risk, "risk", {"threshold"})
     threshold = text(risk.get("threshold", "block"), "risk.threshold")
     if threshold not in RISK_ORDER:
         raise TrustError("risk.threshold must be proceed, review, or block")
 
     provenance = table(document, "provenance")
+    reject_unknown_keys(provenance, "provenance", {"mode", "policy", "skip_reason"})
     provenance_mode = text(provenance.get("mode", "soft"), "provenance.mode")
     if provenance_mode not in {"soft", "enforce", "off"}:
         raise TrustError("provenance.mode must be soft, enforce, or off")
@@ -165,6 +176,7 @@ def load_config(path: Path) -> TrustConfig:
         raise TrustError("disabled provenance layer requires provenance.skip_reason")
 
     atlas = table(document, "atlas")
+    reject_unknown_keys(atlas, "atlas", {"enabled", "skip_reason"})
     atlas_enabled = boolean(atlas.get("enabled", True), "atlas.enabled")
     atlas_reason = text(atlas.get("skip_reason", ""), "atlas.skip_reason").strip()
     if not atlas_enabled and not atlas_reason:
@@ -236,7 +248,12 @@ def detected_fledge(root: Path) -> str:
     elif (root / "Package.swift").is_file():
         tasks = {'build': 'swift build', 'test': 'swift test'}
     elif (root / "go.mod").is_file():
-        tasks = {'build': 'go build ./...', 'test': 'go test ./...', 'lint': 'go vet ./...', 'fmt': 'gofmt -l .'}
+        tasks = {
+            'build': 'go build ./...',
+            'test': 'go test ./...',
+            'lint': 'go vet ./...',
+            'fmt': 'test -z "$(gofmt -l .)"',
+        }
     elif any((root / marker).is_file() for marker in ("pyproject.toml", "setup.py", "requirements.txt")):
         tasks = {'test': 'pytest', 'lint': 'ruff check .', 'fmt': 'ruff format --check .'}
     elif package_json.is_file():
@@ -421,6 +438,62 @@ def apply_overrides(config: TrustConfig, profile: str | None, threshold: str | N
     return TrustConfig(**values)
 
 
+def load_config_text(content: str) -> TrustConfig:
+    with tempfile.NamedTemporaryFile("w", suffix=".toml", encoding="utf-8", delete=False) as stream:
+        stream.write(content)
+        path = Path(stream.name)
+    try:
+        return load_config(path)
+    finally:
+        path.unlink(missing_ok=True)
+
+
+def pull_request_base_config(root: Path, config_path: str) -> TrustConfig | None:
+    if os.environ.get("GITHUB_EVENT_NAME") != "pull_request":
+        return None
+    event_path = os.environ.get("GITHUB_EVENT_PATH", "")
+    if not event_path or not Path(event_path).is_file():
+        raise TrustError("pull_request execution requires a readable GITHUB_EVENT_PATH")
+    try:
+        event = json.loads(Path(event_path).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise TrustError(f"cannot parse GitHub event payload: {error}") from error
+    base = event.get("pull_request", {}).get("base", {}).get("sha")
+    if not isinstance(base, str) or not base:
+        raise TrustError("pull_request event is missing the base commit SHA")
+    repository_root = git_root(str(root))
+    policy_path = (root / config_path).resolve()
+    try:
+        relative = policy_path.relative_to(repository_root).as_posix()
+    except ValueError as error:
+        raise TrustError("Trust configuration must be inside the Git worktree") from error
+    result = run(["git", "show", f"{base}:{relative}"], cwd=repository_root, check=False, capture=True)
+    if result.returncode != 0:
+        # Initial Trust adoption has no policy on the base branch. After adoption,
+        # the base policy is authoritative for every pull request.
+        return None
+    return load_config_text(result.stdout)
+
+
+def validate_policy_strength(base: TrustConfig, proposed: TrustConfig) -> None:
+    if base.strict and not proposed.strict:
+        raise TrustError("pull request policy cannot downgrade strict profile")
+    if base.lifecycle_command != proposed.lifecycle_command:
+        raise TrustError("pull request policy cannot change lifecycle.command")
+    if base.contract_enabled and not proposed.contract_enabled:
+        raise TrustError("pull request policy cannot disable the contract layer")
+    if proposed.effective_contract_coverage < base.effective_contract_coverage:
+        raise TrustError("pull request policy cannot reduce contract coverage")
+    if RISK_ORDER[proposed.risk_threshold] > RISK_ORDER[base.risk_threshold]:
+        raise TrustError("pull request policy cannot weaken the Augur threshold")
+    if PROVENANCE_ORDER[proposed.effective_provenance_mode] < PROVENANCE_ORDER[base.effective_provenance_mode]:
+        raise TrustError("pull request policy cannot soften provenance")
+    if base.provenance_policy != proposed.provenance_policy:
+        raise TrustError("pull request policy cannot change the provenance policy path")
+    if base.atlas_enabled and not proposed.atlas_enabled:
+        raise TrustError("pull request policy cannot disable Atlas")
+
+
 def derive_range(root: Path, explicit: str | None) -> str:
     if explicit:
         return explicit
@@ -474,7 +547,12 @@ def write_github_outputs(values: dict[str, str]) -> None:
 
 def action_resolve(arguments: argparse.Namespace) -> int:
     root = Path(arguments.working_directory).resolve()
-    config = apply_overrides(load_config(root / arguments.config), arguments.profile or None, arguments.threshold or None)
+    committed = load_config(root / arguments.config)
+    validate_layer_files(root, committed)
+    base = pull_request_base_config(root, arguments.config)
+    if base is not None:
+        validate_policy_strength(base, committed)
+    config = apply_overrides(committed, arguments.profile or None, arguments.threshold or None)
     comparison, attest_target, attest_value = action_range(root, arguments.range or None)
     outputs = {
         "profile": config.profile,
@@ -617,8 +695,28 @@ def verify(arguments: argparse.Namespace) -> int:
             raise TrustError(f"provenance policy is missing: {config.provenance_policy}")
         fetch_notes(root, mode)
         print("== provenance ==")
-        result = run(["attest", "verify", "--range", comparison, "--policy", str(policy)], cwd=root, check=False)
-        if result.returncode != 0:
+        result = run(
+            ["attest", "verify", "--range", comparison, "--policy", str(policy), "--json"],
+            cwd=root,
+            check=False,
+            capture=True,
+        )
+        try:
+            report = json.loads(result.stdout or "")
+        except json.JSONDecodeError as error:
+            detail = (result.stderr or result.stdout or "no verification report").strip()
+            raise TrustError(f"Attest execution failed: {detail}") from error
+        if not isinstance(report, dict) or not isinstance(report.get("passed"), bool):
+            raise TrustError("Attest execution failed: malformed verification report")
+        satisfied = result.returncode == 0 and report["passed"] is True
+        unsatisfied = (
+            result.returncode != 0
+            and report["passed"] is False
+            and isinstance(report.get("violations"), list)
+        )
+        if not satisfied and not unsatisfied:
+            raise TrustError("Attest execution failed: report and exit status disagree")
+        if unsatisfied:
             if mode == "soft":
                 print("provenance degraded: policy is not satisfied")
             else:

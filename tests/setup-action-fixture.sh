@@ -45,6 +45,11 @@ cat > "$root/.attest.json" <<'EOF'
 {"requireAttestation": true, "requireTestsPassed": true}
 EOF
 
+cat > "$root/.augur.toml" <<'EOF'
+[weights]
+diffSize = 1.0
+EOF
+
 cat > "$root/.specsync/config.toml" <<'EOF'
 specs_dir = "specs"
 source_dirs = ["src"]

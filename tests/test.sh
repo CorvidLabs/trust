@@ -82,6 +82,12 @@ touch "$fresh/pyproject.toml"
 (cd "$fresh" && "$TRUST" adopt >/dev/null)
 grep -Fq '[lanes.verify]' "$fresh/fledge.toml" || fail "fresh detected repo has no verify lane"
 
+fresh_go="$TMP/fresh-go"
+make_repo "$fresh_go"
+touch "$fresh_go/go.mod"
+(cd "$fresh_go" && "$TRUST" adopt >/dev/null)
+grep -Fq 'fmt = "test -z \"$(gofmt -l .)\""' "$fresh_go/fledge.toml" || fail "Go format lane does not fail on unformatted files"
+
 unknown="$TMP/unknown"
 make_repo "$unknown"
 if (cd "$unknown" && "$TRUST" adopt >/dev/null 2>&1); then fail "unknown stack adoption succeeded"; fi
@@ -97,15 +103,26 @@ if (cd "$malformed" && "$TRUST" adopt >/dev/null 2>&1); then fail "malformed AGE
 fake="$TMP/bin"
 log="$TMP/commands.log"
 mkdir -p "$fake"
-for command in fledge specsync augur attest; do
+for command in fledge specsync augur; do
   printf '#!/usr/bin/env bash\necho "%s $*" >> "%s"\n' "$command" "$log" > "$fake/$command"
   chmod +x "$fake/$command"
 done
+printf '#!/usr/bin/env bash\necho "attest $*" >> "%s"\ncase "$*" in *unknown-policy.json*) echo "unknown policy key" >&2; exit 2;; esac\necho '\''{"checkedCommits":1,"passed":true,"violations":[]}'\''\n' "$log" > "$fake/attest"
+chmod +x "$fake/attest"
 verify_output="$(cd "$repo" && PATH="$fake:$PATH" "$TRUST" verify --range main..HEAD)"
 contains "$verify_output" "progressive provenance"
-expected="$(printf 'fledge lanes run verify\nspecsync check\naugur gate --range main..HEAD --threshold block\nattest verify --range main..HEAD --policy %s/.attest.json' "$repo")"
+expected="$(printf 'fledge lanes run verify\nspecsync check\naugur gate --range main..HEAD --threshold block\nattest verify --range main..HEAD --policy %s/.attest.json --json' "$repo")"
 actual="$(cat "$log")"
 [ "$actual" = "$expected" ] || { printf 'expected:\n%s\nactual:\n%s\n' "$expected" "$actual" >&2; fail "verification order or arguments differ"; }
+
+attest_runtime_repo="$TMP/attest-runtime"
+cp -R "$repo" "$attest_runtime_repo"
+sed -i.bak 's/policy = ".attest.json"/policy = "unknown-policy.json"/' "$attest_runtime_repo/.trust.toml"
+rm -f "$attest_runtime_repo/.trust.toml.bak"
+printf '%s\n' '{"unknownPolicy": true}' > "$attest_runtime_repo/unknown-policy.json"
+if (cd "$attest_runtime_repo" && PATH="$fake:$PATH" "$TRUST" verify --range main..HEAD >/dev/null 2>&1); then
+  fail "Attest runtime failure was softened"
+fi
 
 strict_repo="$TMP/strict"
 cp -R "$repo" "$strict_repo"
@@ -127,6 +144,16 @@ risk_repo="$TMP/missing-risk"
 cp -R "$repo" "$risk_repo"
 rm "$risk_repo/.augur.toml"
 if (cd "$risk_repo" && "$TRUST" doctor --json >/dev/null); then fail "missing Augur config returned success"; fi
+
+unknown_nested_repo="$TMP/unknown-nested"
+cp -R "$repo" "$unknown_nested_repo"
+sed -i.bak '/^\[provenance\]/a\
+mdoe = "soft"
+' "$unknown_nested_repo/.trust.toml"
+rm -f "$unknown_nested_repo/.trust.toml.bak"
+if (cd "$unknown_nested_repo" && "$TRUST" doctor --json >/dev/null 2>&1); then
+  fail "unknown nested policy key was accepted"
+fi
 
 override_repo="$TMP/overrides"
 cp -R "$repo" "$override_repo"
@@ -155,6 +182,22 @@ printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$
 GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
   "$TRUST" action-resolve --working-directory "$event_repo"
 grep -Fxq "$base..$head" "$outputs" || fail "pull request range was not resolved"
+
+cp "$event_repo/.trust.toml" "$TMP/event-trust.toml"
+sed -i.bak '/^\[contract\]/,/^\[risk\]/ { s/enabled = true/enabled = false/; s/skip_reason = ""/skip_reason = "weakened in PR"/; }' "$event_repo/.trust.toml"
+rm -f "$event_repo/.trust.toml.bak"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "pull request policy disabled a committed gate"
+fi
+cp "$TMP/event-trust.toml" "$event_repo/.trust.toml"
+
+mv "$event_repo/.attest.json" "$event_repo/.attest.json.saved"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "Action accepted a missing enabled layer configuration"
+fi
+mv "$event_repo/.attest.json.saved" "$event_repo/.attest.json"
 
 : > "$outputs"
 printf '{"before":"%s","after":"%s"}\n' "$base" "$head" > "$event"
