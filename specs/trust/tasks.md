@@ -22,13 +22,13 @@ spec: trust.spec.md
 - [x] Gate tagged releases on exact-tag installation, real component verification, and monotonic channel selection.
 - [x] Add bootstrap-safe recording and durable verification for landed main provenance.
 - [x] Add a deterministic, syntax-tested Homebrew `corvid-trust` formula renderer.
+- [x] Upgrade the Action and release validation to spec-sync 5.0.0.
 
 ## Next
 
 - [ ] Tag and dogfood a pre-1.0 release through the supported plugin installation path.
 - [ ] Add a Homebrew `corvid-trust` bundle after the first tagged release.
 - [ ] Promote the spec from review to active after spec-sync can match dotted YAML Public API symbols.
-- [ ] Upgrade the Action and release validation to spec-sync 5.0.0 before Trust 1.0.0.
 - [ ] Enable and publish the Trust repository's provenance ledger before Trust 1.0.0.
 - [ ] Add a maintainer-managed `v1` tag ruleset before promoting the stable Action channel.
 - [ ] Cut Trust 1.0.0 and move the supported composite Action channel from `v0` to `v1`.

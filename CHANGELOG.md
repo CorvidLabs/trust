@@ -9,7 +9,7 @@
 
 ### Changed
 
-- Update the composed SpecSync action and binary to 4.8.0 while preparing the 5.0.0 release gate.
+- Upgrade the composed SpecSync action and binary to 5.0.0 and validate the governed Trust contract against it.
 - Normalize the SpecSync cache after forced verification and pin generated checkout steps to v7.0.0.
 - Pin the validation dependency in both CI and the repository self-dogfood workflow.
 - Keep SpecSync out of the lifecycle lane so the composite Action owns contract installation and verification order.

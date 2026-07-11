@@ -73,7 +73,7 @@ the SHA-256, and render the formula with the matching SpecSync version:
 
 ```bash
 python3 scripts/render_homebrew_formula.py 0.2.0 ARCHIVE_SHA256 \
-  --specsync-version 4.8.0
+  --specsync-version 5.0.0
 ```
 
 Copy the output to `Formula/corvid-trust.rb` in `CorvidLabs/homebrew-tap` only
@@ -83,10 +83,10 @@ component formulae, and tests discovery through `fledge trust --version`.
 
 ## Stable release
 
-Trust 1.0.0 additionally requires spec-sync 5.0.0, an enabled provenance
-ledger, the Homebrew bundle, the promoted active spec, and the `v1` Action
-channel. Keep dependency Action code pinned to immutable commits and pair each
-pin with its matching binary version before the final release rehearsal.
+Trust 1.0.0 additionally requires an enabled provenance ledger, the Homebrew
+bundle, the promoted active spec, and the `v1` Action channel. SpecSync 5.0.0 is
+pinned to its immutable Action commit and paired with binary version 5.0.0;
+preserve that pairing through the final release rehearsal.
 The same tag workflow publishes 1.0.0 as a stable GitHub release and selects
 `v1`; a 1.0.0 release candidate is ineligible for that stable channel. Create a
 maintainer-managed `v1` tag ruleset before the stable promotion.

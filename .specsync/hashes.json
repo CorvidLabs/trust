@@ -1,6 +1,7 @@
 {
   "hashes": {
-    "action.yml": "dfde30a5a698d42a87683bd43a21c4dcff4dfee370e8e0dfb353e043ae75277d",
+    ".specsync/config.toml": "5c908e57c3db412919be19da1f66b616650b2db479bdaa5841649c426f18dca5",
+    "action.yml": "a381fb2f27259edef357a90aa597fa50b61fb685dd6047e1074de74a7cdba50b",
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
     "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
     "scripts/normalize_specsync_cache.py": "2ce7b47fcabdd67fa75b72c635731767ffc1de0c17e30fc7ab80d03e301e406e",
@@ -8,12 +9,12 @@
     "scripts/release_channel.py": "62cfa84ac0d1c31e2f24a0f08711566c5e7d74fe3e00346f7bc519356f43252b",
     "scripts/render_homebrew_formula.py": "4cbbe5bd439da1ca946bf6252cf901648fb4ccf7715a83471cd3ddaa4ad48fb0",
     "scripts/trust_cli.py": "0cea5f64745db937c0a0a1beb0e8600976bb2ab26f7c1ffcb58c3158aec8e63a",
-    "scripts/validate.py": "4f9af1bcb455841aadb58236bbe6d478327e98ea371e6f18b48ac12688cdb1e1",
-    "specs/trust/context.md": "48fd1981e228bfefd689701ff8b332f27d4b4d1b036e5f73c0f920060bd73421",
+    "scripts/validate.py": "30f0f26108b24140370de8e90f1687cc775ceee3a44b188975b2b3b4a037ec33",
+    "specs/trust/context.md": "430b4011cdce93f5ebc7873dd36ddfd5532ceb8277f149da028c5588e31f0da8",
     "specs/trust/requirements.md": "39e2211094a6162c36264a87a0d6fb2b55edf79bcf43c7efe59f6811bef7acdf",
-    "specs/trust/tasks.md": "de94ad3b275cd2d5af524f1fa23e7e53721e60793d41c5e8c812bc4195faec57",
+    "specs/trust/tasks.md": "4616847a6877613f651d84879c79f631115712fb7b3761e4b882029176cba7f0",
     "specs/trust/testing.md": "610dff4bbd10cafcfc63002f2f597429bcaa1c614c2a3be80a4a83dcc74af715",
-    "specs/trust/trust.spec.md": "710d76c79623dae614baeb8245ab685dc82bcd913ab43e9bb71d4b3935621773",
+    "specs/trust/trust.spec.md": "80d7262dcb4f0b63a058db7bc6b167f054f0d878605ff402e394f79b066a0295",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }
 }
