@@ -49,6 +49,12 @@ for relative, document in yaml_documents.items():
         if not FULL_ACTION_SHA.fullmatch(reference):
             fail(f"{relative} must pin external Action reference to a full commit SHA: {reference}")
 
+validation_install = "python3 -m pip install --disable-pip-version-check pyyaml==6.0.3"
+for relative in (".github/workflows/ci.yml", ".github/workflows/trust.yml"):
+    workflow = (ROOT / relative).read_text(encoding="utf-8")
+    if validation_install not in workflow:
+        fail(f"{relative} must install the pinned validation dependency")
+
 with (ROOT / "templates/attest.json").open(encoding="utf-8") as stream:
     policy = json.load(stream)
 if policy.get("requireAttestation") is not True:

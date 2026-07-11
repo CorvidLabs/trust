@@ -11,6 +11,7 @@
 
 - Update the composed SpecSync action and binary to 4.8.0 while preparing the 5.0.0 release gate.
 - Normalize the SpecSync cache after forced verification and pin generated checkout steps to v7.0.0.
+- Pin the validation dependency in both CI and the repository self-dogfood workflow.
 
 ## [0.1.0] - 2026-07-10
 
