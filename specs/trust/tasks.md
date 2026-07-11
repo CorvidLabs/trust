@@ -16,12 +16,12 @@ spec: trust.spec.md
 - [x] Add an end-to-end Action smoke matrix against fixture repositories.
 - [x] Replace an older managed rules block without touching surrounding AGENTS.md content.
 - [x] Add opt-in Atlas verification and push-only GitHub Pages publication.
+- [x] Run the complete plugin behavior suite on Windows and resolve Git Bash command and path portability.
 
 ## Next
 
 - [ ] Tag and dogfood a pre-1.0 release through the supported plugin installation path.
 - [ ] Add a Homebrew `corvid-trust` bundle after the first tagged release.
-- [ ] Add Windows plugin behavior coverage.
 - [ ] Promote the spec from review to active after spec-sync can match dotted YAML Public API symbols.
 - [ ] Upgrade the Action and release validation to spec-sync 5.0.0 before Trust 1.0.0.
 - [ ] Enable and publish the Trust repository's provenance ledger before Trust 1.0.0.
