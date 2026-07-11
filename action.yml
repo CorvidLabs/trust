@@ -7,52 +7,46 @@ branding:
   color: "purple"
 
 inputs:
-  profile:
-    description: "Adoption profile: standard or strict. Strict requires full spec coverage and provenance."
+  config:
+    description: "Path to the committed Trust policy, relative to working-directory."
     required: false
-    default: "standard"
-  range:
-    description: "Git range assessed by augur and attest. Checkout with fetch-depth: 0."
-    required: false
-    default: "origin/main..HEAD"
+    default: ".trust.toml"
   working-directory:
-    description: "Repository directory containing fledge.toml and trust configuration."
+    description: "Repository directory governed by Trust."
     required: false
     default: "."
-  verify-command:
-    description: "Lifecycle command run before the contract, risk, and provenance gates. Empty disables it."
+  range:
+    description: "Optional explicit git range. Pull request and push events are resolved automatically."
     required: false
-    default: "fledge lanes run verify"
-  fledge-version:
-    description: "Pinned fledge crate version installed when fledge is absent."
+    default: ""
+  profile:
+    description: "Optional stricter profile override. A committed strict profile cannot be downgraded."
     required: false
-    default: "1.7.0"
-  spec-sync-version:
-    description: "SpecSync action version."
-    required: false
-    default: "4.7.1"
-  spec-mode:
-    description: "Contract mode: enforce, soft, or off."
-    required: false
-    default: "enforce"
-  require-coverage:
-    description: "Minimum spec file coverage percentage."
-    required: false
-    default: "0"
+    default: ""
   augur-threshold:
-    description: "Risk verdict at or above which the gate fails."
+    description: "Optional stricter risk threshold override."
     required: false
-    default: "block"
-  attest-mode:
-    description: "Provenance mode: enforce, soft, or off."
-    required: false
-    default: "soft"
-  attest-policy:
-    description: "Path to the attest policy."
-    required: false
-    default: ".attest.json"
+    default: ""
 
 outputs:
+  status:
+    description: "Overall result: passed, degraded, or failed."
+    value: ${{ steps.summary.outputs.status }}
+  range:
+    description: "Resolved git comparison range."
+    value: ${{ steps.config.outputs.range }}
+  lifecycle-status:
+    description: "Lifecycle gate status."
+    value: ${{ steps.summary.outputs.lifecycle_status }}
+  contract-status:
+    description: "Contract gate status."
+    value: ${{ steps.summary.outputs.contract_status }}
+  risk-status:
+    description: "Risk gate status."
+    value: ${{ steps.summary.outputs.risk_status }}
+  provenance-status:
+    description: "Provenance gate status."
+    value: ${{ steps.summary.outputs.provenance_status }}
   verdict:
     description: "Augur verdict."
     value: ${{ steps.augur.outputs.verdict }}
@@ -63,79 +57,247 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Validate trust inputs
+    - name: Resolve committed Trust policy
+      id: config
       shell: bash
       env:
+        CONFIG: ${{ inputs.config }}
+        WORKING_DIRECTORY: ${{ inputs.working-directory }}
+        RANGE: ${{ inputs.range }}
         PROFILE: ${{ inputs.profile }}
-        SPEC_MODE: ${{ inputs.spec-mode }}
-        ATTEST_MODE: ${{ inputs.attest-mode }}
+        THRESHOLD: ${{ inputs.augur-threshold }}
       run: |
         set -euo pipefail
-        case "$PROFILE" in standard|strict) ;; *) echo "::error::profile must be standard or strict"; exit 64;; esac
-        case "$SPEC_MODE" in enforce|soft|off) ;; *) echo "::error::spec-mode must be enforce, soft, or off"; exit 64;; esac
-        case "$ATTEST_MODE" in enforce|soft|off) ;; *) echo "::error::attest-mode must be enforce, soft, or off"; exit 64;; esac
-        if [ "$PROFILE" = strict ] && { [ "$SPEC_MODE" = off ] || [ "$ATTEST_MODE" = off ]; }; then
-          echo "::error::strict profile cannot disable the contract or provenance gates"
-          exit 64
-        fi
+        python3 "$GITHUB_ACTION_PATH/scripts/trust_cli.py" action-resolve \
+          --working-directory "$WORKING_DIRECTORY" \
+          --config "$CONFIG" \
+          --range "$RANGE" \
+          --profile "$PROFILE" \
+          --threshold "$THRESHOLD"
 
-    - name: Install fledge
-      if: inputs.verify-command != ''
+    - name: Install pinned Fledge 1.7.0
       shell: bash
       env:
-        FLEDGE_VERSION: ${{ inputs.fledge-version }}
+        INSTALL_ROOT: ${{ runner.temp }}/corvid-trust-fledge
       run: |
         set -euo pipefail
-        if command -v fledge >/dev/null 2>&1; then
-          fledge --version
-          exit 0
+        if [ ! -x "$INSTALL_ROOT/bin/fledge" ]; then
+          case "${RUNNER_OS}:$(uname -m)" in
+            macOS:arm64)
+              asset="fledge-macos-aarch64"
+              sha="21d0916d52ef14e6d33e3967417773369e047a0311e66bbb1eecc8f69332a040"
+              ;;
+            macOS:x86_64)
+              asset="fledge-macos-x86_64"
+              sha="9b93babd60f87dc67c1df1902b35ab71c06912a267821c05688e6cd842c71072"
+              ;;
+            Linux:x86_64)
+              asset="fledge-linux-x86_64"
+              sha="9a2c5a0db698811052ad741dd8da5a3e8af5e46797f11b6cc59dffbd49917170"
+              ;;
+            *)
+              echo "::error::Fledge 1.7.0 has no Trust-supported asset for ${RUNNER_OS}/$(uname -m)"
+              exit 1
+              ;;
+          esac
+          mkdir -p "$INSTALL_ROOT/bin"
+          curl -fsSL "https://github.com/CorvidLabs/fledge/releases/download/v1.7.0/$asset" \
+            -o "$INSTALL_ROOT/bin/fledge"
+          actual="$(shasum -a 256 "$INSTALL_ROOT/bin/fledge" | awk '{print $1}')"
+          if [ "$actual" != "$sha" ]; then
+            echo "::error::Fledge 1.7.0 checksum mismatch (expected $sha, got $actual)"
+            exit 1
+          fi
+          chmod +x "$INSTALL_ROOT/bin/fledge"
         fi
-        cargo install fledge --locked --version "$FLEDGE_VERSION"
+        echo "$INSTALL_ROOT/bin" >> "$GITHUB_PATH"
 
     - name: Lifecycle verification
-      if: inputs.verify-command != ''
+      id: lifecycle
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       env:
-        VERIFY_COMMAND: ${{ inputs.verify-command }}
+        TRUST_CONFIG: ${{ inputs.config }}
       run: |
         set -euo pipefail
-        read -r -a command <<< "$VERIFY_COMMAND"
-        "${command[@]}"
+        python3 "$GITHUB_ACTION_PATH/scripts/trust_cli.py" action-lifecycle \
+          --working-directory . \
+          --config "$TRUST_CONFIG"
 
+    # SpecSync action code at v4.7.1 (binary is also pinned to 4.7.1).
     - name: Contract gate
-      if: inputs.spec-mode != 'off'
-      id: specs
-      uses: CorvidLabs/spec-sync@v4
-      continue-on-error: ${{ inputs.spec-mode == 'soft' && inputs.profile != 'strict' }}
+      if: steps.config.outputs.contract_enabled == 'true'
+      id: contract
+      uses: CorvidLabs/spec-sync@0cb1a57cf56105e28fea1288db698ff94d9b9f61
       with:
-        version: ${{ inputs.spec-sync-version }}
+        version: "4.7.1"
         root: ${{ inputs.working-directory }}
-        strict: ${{ inputs.profile == 'strict' }}
-        require-coverage: ${{ inputs.profile == 'strict' && '100' || inputs.require-coverage }}
+        strict: ${{ steps.config.outputs.strict }}
+        require-coverage: ${{ steps.config.outputs.contract_coverage }}
 
+    # Augur action code and binary at release 1.0.0.
     - name: Risk gate
       id: augur
-      uses: CorvidLabs/augur@v1
+      uses: CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0
       with:
-        range: ${{ inputs.range }}
-        threshold: ${{ inputs.augur-threshold }}
+        version: "1.0.0"
+        range: ${{ steps.config.outputs.range }}
+        threshold: ${{ steps.config.outputs.risk_threshold }}
         working-directory: ${{ inputs.working-directory }}
 
-    - name: Fetch provenance ledger
-      if: inputs.attest-mode != 'off'
+    - name: Inspect provenance ledger
+      if: steps.config.outputs.provenance_mode != 'off'
+      id: ledger
       shell: bash
       working-directory: ${{ inputs.working-directory }}
+      env:
+        MODE: ${{ steps.config.outputs.provenance_mode }}
       run: |
         set -euo pipefail
-        git fetch origin "+refs/notes/attest:refs/notes/attest" 2>/dev/null || \
-          echo "No remote attestation ledger exists yet."
+        remote="$(git remote get-url origin 2>/dev/null || true)"
+        if [ -z "$remote" ]; then
+          [ "$MODE" = soft ] && { echo "available=false" >> "$GITHUB_OUTPUT"; exit 0; }
+          echo "::error::origin remote is required for enforced provenance"
+          exit 1
+        fi
+        ledger="$(git ls-remote origin refs/notes/attest)"
+        if [ -z "$ledger" ]; then
+          [ "$MODE" = soft ] && { echo "available=false" >> "$GITHUB_OUTPUT"; exit 0; }
+          echo "::error::remote attestation ledger does not exist"
+          exit 1
+        fi
+        git fetch origin "+refs/notes/attest:refs/notes/attest"
+        echo "available=true" >> "$GITHUB_OUTPUT"
+
+    - name: Prepare Attest installation probe
+      if: steps.config.outputs.provenance_mode != 'off' && steps.ledger.outputs.available == 'true'
+      id: attest_probe
+      shell: bash
+      env:
+        PROBE_POLICY: ${{ runner.temp }}/corvid-trust-attest-probe.json
+      run: |
+        set -euo pipefail
+        printf '%s\n' '{"requireAttestation":false}' > "$PROBE_POLICY"
+        echo "policy=$PROBE_POLICY" >> "$GITHUB_OUTPUT"
+
+    # Attest action code and binary at release 1.0.0. It first verifies a
+    # generated permissive policy so installation/runtime failures stay fatal.
+    - name: Install pinned Attest 1.0.0
+      if: steps.config.outputs.provenance_mode != 'off' && steps.ledger.outputs.available == 'true'
+      id: attest_install
+      uses: CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2
+      with:
+        version: "1.0.0"
+        range: ${{ steps.config.outputs.range }}
+        policy: ${{ steps.attest_probe.outputs.policy }}
+        working-directory: ${{ inputs.working-directory }}
 
     - name: Provenance gate
-      if: inputs.attest-mode != 'off'
-      uses: CorvidLabs/attest@v1
-      continue-on-error: ${{ inputs.attest-mode == 'soft' && inputs.profile != 'strict' }}
-      with:
-        range: ${{ inputs.range }}
-        policy: ${{ inputs.attest-policy }}
-        working-directory: ${{ inputs.working-directory }}
+      if: steps.config.outputs.provenance_mode != 'off' && steps.ledger.outputs.available == 'true'
+      id: provenance
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        ATTEST: ${{ steps.attest_install.outputs.binary }}
+        ATTEST_TARGET: ${{ steps.config.outputs.attest_target }}
+        ATTEST_VALUE: ${{ steps.config.outputs.attest_value }}
+        MODE: ${{ steps.config.outputs.provenance_mode }}
+        POLICY: ${{ steps.config.outputs.provenance_policy }}
+        REPORT: ${{ runner.temp }}/corvid-trust-attest-report.json
+        REPORT_ERROR: ${{ runner.temp }}/corvid-trust-attest-report.err
+      run: |
+        set -euo pipefail
+        args=(verify --policy "$POLICY" --json)
+        if [ "$ATTEST_TARGET" = commit ]; then args+=(--commit "$ATTEST_VALUE")
+        else args+=(--range "$ATTEST_VALUE")
+        fi
+        set +e
+        "$ATTEST" "${args[@]}" > "$REPORT" 2> "$REPORT_ERROR"
+        verify_code=$?
+        set -e
+        classification="$(python3 - "$REPORT" "$verify_code" <<'PY'
+        import json
+        from pathlib import Path
+        import sys
+
+        try:
+            report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise SystemExit(f"Attest did not produce a valid verification report: {error}")
+        if not isinstance(report, dict) or not isinstance(report.get("passed"), bool):
+            raise SystemExit("Attest verification report is missing boolean passed")
+        code = int(sys.argv[2])
+        if report["passed"] and code == 0:
+            print("satisfied")
+        elif not report["passed"] and code != 0 and isinstance(report.get("violations"), list):
+            print("unsatisfied")
+        else:
+            raise SystemExit("Attest report and exit status disagree")
+        PY
+        )" || {
+          cat "$REPORT_ERROR" >&2
+          exit 1
+        }
+        if [ "$classification" = unsatisfied ]; then
+          cat "$REPORT"
+          if [ "$MODE" = soft ]; then
+            echo "status=soft-failed" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          exit 1
+        fi
+        echo "status=success" >> "$GITHUB_OUTPUT"
+
+    - name: Summarize Trust gate
+      if: always()
+      id: summary
+      shell: bash
+      env:
+        LIFECYCLE: ${{ steps.lifecycle.outcome }}
+        CONTRACT_ENABLED: ${{ steps.config.outputs.contract_enabled }}
+        CONTRACT: ${{ steps.contract.outcome }}
+        RISK: ${{ steps.augur.outcome }}
+        PROVENANCE_MODE: ${{ steps.config.outputs.provenance_mode }}
+        LEDGER_AVAILABLE: ${{ steps.ledger.outputs.available }}
+        ATTEST_INSTALL: ${{ steps.attest_install.outcome }}
+        PROVENANCE_OUTCOME: ${{ steps.provenance.outcome }}
+        PROVENANCE: ${{ steps.provenance.outputs.status }}
+      run: |
+        set -euo pipefail
+        lifecycle_status="${LIFECYCLE:-failed}"
+        contract_status="off"; [ "$CONTRACT_ENABLED" = true ] && contract_status="${CONTRACT:-failed}"
+        risk_status="${RISK:-failed}"
+        provenance_status="off"
+        if [ "$PROVENANCE_MODE" != off ]; then
+          if [ "${LEDGER_AVAILABLE:-false}" != true ]; then
+            if [ "$PROVENANCE_MODE" = soft ]; then provenance_status="soft-failed"
+            else provenance_status="failed"
+            fi
+          elif [ "${ATTEST_INSTALL:-skipped}" != success ] || [ "${PROVENANCE_OUTCOME:-skipped}" != success ]; then
+            provenance_status="failed"
+          else
+            provenance_status="${PROVENANCE:-failed}"
+          fi
+        fi
+        status="passed"
+        if [ "$lifecycle_status" != success ] || [ "$risk_status" != success ] || \
+           { [ "$CONTRACT_ENABLED" = true ] && [ "$contract_status" != success ]; } || \
+           [ "$provenance_status" = failed ]; then
+          status="failed"
+        elif [ "$provenance_status" = soft-failed ]; then
+          status="degraded"
+        fi
+        {
+          echo "status=$status"
+          echo "lifecycle_status=$lifecycle_status"
+          echo "contract_status=$contract_status"
+          echo "risk_status=$risk_status"
+          echo "provenance_status=$provenance_status"
+        } >> "$GITHUB_OUTPUT"
+        {
+          echo "### CorvidLabs Trust"
+          echo
+          echo "| lifecycle | contract | risk | provenance | overall |"
+          echo "|---|---|---|---|---|"
+          echo "| $lifecycle_status | $contract_status | $risk_status | $provenance_status | $status |"
+        } >> "$GITHUB_STEP_SUMMARY"
