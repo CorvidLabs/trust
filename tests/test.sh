@@ -148,6 +148,72 @@ for invalid in ("v01.0.0", "v1.0.0-01", "v1.0.0-rc..1"):
     raise AssertionError(f"invalid semantic release tag was accepted: {invalid}")
 PY
 
+python3 - "$ROOT" "$TMP" <<'PY'
+import importlib.util
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+root = Path(sys.argv[1])
+temporary = Path(sys.argv[2])
+scripts = root / "scripts"
+sys.path.insert(0, str(scripts))
+spec = importlib.util.spec_from_file_location("render_homebrew_formula", scripts / "render_homebrew_formula.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load render_homebrew_formula")
+renderer = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = renderer
+spec.loader.exec_module(renderer)
+
+digest = "a" * 64
+formula = renderer.render("0.2.0", digest, "4.8.0")
+for expected in ('version "0.2.0"', f'sha256 "{digest}"', 'assert_match "4.8.0"'):
+    if expected not in formula:
+        raise AssertionError(f"rendered formula is missing: {expected}")
+if "@TRUST_" in formula or "@SPECSYNC_" in formula:
+    raise AssertionError("rendered formula retained a placeholder")
+formula_path = temporary / "corvid-trust.rb"
+formula_path.write_text(formula, encoding="utf-8")
+if shutil.which("ruby") is not None:
+    subprocess.run(["ruby", "-c", str(formula_path)], check=True, capture_output=True, text=True)
+if shutil.which("brew") is not None:
+    cops = ",".join(
+        (
+            "FormulaAudit/ComponentsOrder",
+            "FormulaAudit/DependencyOrder",
+            "Homebrew/FormulaPathMethods",
+            "Layout/ArgumentAlignment",
+        )
+    )
+    homebrew_cache = temporary / "homebrew-cache"
+    homebrew_cache.mkdir(exist_ok=True)
+    environment = dict(os.environ)
+    environment.update({"HOMEBREW_CACHE": str(homebrew_cache), "HOMEBREW_NO_AUTO_UPDATE": "1"})
+    styled = subprocess.run(
+        ["brew", "style", "--only-cops", cops, str(formula_path)],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=environment,
+    )
+    if styled.returncode != 0:
+        raise AssertionError(f"Homebrew formula style failed:\n{styled.stdout}{styled.stderr}")
+
+invalid = [
+    ("not-a-version", digest, "4.8.0"),
+    ("0.2.0", "ABC", "4.8.0"),
+    ("0.2.0", digest, "not-a-version"),
+]
+for arguments in invalid:
+    try:
+        renderer.render(*arguments)
+    except ValueError:
+        continue
+    raise AssertionError(f"invalid Homebrew render arguments were accepted: {arguments}")
+PY
+
 provenance_repo="$TMP/provenance-repo"
 provenance_origin="$TMP/provenance-origin.git"
 provenance_bin="$TMP/provenance-bin"

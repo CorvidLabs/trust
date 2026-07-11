@@ -84,6 +84,22 @@ for required in (
     if required not in provenance_script:
         fail(f"provenance recorder is missing durable publication behavior: {required}")
 
+homebrew_template = (ROOT / "packaging/homebrew/corvid-trust.rb.in").read_text(encoding="utf-8")
+for required in (
+    '@TRUST_VERSION@',
+    '@TRUST_SHA256@',
+    '@SPECSYNC_VERSION@',
+    'depends_on "corvidlabs/tap/fledge"',
+    'depends_on "corvidlabs/tap/spec-sync"',
+    'depends_on "corvidlabs/tap/augur"',
+    'depends_on "corvidlabs/tap/attest"',
+    'bin.write_env_script libexec/"bin/fledge-trust"',
+    'formula_opt_libexec("python@3.11")',
+    'shell_output("fledge trust --version")',
+):
+    if required not in homebrew_template:
+        fail(f"Homebrew formula template is missing Trust bundle behavior: {required}")
+
 template = (ROOT / "templates/trust.yml").read_text(encoding="utf-8")
 for dependency in (
     "CorvidLabs/fledge-plugin-atlas@bfae900492615c6263c5ef431d1326eabb8b0406",

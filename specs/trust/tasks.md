@@ -21,6 +21,7 @@ spec: trust.spec.md
 - [x] Dogfood immutable commit installation through Fledge in a disposable governed repository.
 - [x] Gate tagged releases on exact-tag installation, real component verification, and monotonic channel selection.
 - [x] Add bootstrap-safe recording and durable verification for landed main provenance.
+- [x] Add a deterministic, syntax-tested Homebrew `corvid-trust` formula renderer.
 
 ## Next
 

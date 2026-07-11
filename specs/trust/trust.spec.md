@@ -9,6 +9,7 @@ files:
   - scripts/normalize_specsync_cache.py
   - scripts/release_channel.py
   - scripts/record_provenance.sh
+  - scripts/render_homebrew_formula.py
   - action.yml
   - plugin.toml
   - templates/trust.yml

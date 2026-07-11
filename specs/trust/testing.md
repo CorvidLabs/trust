@@ -23,6 +23,7 @@ spec: trust.spec.md
 | Windows plugin | The complete manifest and plugin behavior suite runs under Git Bash on `windows-latest`. |
 | Tagged release | Tag/version identity, exact-tag installation, pinned tools, and monotonic channel selection. |
 | Main provenance | Every green main CI matrix records, verifies, and durably publishes a risk-bound git note. |
+| Homebrew renderer | Release version, archive digest, dependency version, placeholders, and Ruby syntax validate. |
 
 ## Manual Release Checks
 

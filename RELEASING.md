@@ -66,6 +66,21 @@ attest verify --commit origin/main --policy .attest.json
 Do not claim the provenance release gate complete until both the hosted record
 job and this remote-ledger verification pass.
 
+## Homebrew bundle
+
+After the immutable tag exists, download its GitHub source archive, calculate
+the SHA-256, and render the formula with the matching SpecSync version:
+
+```bash
+python3 scripts/render_homebrew_formula.py 0.2.0 ARCHIVE_SHA256 \
+  --specsync-version 4.8.0
+```
+
+Copy the output to `Formula/corvid-trust.rb` in `CorvidLabs/homebrew-tap` only
+after the real digest is known. The formula installs the plugin under `libexec`,
+wraps it with the guaranteed Homebrew Python path, depends on the four pinned
+component formulae, and tests discovery through `fledge trust --version`.
+
 ## Stable release
 
 Trust 1.0.0 additionally requires spec-sync 5.0.0, an enabled provenance
