@@ -27,10 +27,10 @@ optional upgrade after release.
 
 ## Current External Gates
 
-- spec-sync 5.0.0 is released and pinned for both local and composite Action verification,
-  but its Public API parser still truncates dotted YAML symbols at the first dot.
-  The Trust contract must remain in review until those symbols can be matched
-  without suppressing strict coverage findings.
+- spec-sync 5.0.0 is released and pinned for both local and composite Action verification.
+  The dotted-symbol parser fix is prepared in CorvidLabs/spec-sync#344 for 5.0.1,
+  and Trust's Public API table is aligned to reach exact active coverage with
+  that fix. The contract remains in review until 5.0.1 is released and pinned.
 - A tagged Trust release is required before the Homebrew bundle and tagged
   plugin installation path can be tested honestly.
 - Main-branch CI is prepared to bootstrap `refs/notes/attest` after the

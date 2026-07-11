@@ -24,6 +24,7 @@ spec: trust.spec.md
 | Tagged release | Source contract validation, tag/version identity, exact-tag installation, pinned tools, and monotonic channel selection. |
 | Main provenance | The in-workflow Trust gate passes before CI repairs, verifies, and durably publishes a risk-bound git note. |
 | Homebrew renderer | Release version, archive digest, dependency version, executable wrapper target, placeholders, Ruby syntax, and style validate. |
+| Active contract rehearsal | The SpecSync 5.0.1 candidate reports 30/30 exports, zero warnings, and zero failures. |
 
 ## Manual Release Checks
 

@@ -30,13 +30,6 @@ forcing them into a shared release cycle.
 
 | Export | Description |
 | --- | --- |
-| `fledge trust adopt` | Conservatively add managed trust configuration to a git repository. |
-| `fledge trust verify` | Run lifecycle, contract, risk, and provenance gates in order. |
-| `fledge trust status` | Report installed tools and wired repository layers. |
-| `fledge trust doctor` | Fail when required commands or repository configuration are missing. |
-| `fledge trust --version` | Report the installed Trust plugin version. |
-| `fledge trust adopt --atlas` | Opt into Atlas verification and Pages publication. |
-| `CorvidLabs/trust@v0` | Composite GitHub Action exposing the unified CI gate. |
 | `name` | Human-readable action name. |
 | `description` | Marketplace action summary. |
 | `author` | Action publisher identity. |
@@ -62,7 +55,23 @@ forcing them into a shared release cycle.
 | `permissions` | Least-privilege permissions used by the generated workflow. |
 | `jobs` | Generated workflow job definitions. |
 | `permissions.contents` | Read-only repository content access. |
+| `permissions.pages` | Allow the generated Atlas deployment job to publish Pages. |
+| `permissions.id-token` | Allow the generated Atlas deployment job to request an identity token. |
 | `jobs.trust` | Generated unified trust job. |
+| `jobs.deploy-atlas` | Generated push-only Atlas deployment job. |
+| `outputs.atlas_enabled` | Pass the Atlas policy decision between generated workflow jobs. |
+
+## User-facing Surface
+
+| Command or Action | Description |
+| --- | --- |
+| `fledge trust adopt` | Conservatively add managed trust configuration to a git repository. |
+| `fledge trust verify` | Run lifecycle, contract, risk, and provenance gates in order. |
+| `fledge trust status` | Report installed tools and wired repository layers. |
+| `fledge trust doctor` | Fail when required commands or repository configuration are missing. |
+| `fledge trust --version` | Report the installed Trust plugin version. |
+| `fledge trust adopt --atlas` | Opt into Atlas verification and Pages publication. |
+| `CorvidLabs/trust@v0` | Composite GitHub Action exposing the unified CI gate. |
 
 ## Invariants
 
@@ -123,4 +132,4 @@ And augur gates the range before attest verifies its provenance
 | Version | Date | Changes |
 | --- | --- | --- |
 | 1 | 2026-07-10 | Initial orchestration contract; corrected Action inputs and outputs before activation. |
-| 1 | 2026-07-11 | Validate against SpecSync 5.0.0 and harden tagged, Homebrew, and provenance release gates. |
+| 1 | 2026-07-11 | Validate against SpecSync 5.0.0, prepare exact active coverage for 5.0.1, and harden release gates. |

@@ -10,11 +10,11 @@
     "scripts/render_homebrew_formula.py": "4cbbe5bd439da1ca946bf6252cf901648fb4ccf7715a83471cd3ddaa4ad48fb0",
     "scripts/trust_cli.py": "0cea5f64745db937c0a0a1beb0e8600976bb2ab26f7c1ffcb58c3158aec8e63a",
     "scripts/validate.py": "41f867ef6e0abc5326d9995e5fdf6cd8639395b843a4dfb7b1987ebfc8bcbb77",
-    "specs/trust/context.md": "430b4011cdce93f5ebc7873dd36ddfd5532ceb8277f149da028c5588e31f0da8",
+    "specs/trust/context.md": "533e4824c481804e73533a47052079915fdaafea919c466f782df6c6897d0719",
     "specs/trust/requirements.md": "ae1807cf76c43bd9ab776f1c1dd569a1b43402913798c92c7177b3944461f473",
-    "specs/trust/tasks.md": "4616847a6877613f651d84879c79f631115712fb7b3761e4b882029176cba7f0",
-    "specs/trust/testing.md": "a71f9544c553d08fe6cd2fbc0340805d52e7442998464a3cecc04ca6ba905c97",
-    "specs/trust/trust.spec.md": "d373be8595bc768400719a765a8dfac5c4cdacebc2916c58b4ef31ba72d97f52",
+    "specs/trust/tasks.md": "499049d39e180e09a54c875ea4a7c4c9336250761a6b46efd8899b481ed78edd",
+    "specs/trust/testing.md": "340c7e1fb185de29897085bc621b3b3c598c29db23f0f640fa5bb5477d81c1c4",
+    "specs/trust/trust.spec.md": "3d6a3d44eb1d2a93109bf31c7d968b2df03ccd99d027277f93114847a9db4a8d",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }
 }
