@@ -37,7 +37,13 @@ def action_references(value: object) -> list[str]:
 
 
 yaml_documents: dict[str, object] = {}
-for relative in ("action.yml", "templates/trust.yml", ".github/workflows/ci.yml", ".github/workflows/trust.yml"):
+for relative in (
+    "action.yml",
+    "templates/trust.yml",
+    ".github/workflows/ci.yml",
+    ".github/workflows/release.yml",
+    ".github/workflows/trust.yml",
+):
     path = ROOT / relative
     with path.open(encoding="utf-8") as stream:
         document = yaml.safe_load(stream)
@@ -53,7 +59,7 @@ for relative, document in yaml_documents.items():
             fail(f"{relative} must pin external Action reference to a full commit SHA: {reference}")
 
 validation_install = "python3 -m pip install --disable-pip-version-check pyyaml==6.0.3"
-for relative in (".github/workflows/ci.yml", ".github/workflows/trust.yml"):
+for relative in (".github/workflows/ci.yml", ".github/workflows/release.yml", ".github/workflows/trust.yml"):
     workflow = (ROOT / relative).read_text(encoding="utf-8")
     if validation_install not in workflow:
         fail(f"{relative} must install the pinned validation dependency")
@@ -93,6 +99,20 @@ with (ROOT / "fledge.toml").open("rb") as stream:
 release_lane = fledge.get("lanes", {}).get("release", {})
 if release_lane.get("steps") != ["fmt", "lint", "test", "spec"]:
     fail("fledge.toml release lane must run code checks before the spec contract gate")
+
+release_workflow = (ROOT / ".github/workflows/release.yml").read_text(encoding="utf-8")
+for required in (
+    'tags: ["v*.*.*"]',
+    'fledge plugins install "$REPOSITORY@$REF_NAME"',
+    'fledge trust doctor --root "$FIXTURE"',
+    'fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD',
+    "needs: exact-tag-dogfood",
+    "args=(release create",
+    'major="${REF_NAME%%.*}"',
+    'git tag -f "$major"',
+):
+    if required not in release_workflow:
+        fail(f"release workflow is missing gated publication behavior: {required}")
 
 action = (ROOT / "action.yml").read_text(encoding="utf-8")
 if "atlas-enabled:" not in action:

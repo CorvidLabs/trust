@@ -1,0 +1,171 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+jobs:
+  validate-tag:
+    name: Validate tagged source
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.11"
+      - name: Install validation dependency
+        run: python3 -m pip install --disable-pip-version-check pyyaml==6.0.3
+      - name: Match tag to plugin version
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([+-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Expected a semantic release tag like v0.2.0, got '$REF_NAME'."
+            exit 1
+          fi
+          version="$(python3 -c 'import tomllib; print(tomllib.load(open("plugin.toml", "rb"))["plugin"]["version"])')"
+          if [ "$REF_NAME" != "v$version" ]; then
+            echo "::error::Tag $REF_NAME does not match plugin.toml version $version."
+            exit 1
+          fi
+      - name: Validate tagged plugin
+        run: |
+          set -euo pipefail
+          bash -n bin/fledge-trust tests/test.sh tests/setup-action-fixture.sh
+          python3 -m py_compile scripts/trust_cli.py scripts/validate.py scripts/normalize_specsync_cache.py
+          python3 scripts/validate.py
+          bash tests/test.sh
+
+  exact-tag-dogfood:
+    name: Install and verify exact tag
+    needs: validate-tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Install pinned Fledge 1.7.0
+        env:
+          FLEDGE_SHA256: 9a2c5a0db698811052ad741dd8da5a3e8af5e46797f11b6cc59dffbd49917170
+        run: |
+          set -euo pipefail
+          install_dir="$RUNNER_TEMP/fledge/bin"
+          mkdir -p "$install_dir"
+          curl -fsSL \
+            https://github.com/CorvidLabs/fledge/releases/download/v1.7.0/fledge-linux-x86_64 \
+            -o "$install_dir/fledge"
+          actual="$(sha256sum "$install_dir/fledge" | cut -d' ' -f1)"
+          if [ "$actual" != "$FLEDGE_SHA256" ]; then
+            echo "::error::Fledge checksum mismatch (expected $FLEDGE_SHA256, got $actual)."
+            exit 1
+          fi
+          chmod +x "$install_dir/fledge"
+          echo "$install_dir" >> "$GITHUB_PATH"
+      - name: Install Trust from the immutable release tag
+        env:
+          REF_NAME: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          fledge plugins install "$REPOSITORY@$REF_NAME" --non-interactive --json > "$RUNNER_TEMP/install.json"
+          jq -e --arg ref "$REF_NAME" \
+            '.installed | length == 1 and .[0].name == "trust" and .[0].pinned_ref == $ref' \
+            "$RUNNER_TEMP/install.json"
+      - name: Create disposable governed repository
+        env:
+          FIXTURE: ${{ runner.temp }}/trust-tag-dogfood
+        run: |
+          set -euo pipefail
+          bash tests/setup-action-fixture.sh "$FIXTURE"
+          fledge trust adopt --dry-run --root "$FIXTURE"
+          fledge trust adopt --root "$FIXTURE"
+      - name: Install pinned SpecSync 4.8.0
+        uses: CorvidLabs/spec-sync@7f20c62288e4850c5ea271d148b0c49fba96e188 # v4.8.0
+        with:
+          version: "4.8.0"
+          root: ${{ runner.temp }}/trust-tag-dogfood
+          strict: "true"
+          require-coverage: "100"
+      - name: Install pinned Augur 1.0.0
+        id: augur
+        uses: CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0 # v1.0.0
+        with:
+          version: "1.0.0"
+          range: HEAD~1..HEAD
+          threshold: block
+          working-directory: ${{ runner.temp }}/trust-tag-dogfood
+      - name: Prepare Attest installation probe
+        env:
+          PROBE_POLICY: ${{ runner.temp }}/attest-release-probe.json
+        run: printf '%s\n' '{"requireAttestation":false}' > "$PROBE_POLICY"
+      - name: Install pinned Attest 1.0.0
+        id: attest
+        uses: CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2 # v1.0.0
+        with:
+          version: "1.0.0"
+          range: HEAD~1..HEAD
+          policy: ${{ runner.temp }}/attest-release-probe.json
+          working-directory: ${{ runner.temp }}/trust-tag-dogfood
+      - name: Expose pinned component binaries
+        env:
+          AUGUR: ${{ steps.augur.outputs.binary }}
+          ATTEST: ${{ steps.attest.outputs.binary }}
+        run: |
+          set -euo pipefail
+          dirname "$AUGUR" >> "$GITHUB_PATH"
+          dirname "$ATTEST" >> "$GITHUB_PATH"
+      - name: Verify through the installed Trust plugin
+        env:
+          FIXTURE: ${{ runner.temp }}/trust-tag-dogfood
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          expected="${REF_NAME#v}"
+          [ "$(fledge trust --version)" = "fledge trust $expected" ]
+          fledge trust doctor --root "$FIXTURE"
+          fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD
+
+  publish:
+    name: Publish release and move major channel
+    needs: exact-tag-dogfood
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF_NAME: ${{ github.ref_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if ! gh release view "$REF_NAME" --repo "$REPOSITORY" >/dev/null 2>&1; then
+            args=(release create "$REF_NAME" --repo "$REPOSITORY" --verify-tag \
+              --title "$REF_NAME" --generate-notes)
+            if [[ "$REF_NAME" == v0.* || "$REF_NAME" == *-* ]]; then
+              args+=(--prerelease)
+            fi
+            gh "${args[@]}"
+          fi
+      - name: Move supported major Action channel
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          major="${REF_NAME%%.*}"
+          if [[ "$REF_NAME" == *-* && "$major" != v0 ]]; then
+            echo "Leaving $major unchanged for prerelease $REF_NAME."
+            exit 0
+          fi
+          git tag -f "$major" "$GITHUB_SHA"
+          git push origin -f "refs/tags/$major"
+          echo "$major now points at $GITHUB_SHA from $REF_NAME"

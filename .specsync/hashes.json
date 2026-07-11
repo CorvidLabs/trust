@@ -5,11 +5,11 @@
     "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
     "scripts/normalize_specsync_cache.py": "01bff3b346138e46cd772abd6958285524eefc1dadb45951286e8dc95660d0c4",
     "scripts/trust_cli.py": "0cea5f64745db937c0a0a1beb0e8600976bb2ab26f7c1ffcb58c3158aec8e63a",
-    "scripts/validate.py": "bf7e645216ec7bfd777dbe98ddb9fe5c566f50588165002c62da53c3a4acbec1",
+    "scripts/validate.py": "4e4ce5cced18e30bb607a4175e1727364bd3ac774ed7b18bbb40c25f0b9d02f9",
     "specs/trust/context.md": "f4b4b8a3ea723385a904e58a9370115b6140d8f9123ab16eacdf6e9b5bd0d94a",
     "specs/trust/requirements.md": "39e2211094a6162c36264a87a0d6fb2b55edf79bcf43c7efe59f6811bef7acdf",
-    "specs/trust/tasks.md": "0cb0818b4c5a9d0f12dbe9df688d00ad5fade8e90831b67f13242e347a9d9400",
-    "specs/trust/testing.md": "08f5fb7be9f829415c761844d9261c18311e925fea4c412ec6a5ea71be94ff40",
+    "specs/trust/tasks.md": "db7e64c1468b0377db42534523827d8382e6d87d8d662432b758720c2fac97ae",
+    "specs/trust/testing.md": "a9ceaeda4eb5ea2af17c9397f77376b57e3acb1b2856e3f85449cd64c5f3ebf1",
     "specs/trust/trust.spec.md": "40dfc6e93576efe150086f300ed83ca03af3279bc85972480f5ef0ae54680e1f",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }

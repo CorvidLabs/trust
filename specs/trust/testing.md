@@ -21,11 +21,13 @@ spec: trust.spec.md
 | Action matrix | Standard, strict, provenance, and fatal paths run on Linux and macOS fixture repositories. |
 | Atlas opt-in | Default adoption records Atlas off; explicit adoption verifies reports and renders publication assets. |
 | Windows plugin | The complete manifest and plugin behavior suite runs under Git Bash on `windows-latest`. |
+| Tagged release | Tag/version identity, exact-tag Fledge installation, real pinned tools, and safe major-channel publication. |
 
 ## Manual Release Checks
 
 - Run `fledge lanes run release` from a clean release commit.
 - Rehearse the intended version with `fledge release VERSION --dry-run --pre-lane release --non-interactive`.
+- Confirm the tag workflow publishes only after exact-tag installation and verification pass.
 - Install the plugin through `fledge plugins install CorvidLabs/trust`.
 - Adopt it into a disposable repository with at least one real language stack.
 - Run the generated workflow on a pull request with full git history.

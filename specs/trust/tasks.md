@@ -18,6 +18,8 @@ spec: trust.spec.md
 - [x] Add opt-in Atlas verification and push-only GitHub Pages publication.
 - [x] Run the complete plugin behavior suite on Windows and resolve Git Bash command and path portability.
 - [x] Add a release lane that composes code verification with the spec contract gate.
+- [x] Dogfood immutable commit installation through Fledge in a disposable governed repository.
+- [x] Gate tagged releases on exact-tag installation, real component verification, and safe major-channel promotion.
 
 ## Next
 
