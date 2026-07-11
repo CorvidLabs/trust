@@ -18,6 +18,9 @@ make_repo() {
   git -C "$repo" config user.name Test
 }
 
+plugin_version="$(python3 -c 'import sys, tomllib; print(tomllib.load(open(sys.argv[1], "rb"))["plugin"]["version"])' "$ROOT/plugin.toml")"
+[ "$("$TRUST" --version)" = "fledge trust $plugin_version" ] || fail "version output does not match plugin manifest"
+
 repo="$TMP/repo with spaces"
 make_repo "$repo"
 repo="$(cd "$repo" && pwd -P)"
@@ -53,6 +56,7 @@ status_json="$(cd "$repo" && PATH="$isolated_bin:/usr/bin:/bin" "$TRUST" status 
 [ "$status_code" -eq 0 ] || fail "status diagnostic returned failure"
 STATUS_JSON="$status_json" python3 -c 'import json, os; json.loads(os.environ["STATUS_JSON"])'
 contains "$status_json" '"schemaVersion": 1'
+contains "$status_json" "\"version\": \"$plugin_version\""
 contains "$status_json" '"healthy": false'
 
 skip_repo="$TMP/skip"

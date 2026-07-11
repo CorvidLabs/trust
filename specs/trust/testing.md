@@ -15,6 +15,8 @@ spec: trust.spec.md
 | Idempotent adoption | A second run preserves existing files and the single managed rules block. |
 | Status JSON | Output parses and reports workflow and rules wiring. |
 | Verification order | Fake component commands observe lifecycle, contract, risk, and provenance in order. |
+| Version identity | CLI and status output match the plugin manifest version. |
+| Self-adoption | Trust's own policy, workflow, risk configuration, and managed rules pass doctor and verify. |
 
 ## Manual Release Checks
 

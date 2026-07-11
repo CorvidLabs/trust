@@ -35,6 +35,20 @@ class TrustError(RuntimeError):
     pass
 
 
+def trust_version() -> str:
+    manifest = ROOT / "plugin.toml"
+    try:
+        with manifest.open("rb") as stream:
+            document = tomllib.load(stream)
+    except (OSError, tomllib.TOMLDecodeError) as error:
+        raise TrustError(f"cannot read Trust plugin version: {error}") from error
+    plugin = document.get("plugin")
+    version = plugin.get("version") if isinstance(plugin, dict) else None
+    if not isinstance(version, str) or not version:
+        raise TrustError("plugin.toml is missing plugin.version")
+    return version
+
+
 @dataclass(frozen=True)
 class TrustConfig:
     schema_version: int
@@ -608,6 +622,7 @@ def status_document(root: Path, config_path: Path) -> tuple[dict[str, Any], bool
         errors.append("missing managed trust rules in AGENTS.md")
     document = {
         "schemaVersion": 1,
+        "version": trust_version(),
         "healthy": not errors,
         "profile": config.profile if config else None,
         "tools": tools,
@@ -726,7 +741,11 @@ def verify(arguments: argparse.Namespace) -> int:
 
 
 def parser() -> argparse.ArgumentParser:
-    root_parser = argparse.ArgumentParser(prog="fledge trust", description="One gate for contracts, verification, risk, and provenance")
+    root_parser = argparse.ArgumentParser(
+        prog="fledge trust",
+        description="One gate for contracts, verification, risk, and provenance",
+    )
+    root_parser.add_argument("--version", action="version", version=f"%(prog)s {trust_version()}")
     commands = root_parser.add_subparsers(dest="command", required=True)
     adopt_parser = commands.add_parser("adopt", help="Add Trust to a repository")
     adopt_parser.add_argument("--root")

@@ -16,4 +16,4 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: CorvidLabs/trust@v0
+      - uses: ./

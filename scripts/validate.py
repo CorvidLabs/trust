@@ -3,12 +3,15 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import sys
 
 import yaml
 
 
 ROOT = Path(__file__).resolve().parent.parent
+FULL_ACTION_SHA = re.compile(r"^[^@\s]+@[0-9a-f]{40}$")
+ALLOWED_CHANNELS = {"CorvidLabs/trust@v0"}
 
 
 def fail(message: str) -> None:
@@ -16,12 +19,35 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
-for relative in ("action.yml", "templates/trust.yml", ".github/workflows/ci.yml"):
+def action_references(value: object) -> list[str]:
+    references: list[str] = []
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            if key == "uses" and isinstance(nested, str):
+                references.append(nested)
+            else:
+                references.extend(action_references(nested))
+    elif isinstance(value, list):
+        for nested in value:
+            references.extend(action_references(nested))
+    return references
+
+
+yaml_documents: dict[str, object] = {}
+for relative in ("action.yml", "templates/trust.yml", ".github/workflows/ci.yml", ".github/workflows/trust.yml"):
     path = ROOT / relative
     with path.open(encoding="utf-8") as stream:
         document = yaml.safe_load(stream)
     if not isinstance(document, dict):
         fail(f"{relative} must contain a YAML object")
+    yaml_documents[relative] = document
+
+for relative, document in yaml_documents.items():
+    for reference in action_references(document):
+        if reference.startswith("./") or reference in ALLOWED_CHANNELS:
+            continue
+        if not FULL_ACTION_SHA.fullmatch(reference):
+            fail(f"{relative} must pin external Action reference to a full commit SHA: {reference}")
 
 with (ROOT / "templates/attest.json").open(encoding="utf-8") as stream:
     policy = json.load(stream)
@@ -33,12 +59,22 @@ if 'name = "trust"' not in plugin or 'binary = "bin/fledge-trust"' not in plugin
     fail("plugin.toml does not expose the trust command")
 
 action = (ROOT / "action.yml").read_text(encoding="utf-8")
-for dependency in (
-    "CorvidLabs/spec-sync@0cb1a57cf56105e28fea1288db698ff94d9b9f61",
-    "CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0",
-    "CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2",
-):
+dependencies = {
+    "CorvidLabs/spec-sync@7f20c62288e4850c5ea271d148b0c49fba96e188": "4.8.0",
+    "CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0": "1.0.0",
+    "CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2": "1.0.0",
+}
+for dependency in dependencies:
     if dependency not in action:
         fail(f"action.yml does not compose {dependency}")
+
+action_steps = yaml_documents["action.yml"].get("runs", {}).get("steps", [])
+for step in action_steps:
+    if not isinstance(step, dict) or step.get("uses") not in dependencies:
+        continue
+    expected_version = dependencies[step["uses"]]
+    inputs = step.get("with", {})
+    if not isinstance(inputs, dict) or inputs.get("version") != expected_version:
+        fail(f"action.yml must pair {step['uses']} with binary version {expected_version}")
 
 print("trust validation passed")

@@ -18,6 +18,7 @@ spec: trust.spec.md
 - Verification runs lifecycle, contract, risk, and provenance in order.
 - The composite action exposes Augur verdict and risk outputs.
 - Status JSON is versioned and valid.
+- CLI and status output report the plugin manifest version.
 
 ## Constraints
 
