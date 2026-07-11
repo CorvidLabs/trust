@@ -6,9 +6,9 @@
     "scripts/normalize_specsync_cache.py": "01bff3b346138e46cd772abd6958285524eefc1dadb45951286e8dc95660d0c4",
     "scripts/trust_cli.py": "00d8f330fad4981d07658171b3c5144888d8405abeb3f9530d71020db05d62e5",
     "scripts/validate.py": "e8f9be0f0aa0250218558be3efe10c8ff6ab8e36769ea4b6d327c19c2c353d26",
-    "specs/trust/context.md": "8749b206c3483dcc1f767c27662fbf73b09d7f38a6b174645403709aa5dd631c",
+    "specs/trust/context.md": "f4b4b8a3ea723385a904e58a9370115b6140d8f9123ab16eacdf6e9b5bd0d94a",
     "specs/trust/requirements.md": "39e2211094a6162c36264a87a0d6fb2b55edf79bcf43c7efe59f6811bef7acdf",
-    "specs/trust/tasks.md": "1b3d0df709b333fbb803b814ec8b31fc19b1beacc894a237385912fb3b4a92bd",
+    "specs/trust/tasks.md": "98a4229f994cee7f1cd2e3fb870770ce75f382d65198e22da5c5e225c39cf703",
     "specs/trust/testing.md": "5f763933d624a9704a25484e29090dd55a8301a01de5e03dfed8e2a938cc0afe",
     "specs/trust/trust.spec.md": "40dfc6e93576efe150086f300ed83ca03af3279bc85972480f5ef0ae54680e1f",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"

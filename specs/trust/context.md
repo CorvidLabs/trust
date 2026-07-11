@@ -20,6 +20,8 @@ optional upgrade after release.
   Workflow inputs may strengthen that policy but cannot weaken it.
 - Composite Action code is pinned to immutable commits and paired with explicit
   component binary versions.
+- Atlas is disabled by default. Explicit opt-in adds local report verification
+  and push-only publication with Pages permissions isolated to the deploy job.
 - Pre-release consumers use the `v0` Action channel after the first tag. Trust
   1.0.0 promotes the supported channel to `v1`.
 
@@ -28,8 +30,8 @@ optional upgrade after release.
 - spec-sync 5.0.0 has not been released; 4.8.0 is the newest available release.
 - A tagged Trust release is required before the Homebrew bundle and tagged
   plugin installation path can be tested honestly.
-- GitHub Pages permissions and deployment behavior must be decided before Atlas
-  can be enabled by default in generated workflows.
+- Repositories opting into Atlas must configure GitHub Pages to use GitHub
+  Actions before their first publication push.
 
 ## Trust 1.0.0 Proof
 
