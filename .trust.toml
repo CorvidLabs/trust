@@ -1,0 +1,22 @@
+schema_version = 1
+profile = "standard"
+
+[lifecycle]
+command = ["fledge", "lanes", "run", "verify"]
+
+[contract]
+enabled = true
+require_coverage = 0
+skip_reason = ""
+
+[risk]
+threshold = "block"
+
+[provenance]
+mode = "off"
+policy = ".attest.json"
+skip_reason = "Trust does not have a release provenance ledger before v0.1.0"
+
+[atlas]
+enabled = false
+skip_reason = "Atlas publication begins after the first release"

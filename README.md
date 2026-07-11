@@ -12,14 +12,15 @@ Trust keeps the underlying tools independent and composes them into one gate:
 
 ## Install
 
-The first release will be available as a Homebrew bundle. Until then, install
-the four tools and this plugin directly:
+The supported installation brings in Trust and its pinned fledge, spec-sync,
+augur, and attest toolchain:
 
 ```bash
-brew tap CorvidLabs/tap
-brew install fledge spec-sync augur attest
-fledge plugins install CorvidLabs/trust
+brew install CorvidLabs/tap/corvid-trust
 ```
+
+Homebrew installs `fledge-trust` on `PATH`, where Fledge discovers it without
+writing plugin registration state into your home directory.
 
 ## Adopt the gate
 
@@ -33,11 +34,10 @@ fledge trust doctor
 fledge trust verify
 ```
 
-`adopt` is conservative and idempotent. It creates missing configuration,
-workflow, policy, and standing-rules files but does not overwrite existing
-project files unless `--force` is explicitly passed.
-When fledge cannot infer a complete verification lane, adoption leaves a clear
-note and `doctor` stays red until the repository defines the real commands.
+`adopt` is conservative, transactional, and idempotent. It resolves the Git
+root, validates every generated file, and writes only after preflight succeeds.
+When it cannot infer a real verification lane, it stops without changing the
+repository.
 
 Optional layers can be skipped with a recorded reason:
 
@@ -45,21 +45,30 @@ Optional layers can be skipped with a recorded reason:
 fledge trust adopt --no-specs "content-only repository" --no-atlas "Pages is disabled"
 ```
 
+The decision is stored in `.trust.toml`, the canonical policy used by both the
+local plugin and GitHub Action. Workflow overrides may strengthen that policy,
+but cannot weaken it.
+
+## Policy
+
+Standard mode enforces lifecycle verification, SpecSync, and Augur. Attest is
+progressive: an unavailable or unsatisfied provenance ledger is reported as
+degraded while the repository adopts signed provenance. Strict mode forces
+100% contract coverage and enforced provenance.
+
 ## GitHub Actions
 
-The composite action runs the same gate in CI. Checkout must use full history
-because augur and attest inspect commit ranges and git notes.
+The composite Action reads the same `.trust.toml` and resolves pull request,
+push, and initial-push ranges from the GitHub event. Checkout must use full
+history because Augur and Attest inspect commits and git notes.
 
 ```yaml
 steps:
-  - uses: actions/checkout@v5
+  - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
     with:
       fetch-depth: 0
 
-  - uses: CorvidLabs/trust@v1
-    with:
-      profile: standard
-      range: origin/main..HEAD
+  - uses: CorvidLabs/trust@v0
 ```
 
 The individual actions remain available when a repository needs custom step

@@ -33,7 +33,11 @@ if 'name = "trust"' not in plugin or 'binary = "bin/fledge-trust"' not in plugin
     fail("plugin.toml does not expose the trust command")
 
 action = (ROOT / "action.yml").read_text(encoding="utf-8")
-for dependency in ("CorvidLabs/spec-sync@v4", "CorvidLabs/augur@v1", "CorvidLabs/attest@v1"):
+for dependency in (
+    "CorvidLabs/spec-sync@0cb1a57cf56105e28fea1288db698ff94d9b9f61",
+    "CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0",
+    "CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2",
+):
     if dependency not in action:
         fail(f"action.yml does not compose {dependency}")
 

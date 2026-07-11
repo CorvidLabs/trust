@@ -21,3 +21,39 @@ jobs:
         run: python3 scripts/validate.py
       - name: Test plugin behavior
         run: bash tests/test.sh
+
+  action-smoke:
+    name: Action smoke (${{ matrix.profile }}, ${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        profile: [standard, strict]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+      - name: Create two-commit fixture
+        run: bash tests/setup-action-fixture.sh "$RUNNER_TEMP/trust-fixture"
+      - name: Run local composite Action
+        id: trust
+        continue-on-error: true
+        uses: ./
+        with:
+          working-directory: ${{ runner.temp }}/trust-fixture
+          range: HEAD~1..HEAD
+          profile: ${{ matrix.profile }}
+      - name: Assert profile behavior
+        env:
+          PROFILE: ${{ matrix.profile }}
+          OUTCOME: ${{ steps.trust.outcome }}
+          STATUS: ${{ steps.trust.outputs.status }}
+        run: |
+          set -euo pipefail
+          if [ "$PROFILE" = standard ]; then
+            [ "$OUTCOME" = success ]
+            [ "$STATUS" = degraded ]
+          else
+            [ "$OUTCOME" = failure ]
+          fi

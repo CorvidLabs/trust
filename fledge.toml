@@ -1,5 +1,5 @@
 [tasks]
-fmt = "bash -n bin/fledge-trust tests/test.sh"
+fmt = "bash -n bin/fledge-trust tests/test.sh tests/setup-action-fixture.sh && python3 -m py_compile scripts/trust_cli.py scripts/validate.py"
 lint = "python3 scripts/validate.py"
 test = "bash tests/test.sh"
 spec = "specsync check --force --strict"

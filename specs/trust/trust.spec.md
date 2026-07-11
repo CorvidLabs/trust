@@ -28,7 +28,7 @@ forcing them into a shared release cycle.
 | `fledge trust verify` | Run lifecycle, contract, risk, and provenance gates in order. |
 | `fledge trust status` | Report installed tools and wired repository layers. |
 | `fledge trust doctor` | Fail when required commands or repository configuration are missing. |
-| `CorvidLabs/trust@v1` | Composite GitHub Action exposing the unified CI gate. |
+| `CorvidLabs/trust@v0` | Composite GitHub Action exposing the unified CI gate. |
 | `name` | Human-readable action name. |
 | `description` | Marketplace action summary. |
 | `author` | Action publisher identity. |
