@@ -67,7 +67,8 @@ for relative in (".github/workflows/ci.yml", ".github/workflows/release.yml", ".
 self_ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
 for required in (
     "record-provenance:",
-    "needs: [validate, plugin-windows, action-smoke, action-provenance, action-atlas, action-fatal-paths]",
+    "repository-trust:",
+    "needs: [validate, plugin-windows, action-smoke, action-provenance, action-atlas, action-fatal-paths, repository-trust]",
     "contents: write",
     "bash scripts/record_provenance.sh",
 ):
@@ -93,7 +94,7 @@ for required in (
     'depends_on "corvidlabs/tap/spec-sync"',
     'depends_on "corvidlabs/tap/augur"',
     'depends_on "corvidlabs/tap/attest"',
-    'bin.write_env_script libexec/"bin/fledge-trust"',
+    '(bin/"fledge-trust").write_env_script libexec/"bin/fledge-trust"',
     'formula_opt_libexec("python@3.11")',
     'shell_output("fledge trust --version")',
 ):
@@ -152,6 +153,9 @@ for required in (
     'fledge plugins install "$REPOSITORY@$REF_NAME"',
     'fledge trust doctor --root "$FIXTURE"',
     'fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD',
+    "Validate tagged source contract",
+    "CorvidLabs/spec-sync@d6d8512f9a1d75f308df1e9a8f52b47ca9e839ee # v5.0.0",
+    'version: "5.0.0"',
     "needs: exact-tag-dogfood",
     "args=(release create",
     'python3 scripts/release_channel.py "$REF_NAME"',

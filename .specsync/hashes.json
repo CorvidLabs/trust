@@ -5,16 +5,16 @@
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
     "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
     "scripts/normalize_specsync_cache.py": "2ce7b47fcabdd67fa75b72c635731767ffc1de0c17e30fc7ab80d03e301e406e",
-    "scripts/record_provenance.sh": "384d2349f63b2270f425dc38c099a9b8187fabc611ce669100b0f4ee8ac061ff",
+    "scripts/record_provenance.sh": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
     "scripts/release_channel.py": "62cfa84ac0d1c31e2f24a0f08711566c5e7d74fe3e00346f7bc519356f43252b",
     "scripts/render_homebrew_formula.py": "4cbbe5bd439da1ca946bf6252cf901648fb4ccf7715a83471cd3ddaa4ad48fb0",
     "scripts/trust_cli.py": "0cea5f64745db937c0a0a1beb0e8600976bb2ab26f7c1ffcb58c3158aec8e63a",
-    "scripts/validate.py": "30f0f26108b24140370de8e90f1687cc775ceee3a44b188975b2b3b4a037ec33",
+    "scripts/validate.py": "41f867ef6e0abc5326d9995e5fdf6cd8639395b843a4dfb7b1987ebfc8bcbb77",
     "specs/trust/context.md": "430b4011cdce93f5ebc7873dd36ddfd5532ceb8277f149da028c5588e31f0da8",
-    "specs/trust/requirements.md": "39e2211094a6162c36264a87a0d6fb2b55edf79bcf43c7efe59f6811bef7acdf",
+    "specs/trust/requirements.md": "ae1807cf76c43bd9ab776f1c1dd569a1b43402913798c92c7177b3944461f473",
     "specs/trust/tasks.md": "4616847a6877613f651d84879c79f631115712fb7b3761e4b882029176cba7f0",
-    "specs/trust/testing.md": "610dff4bbd10cafcfc63002f2f597429bcaa1c614c2a3be80a4a83dcc74af715",
-    "specs/trust/trust.spec.md": "80d7262dcb4f0b63a058db7bc6b167f054f0d878605ff402e394f79b066a0295",
+    "specs/trust/testing.md": "a71f9544c553d08fe6cd2fbc0340805d52e7442998464a3cecc04ca6ba905c97",
+    "specs/trust/trust.spec.md": "d373be8595bc768400719a765a8dfac5c4cdacebc2916c58b4ef31ba72d97f52",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }
 }

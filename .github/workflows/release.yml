@@ -38,6 +38,13 @@ jobs:
           python3 -m py_compile scripts/trust_cli.py scripts/validate.py scripts/normalize_specsync_cache.py
           python3 scripts/validate.py
           bash tests/test.sh
+      - name: Validate tagged source contract
+        uses: CorvidLabs/spec-sync@d6d8512f9a1d75f308df1e9a8f52b47ca9e839ee # v5.0.0
+        with:
+          version: "5.0.0"
+          root: .
+          strict: "true"
+          require-coverage: "100"
 
   exact-tag-dogfood:
     name: Install and verify exact tag
@@ -82,10 +89,10 @@ jobs:
           bash tests/setup-action-fixture.sh "$FIXTURE"
           fledge trust adopt --dry-run --root "$FIXTURE"
           fledge trust adopt --root "$FIXTURE"
-      - name: Install pinned SpecSync 4.8.0
-        uses: CorvidLabs/spec-sync@7f20c62288e4850c5ea271d148b0c49fba96e188 # v4.8.0
+      - name: Install pinned SpecSync 5.0.0
+        uses: CorvidLabs/spec-sync@d6d8512f9a1d75f308df1e9a8f52b47ca9e839ee # v5.0.0
         with:
-          version: "4.8.0"
+          version: "5.0.0"
           root: ${{ runner.temp }}/trust-tag-dogfood
           strict: "true"
           require-coverage: "100"

@@ -231,8 +231,10 @@ git -C "$provenance_repo" remote add origin "$provenance_origin"
 git -C "$provenance_repo" push -q -u origin HEAD:main
 printf '%s\n' '{"requireAttestation":true,"requireTestsPassed":true}' > "$provenance_repo/.attest.json"
 printf '#!/usr/bin/env bash\nset -euo pipefail\ncase "$1" in\n  check) echo '\''{"verdict":"proceed","riskScore":12}'\'' ;;\n  *) exit 2 ;;\nesac\n' > "$provenance_bin/augur"
-printf '#!/usr/bin/env bash\nset -euo pipefail\ncommand="$1"; shift\ncase "$command" in\n  sign)\n    commit="HEAD"\n    while [ "$#" -gt 0 ]; do\n      if [ "$1" = --commit ]; then commit="$2"; shift 2; else shift; fi\n    done\n    git notes --ref=attest add -m '\''{"testsPassed":true}'\'' "$commit"\n    printf '\''signed\\n'\'' >> "%s"\n    ;;\n  verify) git notes --ref=attest show HEAD >/dev/null ;;\n  *) exit 2 ;;\nesac\n' "$provenance_log" > "$provenance_bin/attest"
+printf '#!/usr/bin/env bash\nset -euo pipefail\ncommand="$1"; shift\ncase "$command" in\n  sign)\n    commit="HEAD"\n    while [ "$#" -gt 0 ]; do\n      if [ "$1" = --commit ]; then commit="$2"; shift 2; else shift; fi\n    done\n    git notes --ref=attest append -m '\''{"testsPassed":true}'\'' "$commit"\n    printf '\''signed\\n'\'' >> "%s"\n    ;;\n  verify) git notes --ref=attest show HEAD | grep -q '\''"testsPassed":true'\'' ;;\n  *) exit 2 ;;\nesac\n' "$provenance_log" > "$provenance_bin/attest"
 chmod +x "$provenance_bin/augur" "$provenance_bin/attest"
+git -C "$provenance_repo" notes --ref=attest add -m '{"testsPassed":false}' HEAD
+git -C "$provenance_repo" push -q origin refs/notes/attest
 (
   cd "$provenance_repo"
   ATTEST="$provenance_bin/attest" \

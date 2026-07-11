@@ -14,7 +14,8 @@ class CorvidTrust < Formula
 
   def install
     libexec.install "plugin.toml", "bin", "scripts", "templates"
-    bin.write_env_script libexec/"bin/fledge-trust", PATH: "#{formula_opt_libexec("python@3.11")}/bin:$PATH"
+    python_path = "#{formula_opt_libexec("python@3.11")}/bin:$PATH"
+    (bin/"fledge-trust").write_env_script libexec/"bin/fledge-trust", PATH: python_path
   end
 
   test do

@@ -15,7 +15,7 @@ git config user.name "github-actions[bot]"
 
 git fetch origin "+refs/notes/attest:refs/notes/attest-remote" 2>/dev/null || true
 git notes --ref=attest merge -s cat_sort_uniq attest-remote 2>/dev/null || true
-if ! git notes --ref=attest show HEAD >/dev/null 2>&1; then
+if ! "$ATTEST" verify --commit HEAD --policy "$POLICY" >/dev/null 2>&1; then
     "$ATTEST" sign --commit HEAD --reviewer agent:ci --confidence 1 --tests-passed \
         --from-augur "$REPORT" --note "$NOTE"
 fi

@@ -21,9 +21,9 @@ spec: trust.spec.md
 | Action matrix | Standard, strict, provenance, and fatal paths run on Linux and macOS fixture repositories. |
 | Atlas opt-in | Default adoption records Atlas off; explicit adoption verifies reports and renders publication assets. |
 | Windows plugin | The complete manifest and plugin behavior suite runs under Git Bash on `windows-latest`. |
-| Tagged release | Tag/version identity, exact-tag installation, pinned tools, and monotonic channel selection. |
-| Main provenance | Every green main CI matrix records, verifies, and durably publishes a risk-bound git note. |
-| Homebrew renderer | Release version, archive digest, dependency version, placeholders, and Ruby syntax validate. |
+| Tagged release | Source contract validation, tag/version identity, exact-tag installation, pinned tools, and monotonic channel selection. |
+| Main provenance | The in-workflow Trust gate passes before CI repairs, verifies, and durably publishes a risk-bound git note. |
+| Homebrew renderer | Release version, archive digest, dependency version, executable wrapper target, placeholders, Ruby syntax, and style validate. |
 
 ## Manual Release Checks
 

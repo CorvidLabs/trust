@@ -123,4 +123,4 @@ And augur gates the range before attest verifies its provenance
 | Version | Date | Changes |
 | --- | --- | --- |
 | 1 | 2026-07-10 | Initial orchestration contract; corrected Action inputs and outputs before activation. |
-| 1 | 2026-07-11 | Validate the review contract against SpecSync 5.0.0. |
+| 1 | 2026-07-11 | Validate against SpecSync 5.0.0 and harden tagged, Homebrew, and provenance release gates. |
