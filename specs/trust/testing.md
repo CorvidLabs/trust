@@ -24,6 +24,8 @@ spec: trust.spec.md
 
 ## Manual Release Checks
 
+- Run `fledge lanes run release` from a clean release commit.
+- Rehearse the intended version with `fledge release VERSION --dry-run --pre-lane release --non-interactive`.
 - Install the plugin through `fledge plugins install CorvidLabs/trust`.
 - Adopt it into a disposable repository with at least one real language stack.
 - Run the generated workflow on a pull request with full git history.

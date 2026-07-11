@@ -88,6 +88,12 @@ plugin = (ROOT / "plugin.toml").read_text(encoding="utf-8")
 if 'name = "trust"' not in plugin or 'binary = "bin/fledge-trust"' not in plugin:
     fail("plugin.toml does not expose the trust command")
 
+with (ROOT / "fledge.toml").open("rb") as stream:
+    fledge = tomllib.load(stream)
+release_lane = fledge.get("lanes", {}).get("release", {})
+if release_lane.get("steps") != ["fmt", "lint", "test", "spec"]:
+    fail("fledge.toml release lane must run code checks before the spec contract gate")
+
 action = (ROOT / "action.yml").read_text(encoding="utf-8")
 if "atlas-enabled:" not in action:
     fail("action.yml must expose the committed Atlas publication decision")

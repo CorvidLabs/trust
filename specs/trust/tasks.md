@@ -17,6 +17,7 @@ spec: trust.spec.md
 - [x] Replace an older managed rules block without touching surrounding AGENTS.md content.
 - [x] Add opt-in Atlas verification and push-only GitHub Pages publication.
 - [x] Run the complete plugin behavior suite on Windows and resolve Git Bash command and path portability.
+- [x] Add a release lane that composes code verification with the spec contract gate.
 
 ## Next
 
