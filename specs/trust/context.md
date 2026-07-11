@@ -30,6 +30,8 @@ optional upgrade after release.
 - spec-sync 5.0.0 has not been released; 4.8.0 is the newest available release.
 - A tagged Trust release is required before the Homebrew bundle and tagged
   plugin installation path can be tested honestly.
+- Main-branch CI is prepared to bootstrap `refs/notes/attest` after the
+  readiness work lands; enforced provenance waits for that durable first note.
 - Repositories opting into Atlas must configure GitHub Pages to use GitHub
   Actions before their first publication push.
 

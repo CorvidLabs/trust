@@ -49,6 +49,23 @@ fledge trust verify
 Only after exact-tag dogfooding and the generated GitHub workflow pass should
 the supported `v0` Action channel be created at `v0.2.0`.
 
+## Provenance bootstrap
+
+Trust keeps self-provenance in bootstrap-safe `soft` mode until the first green
+main CI run creates `refs/notes/attest`. The main provenance job is still
+required: it records a risk-bound, tests-passed note, verifies the committed
+policy, and fails if the remote note cannot be published durably.
+
+After the readiness merge, verify the external ledger proof locally:
+
+```bash
+git fetch origin "+refs/notes/attest:refs/notes/attest"
+attest verify --commit origin/main --policy .attest.json
+```
+
+Do not claim the provenance release gate complete until both the hosted record
+job and this remote-ledger verification pass.
+
 ## Stable release
 
 Trust 1.0.0 additionally requires spec-sync 5.0.0, an enabled provenance

@@ -20,6 +20,7 @@ spec: trust.spec.md
 - [x] Add a release lane that composes code verification with the spec contract gate.
 - [x] Dogfood immutable commit installation through Fledge in a disposable governed repository.
 - [x] Gate tagged releases on exact-tag installation, real component verification, and monotonic channel selection.
+- [x] Add bootstrap-safe recording and durable verification for landed main provenance.
 
 ## Next
 

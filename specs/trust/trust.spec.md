@@ -8,6 +8,7 @@ files:
   - scripts/validate.py
   - scripts/normalize_specsync_cache.py
   - scripts/release_channel.py
+  - scripts/record_provenance.sh
   - action.yml
   - plugin.toml
   - templates/trust.yml

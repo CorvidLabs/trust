@@ -148,6 +148,42 @@ for invalid in ("v01.0.0", "v1.0.0-01", "v1.0.0-rc..1"):
     raise AssertionError(f"invalid semantic release tag was accepted: {invalid}")
 PY
 
+provenance_repo="$TMP/provenance-repo"
+provenance_origin="$TMP/provenance-origin.git"
+provenance_bin="$TMP/provenance-bin"
+provenance_log="$TMP/provenance-sign.log"
+mkdir -p "$provenance_bin"
+make_repo "$provenance_repo"
+printf '%s\n' initial > "$provenance_repo/source.txt"
+git -C "$provenance_repo" add source.txt
+git -C "$provenance_repo" commit -qm initial
+printf '%s\n' changed >> "$provenance_repo/source.txt"
+git -C "$provenance_repo" add source.txt
+git -C "$provenance_repo" commit -qm change
+git init --bare -q "$provenance_origin"
+git -C "$provenance_repo" remote add origin "$provenance_origin"
+git -C "$provenance_repo" push -q -u origin HEAD:main
+printf '%s\n' '{"requireAttestation":true,"requireTestsPassed":true}' > "$provenance_repo/.attest.json"
+printf '#!/usr/bin/env bash\nset -euo pipefail\ncase "$1" in\n  check) echo '\''{"verdict":"proceed","riskScore":12}'\'' ;;\n  *) exit 2 ;;\nesac\n' > "$provenance_bin/augur"
+printf '#!/usr/bin/env bash\nset -euo pipefail\ncommand="$1"; shift\ncase "$command" in\n  sign)\n    commit="HEAD"\n    while [ "$#" -gt 0 ]; do\n      if [ "$1" = --commit ]; then commit="$2"; shift 2; else shift; fi\n    done\n    git notes --ref=attest add -m '\''{"testsPassed":true}'\'' "$commit"\n    printf '\''signed\\n'\'' >> "%s"\n    ;;\n  verify) git notes --ref=attest show HEAD >/dev/null ;;\n  *) exit 2 ;;\nesac\n' "$provenance_log" > "$provenance_bin/attest"
+chmod +x "$provenance_bin/augur" "$provenance_bin/attest"
+(
+  cd "$provenance_repo"
+  ATTEST="$provenance_bin/attest" \
+  AUGUR="$provenance_bin/augur" \
+  RANGE="HEAD~1..HEAD" \
+  REPORT="$TMP/provenance-augur.json" \
+  bash "$ROOT/scripts/record_provenance.sh"
+  ATTEST="$provenance_bin/attest" \
+  AUGUR="$provenance_bin/augur" \
+  RANGE="HEAD~1..HEAD" \
+  REPORT="$TMP/provenance-augur.json" \
+  bash "$ROOT/scripts/record_provenance.sh"
+)
+git --git-dir="$provenance_origin" show-ref --verify --quiet refs/notes/attest || \
+  fail "provenance recorder did not publish the remote ledger"
+[ "$(wc -l < "$provenance_log" | tr -d ' ')" = 1 ] || fail "provenance recorder was not idempotent"
+
 repo="$TMP/repo with spaces"
 make_repo "$repo"
 repo="$(cd "$repo" && pwd -P)"

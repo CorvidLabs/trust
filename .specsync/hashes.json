@@ -4,14 +4,15 @@
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
     "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
     "scripts/normalize_specsync_cache.py": "2ce7b47fcabdd67fa75b72c635731767ffc1de0c17e30fc7ab80d03e301e406e",
+    "scripts/record_provenance.sh": "384d2349f63b2270f425dc38c099a9b8187fabc611ce669100b0f4ee8ac061ff",
     "scripts/release_channel.py": "62cfa84ac0d1c31e2f24a0f08711566c5e7d74fe3e00346f7bc519356f43252b",
     "scripts/trust_cli.py": "0cea5f64745db937c0a0a1beb0e8600976bb2ab26f7c1ffcb58c3158aec8e63a",
-    "scripts/validate.py": "ca023a9305b19ec510ea1added506e00a7b7c70e3d94f856a6e82aa9e50b3c84",
-    "specs/trust/context.md": "f4b4b8a3ea723385a904e58a9370115b6140d8f9123ab16eacdf6e9b5bd0d94a",
+    "scripts/validate.py": "22ccd48d1c43c068af598384e5b82792657fe60f12e80d76f69db29eb533953d",
+    "specs/trust/context.md": "48fd1981e228bfefd689701ff8b332f27d4b4d1b036e5f73c0f920060bd73421",
     "specs/trust/requirements.md": "39e2211094a6162c36264a87a0d6fb2b55edf79bcf43c7efe59f6811bef7acdf",
-    "specs/trust/tasks.md": "2f58dad30e95cc30ddb0c7d632ba323538ca7e30966be5b3880839babcedf138",
-    "specs/trust/testing.md": "3b0364027eb08eee170ad3b605eec1ec027d80393f526b03ad898130d8173079",
-    "specs/trust/trust.spec.md": "248e51dccd6f319e20dfdb4c8561a577b32cf31e84cdd482b63cae806eea447b",
+    "specs/trust/tasks.md": "bd04889d835229d53fdf12735567870f8d197f3b6a0be58991526d4488473aef",
+    "specs/trust/testing.md": "26389147552aff57a2afc0e2f0ff2f1bca6429ed86dfa7138777c9a20debe04f",
+    "specs/trust/trust.spec.md": "42ca1384df686e82c0a4ecb7d564a4a6c497e99019335b75b7898b0e4e22c43c",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }
 }

@@ -64,6 +64,26 @@ for relative in (".github/workflows/ci.yml", ".github/workflows/release.yml", ".
     if validation_install not in workflow:
         fail(f"{relative} must install the pinned validation dependency")
 
+self_ci = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+for required in (
+    "record-provenance:",
+    "needs: [validate, plugin-windows, action-smoke, action-provenance, action-atlas, action-fatal-paths]",
+    "contents: write",
+    "bash scripts/record_provenance.sh",
+):
+    if required not in self_ci:
+        fail(f"CI workflow is missing durable main provenance behavior: {required}")
+
+provenance_script = (ROOT / "scripts/record_provenance.sh").read_text(encoding="utf-8")
+for required in (
+    'git push origin refs/notes/attest',
+    'verify --commit HEAD --policy "$POLICY"',
+    "could not publish refs/notes/attest after three verified attempts",
+    "git ls-remote --exit-code origin refs/notes/attest",
+):
+    if required not in provenance_script:
+        fail(f"provenance recorder is missing durable publication behavior: {required}")
+
 template = (ROOT / "templates/trust.yml").read_text(encoding="utf-8")
 for dependency in (
     "CorvidLabs/fledge-plugin-atlas@bfae900492615c6263c5ef431d1326eabb8b0406",
@@ -89,6 +109,16 @@ with (ROOT / "templates/attest.json").open(encoding="utf-8") as stream:
     policy = json.load(stream)
 if policy.get("requireAttestation") is not True:
     fail("the managed Attest policy must require one attestation")
+
+with (ROOT / ".attest.json").open(encoding="utf-8") as stream:
+    self_policy = json.load(stream)
+if self_policy != {"requireAttestation": True, "requireTestsPassed": True}:
+    fail("Trust must require a tests-passed attestation for its own landed commits")
+
+with (ROOT / ".trust.toml").open("rb") as stream:
+    self_trust = tomllib.load(stream)
+if self_trust.get("provenance") != {"mode": "soft", "policy": ".attest.json", "skip_reason": ""}:
+    fail("Trust self-provenance must remain enabled in bootstrap-safe soft mode until the ledger exists")
 
 plugin = (ROOT / "plugin.toml").read_text(encoding="utf-8")
 if 'name = "trust"' not in plugin or 'binary = "bin/fledge-trust"' not in plugin:

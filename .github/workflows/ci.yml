@@ -234,3 +234,52 @@ jobs:
         run: |
           [ "$OUTCOME" = failure ]
           [ "$STATUS" = failed ]
+
+  record-provenance:
+    name: Record main provenance
+    needs: [validate, plugin-windows, action-smoke, action-provenance, action-atlas, action-fatal-paths]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+      - name: Resolve landed range
+        id: range
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          if [ -n "$BEFORE" ] && ! [[ "$BEFORE" =~ ^0+$ ]] && git cat-file -e "$BEFORE^{commit}"; then
+            range="$BEFORE..HEAD"
+          else
+            range="HEAD~1..HEAD"
+          fi
+          echo "value=$range" >> "$GITHUB_OUTPUT"
+      - name: Recheck landed risk with pinned Augur 1.0.0
+        id: augur
+        uses: CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0 # v1.0.0
+        with:
+          version: "1.0.0"
+          range: ${{ steps.range.outputs.value }}
+          threshold: block
+      - name: Prepare Attest installation probe
+        env:
+          PROBE_POLICY: ${{ runner.temp }}/attest-provenance-probe.json
+        run: printf '%s\n' '{"requireAttestation":false}' > "$PROBE_POLICY"
+      - name: Install pinned Attest 1.0.0
+        id: attest
+        uses: CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2 # v1.0.0
+        with:
+          version: "1.0.0"
+          range: ${{ steps.range.outputs.value }}
+          policy: ${{ runner.temp }}/attest-provenance-probe.json
+      - name: Record, verify, and publish landed provenance
+        env:
+          ATTEST: ${{ steps.attest.outputs.binary }}
+          AUGUR: ${{ steps.augur.outputs.binary }}
+          RANGE: ${{ steps.range.outputs.value }}
+          REPORT: ${{ runner.temp }}/augur-landed.json
+        run: bash scripts/record_provenance.sh

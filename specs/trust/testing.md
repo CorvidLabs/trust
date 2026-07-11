@@ -22,6 +22,7 @@ spec: trust.spec.md
 | Atlas opt-in | Default adoption records Atlas off; explicit adoption verifies reports and renders publication assets. |
 | Windows plugin | The complete manifest and plugin behavior suite runs under Git Bash on `windows-latest`. |
 | Tagged release | Tag/version identity, exact-tag installation, pinned tools, and monotonic channel selection. |
+| Main provenance | Every green main CI matrix records, verifies, and durably publishes a risk-bound git note. |
 
 ## Manual Release Checks
 
