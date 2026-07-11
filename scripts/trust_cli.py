@@ -88,14 +88,29 @@ def run(
     check: bool = True,
     capture: bool = False,
 ) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run(
-        arguments,
-        cwd=cwd,
-        check=False,
-        text=True,
-        stdout=subprocess.PIPE if capture else None,
-        stderr=subprocess.PIPE if capture else None,
-    )
+    run_arguments = arguments
+    try:
+        result = subprocess.run(
+            run_arguments,
+            cwd=cwd,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE if capture else None,
+            stderr=subprocess.PIPE if capture else None,
+        )
+    except FileNotFoundError:
+        bash = shutil.which("bash") if os.name == "nt" else None
+        if bash is None:
+            raise
+        run_arguments = [bash, "-c", 'exec "$@"', "trust", *arguments]
+        result = subprocess.run(
+            run_arguments,
+            cwd=cwd,
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE if capture else None,
+            stderr=subprocess.PIPE if capture else None,
+        )
     if check and result.returncode != 0:
         detail = (result.stderr or result.stdout or "").strip()
         suffix = f": {detail}" if detail else ""

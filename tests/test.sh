@@ -21,6 +21,34 @@ make_repo() {
 plugin_version="$(python3 -c 'import sys, tomllib; print(tomllib.load(open(sys.argv[1], "rb"))["plugin"]["version"])' "$ROOT/plugin.toml")"
 [ "$("$TRUST" --version)" = "fledge trust $plugin_version" ] || fail "version output does not match plugin manifest"
 
+python3 - "$ROOT" <<'PY'
+import importlib.util
+from pathlib import Path
+import subprocess
+import sys
+from unittest.mock import patch
+
+root = Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location("trust_cli", root / "scripts" / "trust_cli.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load trust_cli")
+trust_cli = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = trust_cli
+spec.loader.exec_module(trust_cli)
+completed = subprocess.CompletedProcess(["tool"], 0)
+with (
+    patch.object(trust_cli.os, "name", "nt"),
+    patch.object(trust_cli.shutil, "which", return_value="/usr/bin/bash"),
+    patch.object(trust_cli.subprocess, "run", side_effect=[FileNotFoundError(), completed]) as run,
+):
+    result = trust_cli.run(["tool", "arg with spaces"], cwd=root)
+if result is not completed:
+    raise AssertionError("Windows Bash fallback did not return the command result")
+fallback = run.call_args_list[1].args[0]
+if fallback != ["/usr/bin/bash", "-c", 'exec "$@"', "trust", "tool", "arg with spaces"]:
+    raise AssertionError(f"unexpected Windows Bash fallback: {fallback}")
+PY
+
 repo="$TMP/repo with spaces"
 make_repo "$repo"
 repo="$(cd "$repo" && pwd -P)"
