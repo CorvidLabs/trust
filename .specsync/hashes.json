@@ -1,12 +1,12 @@
 {
   "hashes": {
-    "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
-    "action.yml": "79c816dad44acd956251812ad8d4e3b42194dc0e0f9901f8563e36567fd23e33",
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
     "specs/trust/testing.md": "48609e67165fa4fc5e6cf8a2b99f1cb6b0a9e2722ae94ac1c88b30605ec30dcb",
-    "specs/trust/requirements.md": "48b9852824b340a0583d8c0841f3e40ae3a5d65df0b16f129c0b63d56d99c132",
-    "templates/trust.yml": "c226d08030b804b6e4ee8fab3d73d35c8a9b6cec0ef1ecb886ef29e46cdca6cf",
+    "specs/trust/trust.spec.md": "a9f7306e4e864de6969dfe17f4ba9ee351978f67d84d8d8db7d649a6bbd72f85",
+    "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
     "specs/trust/tasks.md": "c4b6386a224313ccab17ed4b368112d1c7a93ae4584b09e3ba26ce5869695358",
-    "specs/trust/trust.spec.md": "a9f7306e4e864de6969dfe17f4ba9ee351978f67d84d8d8db7d649a6bbd72f85"
+    "action.yml": "b57f344cef5f6b8dcd1b9a5354110914fd11629b488db80b9d9cb75cc0ff8a52",
+    "templates/trust.yml": "c226d08030b804b6e4ee8fab3d73d35c8a9b6cec0ef1ecb886ef29e46cdca6cf",
+    "specs/trust/requirements.md": "48b9852824b340a0583d8c0841f3e40ae3a5d65df0b16f129c0b63d56d99c132"
   }
 }

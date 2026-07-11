@@ -82,7 +82,33 @@ runs:
       run: |
         set -euo pipefail
         if [ ! -x "$INSTALL_ROOT/bin/fledge" ]; then
-          cargo install fledge --locked --version 1.7.0 --root "$INSTALL_ROOT"
+          case "${RUNNER_OS}:$(uname -m)" in
+            macOS:arm64)
+              asset="fledge-macos-aarch64"
+              sha="21d0916d52ef14e6d33e3967417773369e047a0311e66bbb1eecc8f69332a040"
+              ;;
+            macOS:x86_64)
+              asset="fledge-macos-x86_64"
+              sha="9b93babd60f87dc67c1df1902b35ab71c06912a267821c05688e6cd842c71072"
+              ;;
+            Linux:x86_64)
+              asset="fledge-linux-x86_64"
+              sha="9a2c5a0db698811052ad741dd8da5a3e8af5e46797f11b6cc59dffbd49917170"
+              ;;
+            *)
+              echo "::error::Fledge 1.7.0 has no Trust-supported asset for ${RUNNER_OS}/$(uname -m)"
+              exit 1
+              ;;
+          esac
+          mkdir -p "$INSTALL_ROOT/bin"
+          curl -fsSL "https://github.com/CorvidLabs/fledge/releases/download/v1.7.0/$asset" \
+            -o "$INSTALL_ROOT/bin/fledge"
+          actual="$(shasum -a 256 "$INSTALL_ROOT/bin/fledge" | awk '{print $1}')"
+          if [ "$actual" != "$sha" ]; then
+            echo "::error::Fledge 1.7.0 checksum mismatch (expected $sha, got $actual)"
+            exit 1
+          fi
+          chmod +x "$INSTALL_ROOT/bin/fledge"
         fi
         echo "$INSTALL_ROOT/bin" >> "$GITHUB_PATH"
 
