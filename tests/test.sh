@@ -174,7 +174,8 @@ printf '#!/usr/bin/env bash\necho "fledge-atlas $*" >> "%s"\necho '\''{"verdict"
 chmod +x "$fake/fledge-atlas"
 verify_output="$(cd "$repo" && PATH="$fake:$PATH" "$TRUST" verify --range main..HEAD)"
 contains "$verify_output" "progressive provenance"
-expected="$(printf 'fledge lanes run verify\nspecsync check\naugur gate --range main..HEAD --threshold block\nattest verify --range main..HEAD --policy %s/.attest.json --json' "$repo")"
+policy_path="$(cd "$repo" && python3 -c 'from pathlib import Path; print(Path(".attest.json").resolve())')"
+expected="$(printf 'fledge lanes run verify\nspecsync check\naugur gate --range main..HEAD --threshold block\nattest verify --range main..HEAD --policy %s --json' "$policy_path")"
 actual="$(cat "$log")"
 [ "$actual" = "$expected" ] || { printf 'expected:\n%s\nactual:\n%s\n' "$expected" "$actual" >&2; fail "verification order or arguments differ"; }
 
