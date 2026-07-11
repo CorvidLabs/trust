@@ -68,8 +68,9 @@ if grep -Fq 'obsolete managed rules' "$repo/AGENTS.md"; then fail "managed updat
 isolated_bin="$TMP/isolated-bin"
 mkdir -p "$isolated_bin"
 ln -s "$(command -v python3)" "$isolated_bin/python3"
+git_bin="$(dirname "$(command -v git)")"
 status_code=0
-status_json="$(cd "$repo" && PATH="$isolated_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
+status_json="$(cd "$repo" && PATH="$isolated_bin:$git_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
 [ "$status_code" -eq 0 ] || fail "status diagnostic returned failure"
 STATUS_JSON="$status_json" python3 -c 'import json, os; json.loads(os.environ["STATUS_JSON"])'
 contains "$status_json" '"schemaVersion": 1'
