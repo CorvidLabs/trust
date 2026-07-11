@@ -140,7 +140,8 @@ rm -f "$override_repo/.trust.toml.bak"
 if "$TRUST" action-resolve --working-directory "$override_repo" --range HEAD~1..HEAD --threshold block >/dev/null 2>&1; then
   fail "workflow override weakened Augur threshold"
 fi
-if "$TRUST" action-resolve --working-directory "$override_repo" >/dev/null 2>&1; then
+if env -u GITHUB_EVENT_NAME -u GITHUB_EVENT_PATH -u GITHUB_SHA \
+  "$TRUST" action-resolve --working-directory "$override_repo" >/dev/null 2>&1; then
   fail "manual Action resolution without range or upstream succeeded"
 fi
 
