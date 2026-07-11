@@ -6,4 +6,4 @@ spec = "specsync check --force --strict && python3 scripts/normalize_specsync_ca
 
 [lanes.verify]
 description = "Validate the Trust action, plugin, templates, and specs"
-steps = ["fmt", "lint", "test", "spec"]
+steps = ["fmt", "lint", "test"]

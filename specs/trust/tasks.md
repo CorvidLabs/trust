@@ -12,6 +12,7 @@ spec: trust.spec.md
 - [x] Govern the orchestration contract with strict spec-sync validation.
 - [x] Adopt Trust into its own repository and run the local gate against itself.
 - [x] Make forced spec checks leave the tracked cache deterministic.
+- [x] Separate Trust's lifecycle lane from its composed SpecSync contract gate.
 
 ## Next
 
