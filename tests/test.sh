@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TRUST="$ROOT/bin/fledge-trust"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
+unset GITHUB_EVENT_NAME GITHUB_EVENT_PATH GITHUB_SHA
 
 fail() { echo "test failure: $*" >&2; exit 1; }
 contains() { case "$1" in *"$2"*) ;; *) fail "expected output to contain: $2";; esac; }
