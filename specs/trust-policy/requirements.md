@@ -51,3 +51,4 @@ Pull request policy comparison SHALL fail closed when the base commit is unavail
 Acceptance Criteria
 
 - Missing history or fetch failure cannot degrade into a permissive policy result.
+

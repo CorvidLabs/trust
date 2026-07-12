@@ -5,10 +5,10 @@
   "title": "Split the Trust 1 public contract into focused canonical companions",
   "description": "Split the Trust 1 public contract into focused canonical companions",
   "kind": "documentation",
-  "state": "implementing",
+  "state": "accepted",
   "base_commit": "e5827e83212f2716a65bbd0a72147fa8297b97b4",
   "created_at": 1783864998,
-  "updated_at": 1783865330,
+  "updated_at": 1783900654,
   "affected_specs": [
     "trust",
     "trust-action",
@@ -28,11 +28,7 @@
   "no_spec_change": false,
   "no_spec_change_rationale": null,
   "acceptance_criteria": [
-    "Five non-overlapping companions document Trust orchestration",
-    "Action",
-    "plugin CLI",
-    "policy resolution",
-    "and provenance; SpecSync 5.0.1 strict validation passes at 100%; native Trust tests pass"
+    "Five non-overlapping companions document Trust orchestration, Action, plugin CLI, policy resolution, and provenance; SpecSync 5.0.1 strict validation passes at 100%; native Trust tests pass"
   ],
   "selected_artifacts": [
     "context",
@@ -43,6 +39,6 @@
   "dependencies": [],
   "answers": {
     "architecture_risk": "no",
-    "public_contract": "no"
+    "public_contract": "yes"
   }
 }

@@ -1,6 +1,6 @@
 ---
 module: trust
-version: 1
+version: 2
 status: active
 files:
   - scripts/render_homebrew_formula.py
@@ -68,3 +68,4 @@ Then the formula installs both components under the corvid-trust bundle
 | 1 | 2026-07-10 | Initial orchestration contract; corrected Action inputs and outputs before activation. |
 | 1 | 2026-07-12 | Activate exact coverage and expose pinned release binaries under canonical command names. |
 | 1 | 2026-07-12 | Split focused public contracts into dedicated companions. |
+| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |

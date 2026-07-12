@@ -1,6 +1,6 @@
 ---
 module: trust-provenance
-version: 1
+version: 2
 status: stable
 files:
   - scripts/record_provenance.sh
@@ -56,3 +56,4 @@ And lifecycle, contract, and risk still determine pass or failure
 | Version | Date | Changes |
 | --- | --- | --- |
 | 1 | 2026-07-12 | Stable Trust 1.0 provenance contract. |
+| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |

@@ -43,3 +43,4 @@ Provenance scope changes SHALL be limited to a simultaneous soft-to-enforced bas
 Acceptance Criteria
 
 - A pull request cannot silently swap provenance scope without the associated policy transition.
+

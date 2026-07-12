@@ -1,6 +1,6 @@
 ---
 module: trust-policy
-version: 1
+version: 2
 status: stable
 files:
   - scripts/trust_cli.py
@@ -60,3 +60,4 @@ But rejects any attempt to disable contract or provenance enforcement
 | Version | Date | Changes |
 | --- | --- | --- |
 | 1 | 2026-07-12 | Stable Trust 1.0 policy contract. |
+| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |

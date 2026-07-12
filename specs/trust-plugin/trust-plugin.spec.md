@@ -1,6 +1,6 @@
 ---
 module: trust-plugin
-version: 1
+version: 2
 status: stable
 files:
   - bin/fledge-trust
@@ -54,3 +54,4 @@ And returns its exact exit status
 | Version | Date | Changes |
 | --- | --- | --- |
 | 1 | 2026-07-12 | Stable Trust 1.0 plugin contract. |
+| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |

@@ -59,3 +59,4 @@ CLI and status output SHALL report the plugin manifest version.
 Acceptance Criteria
 
 - Installed-version diagnostics agree with `plugin.toml`.
+

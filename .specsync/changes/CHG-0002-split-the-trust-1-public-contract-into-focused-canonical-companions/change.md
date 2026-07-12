@@ -1,6 +1,6 @@
 ---
 id: CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions
-state: implementing
+state: accepted
 type: documentation
 base_commit: e5827e83212f2716a65bbd0a72147fa8297b97b4
 ---
@@ -21,11 +21,7 @@ Split the Trust 1 public contract into focused canonical companions
 
 ## Acceptance Criteria
 
-- Five non-overlapping companions document Trust orchestration
-- Action
-- plugin CLI
-- policy resolution
-- and provenance; SpecSync 5.0.1 strict validation passes at 100%; native Trust tests pass
+- Five non-overlapping companions document Trust orchestration, Action, plugin CLI, policy resolution, and provenance; SpecSync 5.0.1 strict validation passes at 100%; native Trust tests pass
 
 ## No-spec Rationale
 

@@ -2,7 +2,14 @@
 spec: trust.spec.md
 ---
 
-# Requirements — Trust Distribution
+## User Stories
+
+- As a maintainer, I want one command to adopt the CorvidLabs trust toolchain without losing existing configuration.
+- As a contributor, I want one local command to reproduce the trust gate that CI runs.
+- As an agent, I want deterministic status and stop conditions for every trust layer.
+- As a team, I want the component tools to remain independently usable and releasable.
+
+## Acceptance Criteria
 
 ### REQ-trust-001
 
@@ -35,3 +42,15 @@ The Homebrew bundle SHALL expose `fledge-trust` as a concrete executable for Fle
 Acceptance Criteria
 
 - A fresh bundle installation exposes `fledge trust` without repository-local shims.
+
+## Constraints
+
+- Shell behavior supports Bash 3.2 or newer on macOS and current Bash on Linux.
+- GitHub Action inputs enter shell scripts through environment variables.
+- The repository contains orchestration only, not copied component engines.
+
+## Out of Scope
+
+- Replacing the individual CLIs or GitHub Actions.
+- Hosting a central policy service.
+- Silently overriding block verdicts or provenance failures.

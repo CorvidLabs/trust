@@ -75,3 +75,4 @@ Native pull request comparisons SHALL be fixed to the event base and head commit
 Acceptance Criteria
 
 - The action does not silently widen or move a pull request comparison.
+
