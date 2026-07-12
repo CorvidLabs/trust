@@ -79,7 +79,7 @@ After the immutable tag exists, download its GitHub source archive, calculate
 the SHA-256, and render the formula with the matching SpecSync version:
 
 ```bash
-python3 scripts/render_homebrew_formula.py 0.2.0 ARCHIVE_SHA256 \
+python3 scripts/render_homebrew_formula.py 0.2.1 ARCHIVE_SHA256 \
   --specsync-version 5.0.1
 ```
 
