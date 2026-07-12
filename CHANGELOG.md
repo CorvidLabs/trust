@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.0.0] - 2026-07-11
+
+### Features
+
+- enforce merge-safe baseline provenance (#8) (40a4d3c)
+
 ## [v0.2.1] - 2026-07-11
 
 ### Other
