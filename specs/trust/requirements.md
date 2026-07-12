@@ -25,6 +25,8 @@ spec: trust.spec.md
 - Exact-tag dogfooding exposes suffixed release assets through canonical `augur` and `attest` command names.
 - Main provenance waits for the repository Trust gate in the same workflow and repairs insufficient existing notes.
 - The Homebrew bundle exposes `fledge-trust` as a concrete executable for Fledge PATH discovery.
+- Baseline provenance verifies the protected base commit while lifecycle, contract, and risk gate the proposed range.
+- Pull requests cannot weaken the committed provenance verification scope from baseline to changed commits.
 
 ## Constraints
 

@@ -13,7 +13,8 @@ skip_reason = ""
 threshold = "block"
 
 [provenance]
-mode = "soft"
+mode = "enforce"
+scope = "baseline"
 policy = ".attest.json"
 skip_reason = ""
 

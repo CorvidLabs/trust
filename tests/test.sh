@@ -294,6 +294,7 @@ for file in .trust.toml .specsync/config.toml .augur.toml .attest.json .github/w
 done
 [ ! -e "$repo/.atlasignore" ] || fail "default adoption enabled Atlas without opt-in"
 grep -Fq 'enabled = false' "$repo/.trust.toml" || fail "default adoption did not record Atlas disabled"
+grep -Fq 'scope = "changes"' "$repo/.trust.toml" || fail "default adoption did not preserve changed-commit provenance"
 [ "$(cat "$repo/fledge.toml")" = "$expected_fledge" ] || fail "adopt replaced fledge.toml"
 
 mkdir -p "$repo/nested/package"
@@ -481,6 +482,39 @@ GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$output
   "$TRUST" action-resolve --working-directory "$event_repo"
 grep -Fxq "$base..$head" "$outputs" || fail "pull request range was not resolved"
 
+baseline_repo="$TMP/baseline-provenance"
+"$ROOT/tests/setup-action-fixture.sh" "$baseline_repo"
+sed -i.bak 's/scope = "changes"/scope = "baseline"/' "$baseline_repo/.trust.toml"
+rm -f "$baseline_repo/.trust.toml.bak"
+git -C "$baseline_repo" add .trust.toml
+git -C "$baseline_repo" commit -qm "enforce baseline provenance"
+printf '\n# baseline proposal\n' >> "$baseline_repo/src/example.py"
+git -C "$baseline_repo" add src/example.py
+git -C "$baseline_repo" commit -qm "proposal"
+baseline_base="$(git -C "$baseline_repo" rev-parse HEAD~1)"
+baseline_head="$(git -C "$baseline_repo" rev-parse HEAD)"
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' \
+  "$baseline_base" "$baseline_head" > "$event"
+: > "$outputs"
+GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
+  "$TRUST" action-resolve --working-directory "$baseline_repo"
+grep -Fxq "$baseline_base..$baseline_head" "$outputs" || fail "baseline scope changed the risk range"
+grep -Fxq "commit" "$outputs" || fail "baseline scope did not select commit verification"
+grep -Fxq "$baseline_base" "$outputs" || fail "baseline scope did not select the pull request base"
+
+sed -i.bak 's/scope = "baseline"/scope = "changes"/' "$baseline_repo/.trust.toml"
+rm -f "$baseline_repo/.trust.toml.bak"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$baseline_repo" >/dev/null 2>&1; then
+  fail "pull request weakened the committed provenance scope"
+fi
+git -C "$baseline_repo" restore .trust.toml
+
+: > "$log"
+(cd "$baseline_repo" && PATH="$fake:$PATH" "$TRUST" verify --range "$baseline_base..$baseline_head" >/dev/null)
+contains "$(cat "$log")" "attest verify --commit $baseline_base"
+
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$head" > "$event"
 cp "$event_repo/.trust.toml" "$TMP/event-trust.toml"
 sed -i.bak '/^\[contract\]/,/^\[risk\]/ { s/enabled = true/enabled = false/; s/skip_reason = ""/skip_reason = "weakened in PR"/; }' "$event_repo/.trust.toml"
 rm -f "$event_repo/.trust.toml.bak"

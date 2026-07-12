@@ -32,6 +32,7 @@ BEGIN = "<!-- CorvidLabs trust toolchain: BEGIN (managed, do not edit inside) --
 END = "<!-- CorvidLabs trust toolchain: END -->"
 RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
 PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
+PROVENANCE_SCOPE_ORDER = {"changes": 0, "baseline": 1}
 DEFAULT_ATLAS_SKIP_REASON = "Atlas publication was not enabled during adoption"
 
 
@@ -63,6 +64,7 @@ class TrustConfig:
     contract_skip_reason: str
     risk_threshold: str
     provenance_mode: str
+    provenance_scope: str
     provenance_policy: str
     provenance_skip_reason: str
     atlas_enabled: bool
@@ -197,10 +199,13 @@ def load_config(path: Path) -> TrustConfig:
         raise TrustError("risk.threshold must be proceed, review, or block")
 
     provenance = table(document, "provenance")
-    reject_unknown_keys(provenance, "provenance", {"mode", "policy", "skip_reason"})
+    reject_unknown_keys(provenance, "provenance", {"mode", "scope", "policy", "skip_reason"})
     provenance_mode = text(provenance.get("mode", "soft"), "provenance.mode")
     if provenance_mode not in {"soft", "enforce", "off"}:
         raise TrustError("provenance.mode must be soft, enforce, or off")
+    provenance_scope = text(provenance.get("scope", "changes"), "provenance.scope")
+    if provenance_scope not in {"changes", "baseline"}:
+        raise TrustError("provenance.scope must be changes or baseline")
     policy = text(provenance.get("policy", ".attest.json"), "provenance.policy")
     if provenance_mode != "off" and not policy:
         raise TrustError("provenance.policy must be nonempty when provenance is enabled")
@@ -227,6 +232,7 @@ def load_config(path: Path) -> TrustConfig:
         contract_skip_reason=contract_reason,
         risk_threshold=threshold,
         provenance_mode=provenance_mode,
+        provenance_scope=provenance_scope,
         provenance_policy=policy,
         provenance_skip_reason=provenance_reason,
         atlas_enabled=atlas_enabled,
@@ -257,6 +263,7 @@ threshold = "block"
 
 [provenance]
 mode = "{'off' if no_attest else 'soft'}"
+scope = "changes"
 policy = ".attest.json"
 skip_reason = {json.dumps(no_attest)}
 
@@ -536,6 +543,8 @@ def validate_policy_strength(base: TrustConfig, proposed: TrustConfig) -> None:
         raise TrustError("pull request policy cannot soften provenance")
     if base.provenance_policy != proposed.provenance_policy:
         raise TrustError("pull request policy cannot change the provenance policy path")
+    if PROVENANCE_SCOPE_ORDER[proposed.provenance_scope] < PROVENANCE_SCOPE_ORDER[base.provenance_scope]:
+        raise TrustError("pull request policy cannot weaken the provenance verification scope")
     if base.atlas_enabled and not proposed.atlas_enabled:
         raise TrustError("pull request policy cannot disable Atlas")
 
@@ -549,9 +558,36 @@ def derive_range(root: Path, explicit: str | None) -> str:
     raise TrustError("cannot infer a comparison range; pass --range or configure an upstream branch")
 
 
-def action_range(root: Path, explicit: str | None) -> tuple[str, str, str]:
+def baseline_commit(root: Path, comparison: str) -> str:
+    if "..." in comparison:
+        left, right = comparison.split("...", 1)
+        if not left.strip() or not right.strip():
+            raise TrustError("baseline provenance requires two nonempty range endpoints")
+        result = run(["git", "merge-base", left.strip(), right.strip()], cwd=root, capture=True)
+        return result.stdout.strip()
+    if ".." not in comparison:
+        raise TrustError("baseline provenance requires a comparison range")
+    base = comparison.split("..", 1)[0].strip()
+    if not base:
+        raise TrustError("baseline provenance requires a nonempty range base")
+    result = run(["git", "rev-parse", f"{base}^{{commit}}"], cwd=root, capture=True)
+    return result.stdout.strip()
+
+
+def provenance_target(root: Path, comparison: str, scope: str) -> tuple[str, str]:
+    if scope == "baseline":
+        return "commit", baseline_commit(root, comparison)
+    return "range", comparison
+
+
+def action_range(
+    root: Path,
+    explicit: str | None,
+    provenance_scope: str,
+) -> tuple[str, str, str]:
     if explicit:
-        return explicit, "range", explicit
+        target, value = provenance_target(root, explicit, provenance_scope)
+        return explicit, target, value
     event_name = os.environ.get("GITHUB_EVENT_NAME", "")
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
     event: dict[str, Any] = {}
@@ -566,17 +602,20 @@ def action_range(root: Path, explicit: str | None) -> tuple[str, str, str]:
         head = pull.get("head", {}).get("sha")
         if base and head:
             comparison = f"{base}..{head}"
-            return comparison, "range", comparison
+            target, value = provenance_target(root, comparison, provenance_scope)
+            return comparison, target, value
     if event_name == "push":
         before = str(event.get("before", ""))
         current = str(event.get("after") or os.environ.get("GITHUB_SHA", "HEAD"))
         if before and set(before) != {"0"}:
             comparison = f"{before}..{current}"
-            return comparison, "range", comparison
+            target, value = provenance_target(root, comparison, provenance_scope)
+            return comparison, target, value
         empty_tree = run(["git", "hash-object", "-t", "tree", "/dev/null"], cwd=root, capture=True).stdout.strip()
         return f"{empty_tree}..{current}", "commit", current
     comparison = derive_range(root, None)
-    return comparison, "range", comparison
+    target, value = provenance_target(root, comparison, provenance_scope)
+    return comparison, target, value
 
 
 def write_github_outputs(values: dict[str, str]) -> None:
@@ -599,7 +638,11 @@ def action_resolve(arguments: argparse.Namespace) -> int:
     if base is not None:
         validate_policy_strength(base, committed)
     config = apply_overrides(committed, arguments.profile or None, arguments.threshold or None)
-    comparison, attest_target, attest_value = action_range(root, arguments.range or None)
+    comparison, attest_target, attest_value = action_range(
+        root,
+        arguments.range or None,
+        config.provenance_scope,
+    )
     outputs = {
         "profile": config.profile,
         "strict": str(config.strict).lower(),
@@ -607,6 +650,7 @@ def action_resolve(arguments: argparse.Namespace) -> int:
         "contract_coverage": str(config.effective_contract_coverage),
         "risk_threshold": config.risk_threshold,
         "provenance_mode": config.effective_provenance_mode,
+        "provenance_scope": config.provenance_scope,
         "provenance_policy": config.provenance_policy,
         "atlas_enabled": str(config.atlas_enabled).lower(),
         "range": comparison,
@@ -750,8 +794,9 @@ def verify(arguments: argparse.Namespace) -> int:
             raise TrustError(f"provenance policy is missing: {config.provenance_policy}")
         fetch_notes(root, mode)
         print("== provenance ==")
+        target, value = provenance_target(root, comparison, config.provenance_scope)
         result = run(
-            ["attest", "verify", "--range", comparison, "--policy", str(policy), "--json"],
+            ["attest", "verify", f"--{target}", value, "--policy", str(policy), "--json"],
             cwd=root,
             check=False,
             capture=True,

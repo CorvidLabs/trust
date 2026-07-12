@@ -54,10 +54,11 @@ the supported `v0` Action channel be created at `v0.2.1`.
 
 ## Provenance bootstrap
 
-Trust keeps self-provenance in bootstrap-safe `soft` mode until the first green
-main CI run creates `refs/notes/attest`. The main provenance job is still
-required: it records a risk-bound, tests-passed note, verifies the committed
-policy, and fails if the remote note cannot be published durably.
+Trust self-provenance uses enforced `baseline` scope. Pull requests and main
+pushes verify the already-attested base while lifecycle, contract, and risk
+gate the proposed range. The main provenance job records a risk-bound,
+tests-passed note for the landed commit, verifies the committed policy, and
+fails if the remote note cannot be published durably.
 
 After the readiness merge, verify the external ledger proof locally:
 
@@ -69,9 +70,9 @@ attest verify --commit origin/main --policy .attest.json
 Do not claim the provenance release gate complete until both the hosted record
 job and this remote-ledger verification pass.
 
-The initial readiness merge satisfied that bootstrap gate. Keep self-policy in
-`soft` mode until a merge-safe enforcement flow can verify a newly created main
-commit before the post-merge recorder would otherwise attest it.
+Branch governance must require pull requests to be current with `main`. That
+keeps the proof inductive: the base is attested before merge and the landed
+commit is attested before another proposal based on it can pass.
 
 ## Homebrew bundle
 
@@ -87,6 +88,10 @@ Copy the output to `Formula/corvid-trust.rb` in `CorvidLabs/homebrew-tap` only
 after the real digest is known. The formula installs the plugin under `libexec`,
 wraps it with the guaranteed Homebrew Python path, depends on the four pinned
 component formulae, and tests discovery through `fledge trust --version`.
+
+For Homebrew installations with third-party tap trust enforcement, grant
+formula-scoped trust to `corvid-trust`, `fledge`, `spec-sync`, `augur`, and
+`attest`; whole-tap trust is not required.
 
 ## Stable release
 

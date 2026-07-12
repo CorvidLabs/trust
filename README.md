@@ -12,11 +12,31 @@ Trust keeps the underlying tools independent and composes them into one gate:
 
 ## Install the pre-release plugin
 
-Until the first tagged Trust release and Homebrew bundle are published, install
-the plugin from the repository:
+Install the complete toolchain from the CorvidLabs Homebrew tap:
 
 ```bash
-fledge plugins install CorvidLabs/trust
+brew tap corvidlabs/tap
+brew install corvidlabs/tap/corvid-trust
+```
+
+When Homebrew's third-party tap trust gate is enabled, trust the five formulas
+explicitly before installation:
+
+```bash
+brew trust --formula \
+  corvidlabs/tap/corvid-trust \
+  corvidlabs/tap/fledge \
+  corvidlabs/tap/spec-sync \
+  corvidlabs/tap/augur \
+  corvidlabs/tap/attest
+```
+
+The bundle installs `fledge-trust` on `PATH`; Fledge discovers that executable
+automatically as `fledge trust`. To install the plugin without Homebrew, pin the
+immutable release tag:
+
+```bash
+fledge plugins install CorvidLabs/trust@v0.2.1
 ```
 
 Trust verification also requires the independently distributed `specsync`,
@@ -61,6 +81,13 @@ progressive: an unavailable or unsatisfied provenance ledger is reported as
 degraded while the repository adopts signed provenance. Strict mode forces
 100% contract coverage and enforced provenance. Atlas is disabled unless
 adoption explicitly opts into Pages publication with `--atlas`.
+
+`provenance.scope = "changes"` verifies attestations on the proposed commits.
+Repositories that record provenance only after merge can select `"baseline"`:
+Trust then verifies the attested base while lifecycle, SpecSync, and Augur gate
+the proposed range. Baseline enforcement requires pull requests to be current
+with the protected base branch so post-merge CI can attest each landed commit
+before the next change merges.
 
 ## GitHub Actions
 

@@ -134,8 +134,13 @@ if self_policy != {"requireAttestation": True, "requireTestsPassed": True}:
 
 with (ROOT / ".trust.toml").open("rb") as stream:
     self_trust = tomllib.load(stream)
-if self_trust.get("provenance") != {"mode": "soft", "policy": ".attest.json", "skip_reason": ""}:
-    fail("Trust self-provenance must remain enabled in bootstrap-safe soft mode until the ledger exists")
+if self_trust.get("provenance") != {
+    "mode": "enforce",
+    "scope": "baseline",
+    "policy": ".attest.json",
+    "skip_reason": "",
+}:
+    fail("Trust must enforce merge-safe baseline provenance for its own changes")
 
 plugin = (ROOT / "plugin.toml").read_text(encoding="utf-8")
 if 'name = "trust"' not in plugin or 'binary = "bin/fledge-trust"' not in plugin:

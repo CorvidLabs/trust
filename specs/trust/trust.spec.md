@@ -88,6 +88,8 @@ forcing them into a shared release cycle.
 10. Status JSON reports the Trust plugin version from `plugin.toml`.
 11. Atlas is disabled by default and requires explicit adoption plus a recorded `.atlasignore`.
 12. Generated workflows publish Atlas only for pushes and isolate Pages write permissions to the deployment job.
+13. Baseline provenance verifies the range base without changing the lifecycle, contract, or risk comparison.
+14. Pull requests cannot weaken baseline provenance back to changed-commit verification.
 
 ## Behavioral Examples
 
@@ -106,7 +108,7 @@ And every missing managed file is created
 Given all four tools are installed and configured
 When fledge trust verify --range origin/main..HEAD runs
 Then the verify lane runs before specsync check
-And augur gates the range before attest verifies its provenance
+And augur gates the range before attest verifies the configured changes or baseline scope
 ```
 
 ## Error Cases
