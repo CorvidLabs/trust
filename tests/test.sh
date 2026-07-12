@@ -482,6 +482,14 @@ GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$output
   "$TRUST" action-resolve --working-directory "$event_repo"
 grep -Fxq "$base..$head" "$outputs" || fail "pull request range was not resolved"
 
+printf '{"pull_request":{"base":{"sha":"ffffffffffffffffffffffffffffffffffffffff"},"head":{"sha":"%s"}}}\n' \
+  "$head" > "$event"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "unavailable pull request base commit bypassed policy comparison"
+fi
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$head" > "$event"
+
 baseline_repo="$TMP/baseline-provenance"
 "$ROOT/tests/setup-action-fixture.sh" "$baseline_repo"
 sed -i.bak '/^mode = "soft"/a\
@@ -495,7 +503,11 @@ git -C "$baseline_repo" add src/example.py
 git -C "$baseline_repo" commit -qm "proposal"
 baseline_base="$(git -C "$baseline_repo" rev-parse HEAD~1)"
 baseline_head="$(git -C "$baseline_repo" rev-parse HEAD)"
-printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' \
+baseline_origin="$TMP/baseline-origin.git"
+git init --bare -q "$baseline_origin"
+git -C "$baseline_repo" remote add origin "$baseline_origin"
+git -C "$baseline_repo" push -q origin "$baseline_base:refs/heads/main"
+printf '{"pull_request":{"base":{"sha":"%s","ref":"main"},"head":{"sha":"%s"}}}\n' \
   "$baseline_base" "$baseline_head" > "$event"
 : > "$outputs"
 GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
@@ -503,6 +515,13 @@ GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$output
 grep -Fxq "$baseline_base..$baseline_head" "$outputs" || fail "baseline scope changed the risk range"
 grep -Fxq "commit" "$outputs" || fail "baseline scope did not select commit verification"
 grep -Fxq "$baseline_base" "$outputs" || fail "baseline scope did not select the pull request base"
+
+git -C "$baseline_repo" push -q -f origin "$baseline_head:refs/heads/main"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$baseline_repo" >/dev/null 2>&1; then
+  fail "stale baseline pull request was accepted"
+fi
+git -C "$baseline_repo" push -q -f origin "$baseline_base:refs/heads/main"
 
 sed -i.bak 's/scope = "baseline"/scope = "changes"/' "$baseline_repo/.trust.toml"
 rm -f "$baseline_repo/.trust.toml.bak"
@@ -514,6 +533,9 @@ git -C "$baseline_repo" restore .trust.toml
 
 : > "$log"
 (cd "$baseline_repo" && PATH="$fake:$PATH" "$TRUST" verify --range "$baseline_base..$baseline_head" >/dev/null)
+contains "$(cat "$log")" "attest verify --commit $baseline_base"
+: > "$log"
+(cd "$baseline_repo" && PATH="$fake:$PATH" "$TRUST" verify --range "$baseline_base..." >/dev/null)
 contains "$(cat "$log")" "attest verify --commit $baseline_base"
 
 strict_scope_repo="$TMP/strict-scope"

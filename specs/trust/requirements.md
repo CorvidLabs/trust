@@ -27,8 +27,10 @@ spec: trust.spec.md
 - Main provenance waits for the repository Trust gate in the same workflow and repairs insufficient existing notes.
 - The Homebrew bundle exposes `fledge-trust` as a concrete executable for Fledge PATH discovery.
 - Baseline provenance verifies the protected base commit while lifecycle, contract, and risk gate the proposed range.
+- Baseline pull requests fail when their event base is not the live remote branch tip.
 - Provenance scope changes are limited to a simultaneous soft-to-enforced baseline migration.
 - Pull requests cannot change the committed provenance policy contents.
+- Pull request policy comparison fails closed when the base commit is unavailable.
 
 ## Constraints
 

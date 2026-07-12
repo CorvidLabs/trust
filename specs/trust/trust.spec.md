@@ -91,6 +91,8 @@ forcing them into a shared release cycle.
 13. Baseline provenance verifies the range base without changing the lifecycle, contract, or risk comparison.
 14. Provenance scope can change only during a simultaneous soft-to-enforced baseline migration.
 15. Pull requests cannot change the committed provenance policy contents.
+16. Pull request policy comparison fails when the base commit object is unavailable.
+17. Baseline pull requests fail unless their event base matches the live remote branch tip.
 
 ## Behavioral Examples
 

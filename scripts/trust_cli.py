@@ -518,11 +518,25 @@ def pull_request_base_config(root: Path, config_path: str) -> tuple[TrustConfig,
         relative = policy_path.relative_to(repository_root).as_posix()
     except ValueError as error:
         raise TrustError("Trust configuration must be inside the Git worktree") from error
-    result = run(["git", "show", f"{base}:{relative}"], cwd=repository_root, check=False, capture=True)
-    if result.returncode != 0:
+    base_object = run(
+        ["git", "cat-file", "-e", f"{base}^{{commit}}"],
+        cwd=repository_root,
+        check=False,
+        capture=True,
+    )
+    if base_object.returncode != 0:
+        raise TrustError("pull request base commit is unavailable; checkout must include full history")
+    config_object = run(
+        ["git", "cat-file", "-e", f"{base}:{relative}"],
+        cwd=repository_root,
+        check=False,
+        capture=True,
+    )
+    if config_object.returncode != 0:
         # Initial Trust adoption has no policy on the base branch. After adoption,
         # the base policy is authoritative for every pull request.
         return None
+    result = run(["git", "show", f"{base}:{relative}"], cwd=repository_root, capture=True)
     return load_config_text(result.stdout), base
 
 
@@ -596,9 +610,11 @@ def derive_range(root: Path, explicit: str | None) -> str:
 def baseline_commit(root: Path, comparison: str) -> str:
     if "..." in comparison:
         left, right = comparison.split("...", 1)
-        if not left.strip() or not right.strip():
-            raise TrustError("baseline provenance requires two nonempty range endpoints")
-        result = run(["git", "merge-base", left.strip(), right.strip()], cwd=root, capture=True)
+        left_value = left.strip()
+        right_value = right.strip() or "HEAD"
+        if not left_value:
+            raise TrustError("baseline provenance requires a nonempty range base")
+        result = run(["git", "merge-base", left_value, right_value], cwd=root, capture=True)
         return result.stdout.strip()
     if ".." not in comparison:
         raise TrustError("baseline provenance requires a comparison range")
@@ -615,14 +631,28 @@ def provenance_target(root: Path, comparison: str, scope: str) -> tuple[str, str
     return "range", comparison
 
 
+def validate_current_pull_request_base(root: Path, pull: dict[str, Any], base: str) -> None:
+    base_ref = pull.get("base", {}).get("ref")
+    if not isinstance(base_ref, str) or not base_ref:
+        raise TrustError("baseline pull request event is missing the base branch ref")
+    result = run(
+        ["git", "ls-remote", "--exit-code", "origin", f"refs/heads/{base_ref}"],
+        cwd=root,
+        check=False,
+        capture=True,
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        raise TrustError(f"cannot resolve protected base branch origin/{base_ref}")
+    tip = result.stdout.split()[0]
+    if tip != base:
+        raise TrustError("baseline provenance requires the pull request to be current with its base branch")
+
+
 def action_range(
     root: Path,
     explicit: str | None,
     provenance_scope: str,
 ) -> tuple[str, str, str]:
-    if explicit:
-        target, value = provenance_target(root, explicit, provenance_scope)
-        return explicit, target, value
     event_name = os.environ.get("GITHUB_EVENT_NAME", "")
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
     event: dict[str, Any] = {}
@@ -636,9 +666,19 @@ def action_range(
         base = pull.get("base", {}).get("sha")
         head = pull.get("head", {}).get("sha")
         if base and head:
+            if provenance_scope == "baseline":
+                validate_current_pull_request_base(root, pull, base)
+            if explicit:
+                target, value = provenance_target(root, explicit, provenance_scope)
+                if provenance_scope == "baseline" and value != base:
+                    raise TrustError("explicit baseline range must resolve to the pull request base commit")
+                return explicit, target, value
             comparison = f"{base}..{head}"
             target, value = provenance_target(root, comparison, provenance_scope)
             return comparison, target, value
+    if explicit:
+        target, value = provenance_target(root, explicit, provenance_scope)
+        return explicit, target, value
     if event_name == "push":
         before = str(event.get("before", ""))
         current = str(event.get("after") or os.environ.get("GITHUB_SHA", "HEAD"))

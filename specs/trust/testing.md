@@ -27,7 +27,9 @@ spec: trust.spec.md
 | Homebrew renderer | Release version, archive digest, dependency version, executable wrapper target, placeholders, Ruby syntax, and style validate. |
 | Active contract | Released SpecSync 5.0.1 reports 30/30 exports, zero warnings, and zero failures. |
 | Baseline provenance | Risk retains the proposed range while Attest verifies its resolved base commit. |
+| Stale baseline | Baseline pull requests fail when the protected remote branch has advanced. |
 | Policy immutability | Pull requests cannot weaken or replace the committed Attest policy contents. |
+| Base availability | Missing pull request base objects fail closed instead of bypassing policy comparison. |
 
 ## Manual Release Checks
 

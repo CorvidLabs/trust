@@ -86,8 +86,9 @@ adoption explicitly opts into Pages publication with `--atlas`.
 Repositories that record provenance only after merge can select `"baseline"`:
 Trust then verifies the attested base while lifecycle, SpecSync, and Augur gate
 the proposed range. Baseline enforcement requires pull requests to be current
-with the protected base branch so post-merge CI can attest each landed commit
-before the next change merges.
+with the protected base branch; the Action confirms the event base against the
+live remote branch tip. Post-merge CI can then attest each landed commit before
+the next change merges.
 
 ## GitHub Actions
 
