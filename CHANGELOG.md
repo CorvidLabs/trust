@@ -13,6 +13,7 @@
 - Require tagged source contract validation, a concrete Homebrew plugin wrapper, and an in-workflow Trust gate before provenance publication.
 - Repair insufficient existing provenance notes before verifying and publishing the durable ledger.
 - Align the governed Public API table for exact active coverage with the SpecSync 5.0.1 parser fix.
+- Record the bootstrapped and independently verified main provenance ledger while retaining merge-safe progressive policy.
 - Normalize the SpecSync cache after forced verification and pin generated checkout steps to v7.0.0.
 - Pin the validation dependency in both CI and the repository self-dogfood workflow.
 - Keep SpecSync out of the lifecycle lane so the composite Action owns contract installation and verification order.

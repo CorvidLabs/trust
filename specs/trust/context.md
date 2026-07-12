@@ -31,8 +31,9 @@ optional upgrade after release.
   Trust's Public API table has exact active coverage with its dotted-symbol parser fix.
 - A tagged Trust release is required before the Homebrew bundle and tagged
   plugin installation path can be tested honestly.
-- Main-branch CI is prepared to bootstrap `refs/notes/attest` after the
-  readiness work lands; enforced provenance waits for that durable first note.
+- Main-branch CI published `refs/notes/attest` for the landed readiness commit,
+  and local policy verification passes against `origin/main`. Repository policy
+  remains progressive until hard enforcement has a merge-safe attestation flow.
 - Repositories opting into Atlas must configure GitHub Pages to use GitHub
   Actions before their first publication push.
 

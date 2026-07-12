@@ -66,6 +66,10 @@ attest verify --commit origin/main --policy .attest.json
 Do not claim the provenance release gate complete until both the hosted record
 job and this remote-ledger verification pass.
 
+The initial readiness merge satisfied that bootstrap gate. Keep self-policy in
+`soft` mode until a merge-safe enforcement flow can verify a newly created main
+commit before the post-merge recorder would otherwise attest it.
+
 ## Homebrew bundle
 
 After the immutable tag exists, download its GitHub source archive, calculate
