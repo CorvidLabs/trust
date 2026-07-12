@@ -10,7 +10,7 @@ Trust keeps the underlying tools independent and composes them into one gate:
 4. **attest** verifies signed provenance recorded in git notes.
 5. **atlas** optionally publishes the result as a living coverage map.
 
-## Install the pre-release plugin
+## Install Trust
 
 Install the complete toolchain from the CorvidLabs Homebrew tap:
 
@@ -36,7 +36,7 @@ automatically as `fledge trust`. To install the plugin without Homebrew, pin the
 immutable release tag:
 
 ```bash
-fledge plugins install CorvidLabs/trust@v0.2.1
+fledge plugins install CorvidLabs/trust@v1.0.0
 ```
 
 Trust verification also requires the independently distributed `specsync`,
@@ -104,7 +104,7 @@ steps:
     with:
       fetch-depth: 0
 
-  - uses: CorvidLabs/trust@v0
+  - uses: CorvidLabs/trust@v1
 ```
 
 The individual actions remain available when a repository needs custom step

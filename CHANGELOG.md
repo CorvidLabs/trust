@@ -6,6 +6,11 @@
 
 - enforce merge-safe baseline provenance (#8) (40a4d3c)
 
+### Fixed
+
+- Point generated workflows and stable installation documentation at the 1.x plugin and Action channels.
+- Declare the stable 1.x release line as supported by the security policy.
+
 ## [v0.2.1] - 2026-07-11
 
 ### Other

@@ -32,6 +32,12 @@ with open(sys.argv[1], "rb") as stream:
 PY
 )"
 [ "$("$TRUST" --version)" = "fledge trust $plugin_version" ] || fail "version output does not match plugin manifest"
+grep -q 'uses: CorvidLabs/trust@v1' "$ROOT/templates/trust.yml" || fail "generated workflow must use v1"
+if grep -q 'CorvidLabs/trust@v0' "$ROOT/templates/trust.yml"; then
+  fail "generated workflow retained the pre-stable v0 channel"
+fi
+grep -q 'CorvidLabs/trust@v1.0.0' "$ROOT/README.md" || fail "README must install the stable immutable tag"
+grep -q 'latest `1.x` release line' "$ROOT/SECURITY.md" || fail "security policy must support 1.x"
 
 component_source="$TMP/component-source"
 component_bin="$TMP/component-bin"
