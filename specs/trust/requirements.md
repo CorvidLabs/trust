@@ -22,6 +22,7 @@ spec: trust.spec.md
 - Atlas publication is explicit opt-in and never runs for pull request events.
 - Enabled Atlas policy is verified locally and published by the generated workflow on pushes.
 - Tagged publication validates the Trust source contract with the pinned SpecSync release before exact-tag dogfooding.
+- Exact-tag dogfooding exposes suffixed release assets through canonical `augur` and `attest` command names.
 - Main provenance waits for the repository Trust gate in the same workflow and repairs insufficient existing notes.
 - The Homebrew bundle exposes `fledge-trust` as a concrete executable for Fledge PATH discovery.
 

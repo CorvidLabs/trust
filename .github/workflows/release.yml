@@ -120,10 +120,8 @@ jobs:
         env:
           AUGUR: ${{ steps.augur.outputs.binary }}
           ATTEST: ${{ steps.attest.outputs.binary }}
-        run: |
-          set -euo pipefail
-          dirname "$AUGUR" >> "$GITHUB_PATH"
-          dirname "$ATTEST" >> "$GITHUB_PATH"
+          COMPONENT_BIN: ${{ runner.temp }}/trust-component-bin
+        run: bash scripts/expose_component_binaries.sh
       - name: Verify through the installed Trust plugin
         env:
           FIXTURE: ${{ runner.temp }}/trust-tag-dogfood

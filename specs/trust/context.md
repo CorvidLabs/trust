@@ -29,8 +29,10 @@ optional upgrade after release.
 
 - spec-sync 5.0.1 is released and pinned for both local and composite Action verification.
   Trust's Public API table has exact active coverage with its dotted-symbol parser fix.
-- A tagged Trust release is required before the Homebrew bundle and tagged
-  plugin installation path can be tested honestly.
+- Immutable tag `v0.2.0` proved source and plugin installation but failed final
+  dogfooding because suffixed Augur and Attest assets were not exposed under
+  canonical command names. Corrective tag `v0.2.1` must pass before Homebrew
+  publication and supported-channel promotion.
 - Main-branch CI published `refs/notes/attest` for the landed readiness commit,
   and local policy verification passes against `origin/main`. Repository policy
   remains progressive until hard enforcement has a merge-safe attestation flow.
