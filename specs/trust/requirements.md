@@ -31,6 +31,7 @@ spec: trust.spec.md
 - Provenance scope changes are limited to a simultaneous soft-to-enforced baseline migration.
 - Pull requests cannot change the committed provenance policy contents.
 - Pull request policy comparison fails closed when the base commit is unavailable.
+- External governed worktrees ignore the host GitHub event and require an explicit range.
 
 ## Constraints
 

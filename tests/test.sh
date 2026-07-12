@@ -472,6 +472,11 @@ if env -u GITHUB_EVENT_NAME -u GITHUB_EVENT_PATH -u GITHUB_SHA \
   fail "manual Action resolution without range or upstream succeeded"
 fi
 
+if GITHUB_REPOSITORY=CorvidLabs/trust GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$TMP/missing-event" \
+  "$TRUST" action-resolve --working-directory "$override_repo" >/dev/null 2>&1; then
+  fail "external governed repository inherited host pull request context without an explicit range"
+fi
+
 event_repo="$TMP/event-ranges"
 "$ROOT/tests/setup-action-fixture.sh" "$event_repo"
 base="$(git -C "$event_repo" rev-parse HEAD~1)"

@@ -93,6 +93,7 @@ forcing them into a shared release cycle.
 15. Pull requests cannot change the committed provenance policy contents.
 16. Pull request policy comparison fails when the base commit object is unavailable.
 17. Baseline pull requests fail unless their event base matches the live remote branch tip.
+18. External governed worktrees require explicit ranges and do not inherit host pull request metadata.
 
 ## Behavioral Examples
 

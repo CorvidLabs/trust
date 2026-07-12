@@ -30,6 +30,7 @@ spec: trust.spec.md
 | Stale baseline | Baseline pull requests fail when the protected remote branch has advanced. |
 | Policy immutability | Pull requests cannot weaken or replace the committed Attest policy contents. |
 | Base availability | Missing pull request base objects fail closed instead of bypassing policy comparison. |
+| External fixture isolation | Governed worktrees with a different origin require explicit ranges and ignore host PR metadata. |
 
 ## Manual Release Checks
 

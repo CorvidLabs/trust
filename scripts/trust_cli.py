@@ -540,6 +540,19 @@ def pull_request_base_config(root: Path, config_path: str) -> tuple[TrustConfig,
     return load_config_text(result.stdout), base
 
 
+def governs_github_event_repository(root: Path) -> bool:
+    repository = os.environ.get("GITHUB_REPOSITORY", "").strip()
+    if not repository:
+        return True
+    remote = run(["git", "remote", "get-url", "origin"], cwd=root, check=False, capture=True)
+    if remote.returncode != 0:
+        return False
+    normalized = remote.stdout.strip().rstrip("/")
+    if normalized.endswith(".git"):
+        normalized = normalized[:-4]
+    return normalized.endswith(f"/{repository}") or normalized.endswith(f":{repository}")
+
+
 def validate_pull_request_policy_content(
     root: Path,
     base_commit: str,
@@ -652,7 +665,13 @@ def action_range(
     root: Path,
     explicit: str | None,
     provenance_scope: str,
+    use_event_context: bool,
 ) -> tuple[str, str, str]:
+    if not use_event_context:
+        if not explicit:
+            raise TrustError("external governed repositories require an explicit comparison range")
+        target, value = provenance_target(root, explicit, provenance_scope)
+        return explicit, target, value
     event_name = os.environ.get("GITHUB_EVENT_NAME", "")
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
     event: dict[str, Any] = {}
@@ -709,7 +728,8 @@ def action_resolve(arguments: argparse.Namespace) -> int:
     root = Path(arguments.working_directory).resolve()
     committed = load_config(root / arguments.config)
     validate_layer_files(root, committed)
-    base_policy = pull_request_base_config(root, arguments.config)
+    use_event_context = governs_github_event_repository(root)
+    base_policy = pull_request_base_config(root, arguments.config) if use_event_context else None
     if base_policy is not None:
         base, base_commit = base_policy
         validate_policy_strength(base, committed)
@@ -719,6 +739,7 @@ def action_resolve(arguments: argparse.Namespace) -> int:
         root,
         arguments.range or None,
         config.provenance_scope,
+        use_event_context,
     )
     outputs = {
         "profile": config.profile,
