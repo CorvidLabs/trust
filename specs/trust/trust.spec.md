@@ -88,6 +88,14 @@ forcing them into a shared release cycle.
 10. Status JSON reports the Trust plugin version from `plugin.toml`.
 11. Atlas is disabled by default and requires explicit adoption plus a recorded `.atlasignore`.
 12. Generated workflows publish Atlas only for pushes and isolate Pages write permissions to the deployment job.
+13. Baseline provenance verifies the range base without changing the lifecycle, contract, or risk comparison.
+14. Provenance scope can change only during a simultaneous soft-to-enforced baseline migration.
+15. Pull requests cannot change the committed provenance policy contents.
+16. Pull request policy comparison fails when the base commit object is unavailable.
+17. Baseline pull requests fail unless their event base matches the live remote branch tip.
+18. External governed worktrees require explicit ranges and do not inherit host pull request metadata.
+19. Native event context requires an exact GitHub server and owner/repository origin match.
+20. Native pull request comparisons cannot differ from the canonical event base-to-head range.
 
 ## Behavioral Examples
 
@@ -106,7 +114,7 @@ And every missing managed file is created
 Given all four tools are installed and configured
 When fledge trust verify --range origin/main..HEAD runs
 Then the verify lane runs before specsync check
-And augur gates the range before attest verifies its provenance
+And augur gates the range before attest verifies the configured changes or baseline scope
 ```
 
 ## Error Cases

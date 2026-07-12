@@ -5,6 +5,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TRUST="$ROOT/bin/fledge-trust"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
+unset GITHUB_EVENT_NAME GITHUB_EVENT_PATH GITHUB_REPOSITORY GITHUB_SERVER_URL GITHUB_SHA
 
 fail() { echo "test failure: $*" >&2; exit 1; }
 contains() { case "$1" in *"$2"*) ;; *) fail "expected output to contain: $2";; esac; }
@@ -294,6 +295,7 @@ for file in .trust.toml .specsync/config.toml .augur.toml .attest.json .github/w
 done
 [ ! -e "$repo/.atlasignore" ] || fail "default adoption enabled Atlas without opt-in"
 grep -Fq 'enabled = false' "$repo/.trust.toml" || fail "default adoption did not record Atlas disabled"
+if grep -q '^scope = ' "$repo/.trust.toml"; then fail "default adoption emitted a channel-incompatible scope"; fi
 [ "$(cat "$repo/fledge.toml")" = "$expected_fledge" ] || fail "adopt replaced fledge.toml"
 
 mkdir -p "$repo/nested/package"
@@ -470,6 +472,16 @@ if env -u GITHUB_EVENT_NAME -u GITHUB_EVENT_PATH -u GITHUB_SHA \
   fail "manual Action resolution without range or upstream succeeded"
 fi
 
+if GITHUB_REPOSITORY=CorvidLabs/trust GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$TMP/missing-event" \
+  "$TRUST" action-resolve --working-directory "$override_repo" >/dev/null 2>&1; then
+  fail "external governed repository inherited host pull request context without an explicit range"
+fi
+git -C "$override_repo" remote add origin https://mirror.invalid/CorvidLabs/trust.git
+GITHUB_REPOSITORY=CorvidLabs/trust GITHUB_SERVER_URL=https://github.com \
+  GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$TMP/missing-event" \
+  "$TRUST" action-resolve --working-directory "$override_repo" --range HEAD~1..HEAD >/dev/null
+git -C "$override_repo" remote remove origin
+
 event_repo="$TMP/event-ranges"
 "$ROOT/tests/setup-action-fixture.sh" "$event_repo"
 base="$(git -C "$event_repo" rev-parse HEAD~1)"
@@ -480,7 +492,93 @@ printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$
 GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
   "$TRUST" action-resolve --working-directory "$event_repo"
 grep -Fxq "$base..$head" "$outputs" || fail "pull request range was not resolved"
+GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" --range "$base..$head" >/dev/null
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" --range "$base..$base" >/dev/null 2>&1; then
+  fail "pull request explicit range omitted the proposed head"
+fi
 
+printf '{"pull_request":{"base":{"sha":"ffffffffffffffffffffffffffffffffffffffff"},"head":{"sha":"%s"}}}\n' \
+  "$head" > "$event"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "unavailable pull request base commit bypassed policy comparison"
+fi
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$head" > "$event"
+
+baseline_repo="$TMP/baseline-provenance"
+"$ROOT/tests/setup-action-fixture.sh" "$baseline_repo"
+sed -i.bak '/^mode = "soft"/a\
+scope = "baseline"
+' "$baseline_repo/.trust.toml"
+rm -f "$baseline_repo/.trust.toml.bak"
+git -C "$baseline_repo" add .trust.toml
+git -C "$baseline_repo" commit -qm "enforce baseline provenance"
+printf '\n# baseline proposal\n' >> "$baseline_repo/src/example.py"
+git -C "$baseline_repo" add src/example.py
+git -C "$baseline_repo" commit -qm "proposal"
+baseline_base="$(git -C "$baseline_repo" rev-parse HEAD~1)"
+baseline_head="$(git -C "$baseline_repo" rev-parse HEAD)"
+baseline_origin="$TMP/baseline-origin.git"
+git init --bare -q "$baseline_origin"
+git -C "$baseline_repo" remote add origin "$baseline_origin"
+git -C "$baseline_repo" push -q origin "$baseline_base:refs/heads/main"
+printf '{"pull_request":{"base":{"sha":"%s","ref":"main"},"head":{"sha":"%s"}}}\n' \
+  "$baseline_base" "$baseline_head" > "$event"
+: > "$outputs"
+GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
+  "$TRUST" action-resolve --working-directory "$baseline_repo"
+grep -Fxq "$baseline_base..$baseline_head" "$outputs" || fail "baseline scope changed the risk range"
+grep -Fxq "commit" "$outputs" || fail "baseline scope did not select commit verification"
+grep -Fxq "$baseline_base" "$outputs" || fail "baseline scope did not select the pull request base"
+
+git -C "$baseline_repo" push -q -f origin "$baseline_head:refs/heads/main"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$baseline_repo" >/dev/null 2>&1; then
+  fail "stale baseline pull request was accepted"
+fi
+git -C "$baseline_repo" push -q -f origin "$baseline_base:refs/heads/main"
+
+sed -i.bak 's/scope = "baseline"/scope = "changes"/' "$baseline_repo/.trust.toml"
+rm -f "$baseline_repo/.trust.toml.bak"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$baseline_repo" >/dev/null 2>&1; then
+  fail "pull request weakened the committed provenance scope"
+fi
+git -C "$baseline_repo" restore .trust.toml
+
+: > "$log"
+(cd "$baseline_repo" && PATH="$fake:$PATH" "$TRUST" verify --range "$baseline_base..$baseline_head" >/dev/null)
+contains "$(cat "$log")" "attest verify --commit $baseline_base"
+: > "$log"
+(cd "$baseline_repo" && PATH="$fake:$PATH" "$TRUST" verify --range "$baseline_base..." >/dev/null)
+contains "$(cat "$log")" "attest verify --commit $baseline_base"
+
+strict_scope_repo="$TMP/strict-scope"
+"$ROOT/tests/setup-action-fixture.sh" "$strict_scope_repo"
+sed -i.bak 's/profile = "standard"/profile = "strict"/' "$strict_scope_repo/.trust.toml"
+rm -f "$strict_scope_repo/.trust.toml.bak"
+git -C "$strict_scope_repo" add .trust.toml
+git -C "$strict_scope_repo" commit -qm "enforce strict profile"
+printf '\n# strict proposal\n' >> "$strict_scope_repo/src/example.py"
+git -C "$strict_scope_repo" add src/example.py
+git -C "$strict_scope_repo" commit -qm "strict proposal"
+strict_base="$(git -C "$strict_scope_repo" rev-parse HEAD~1)"
+strict_head="$(git -C "$strict_scope_repo" rev-parse HEAD)"
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' \
+  "$strict_base" "$strict_head" > "$event"
+sed -i.bak '/^mode = "soft"/c\
+mode = "enforce"\
+scope = "baseline"
+' "$strict_scope_repo/.trust.toml"
+rm -f "$strict_scope_repo/.trust.toml.bak"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$strict_scope_repo" >/dev/null 2>&1; then
+  fail "strict profile changed provenance scope without stronger effective enforcement"
+fi
+
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$head" > "$event"
 cp "$event_repo/.trust.toml" "$TMP/event-trust.toml"
 sed -i.bak '/^\[contract\]/,/^\[risk\]/ { s/enabled = true/enabled = false/; s/skip_reason = ""/skip_reason = "weakened in PR"/; }' "$event_repo/.trust.toml"
 rm -f "$event_repo/.trust.toml.bak"
@@ -490,12 +588,30 @@ if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
 fi
 cp "$TMP/event-trust.toml" "$event_repo/.trust.toml"
 
+sed -i.bak '/^mode = "soft"/a\
+scope = "baseline"
+' "$event_repo/.trust.toml"
+rm -f "$event_repo/.trust.toml.bak"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "pull request changed provenance scope without enabling enforcement"
+fi
+cp "$TMP/event-trust.toml" "$event_repo/.trust.toml"
+
 mv "$event_repo/.attest.json" "$event_repo/.attest.json.saved"
 if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
   "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
   fail "Action accepted a missing enabled layer configuration"
 fi
 mv "$event_repo/.attest.json.saved" "$event_repo/.attest.json"
+
+cp "$event_repo/.attest.json" "$TMP/event-attest.json"
+printf '%s\n' '{"requireAttestation":false}' > "$event_repo/.attest.json"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "pull request weakened the committed provenance policy contents"
+fi
+cp "$TMP/event-attest.json" "$event_repo/.attest.json"
 
 : > "$outputs"
 printf '{"before":"%s","after":"%s"}\n' "$base" "$head" > "$event"

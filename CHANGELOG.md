@@ -32,6 +32,9 @@
 
 - Add CLI and status version reporting so installed plugin builds can be identified.
 - Dogfood Trust through a repository-local workflow and committed managed configuration.
+- Add merge-safe baseline provenance verification while retaining changed-commit scope as the compatibility default.
+- Publish and dogfood the Homebrew Trust bundle and protected `v0` Action channel at v0.2.1.
+- Require exact-tag releases to pass installed-plugin verification against a satisfied enforced baseline ledger.
 
 ### Changed
 
@@ -39,7 +42,10 @@
 - Require tagged source contract validation, a concrete Homebrew plugin wrapper, and an in-workflow Trust gate before provenance publication.
 - Repair insufficient existing provenance notes before verifying and publishing the durable ledger.
 - Align the governed Public API table for exact active coverage with the SpecSync 5.0.1 parser fix.
-- Record the bootstrapped and independently verified main provenance ledger while retaining merge-safe progressive policy.
+- Enforce the bootstrapped and independently verified main provenance ledger through protected baseline verification.
+- Prevent pull requests from changing committed Attest policy contents or switching provenance scope outside migration.
+- Fail baseline pull requests whose base is stale or unavailable instead of relying only on repository settings.
+- Bind native pull request risk and provenance checks to the event's exact base-to-head range.
 - Normalize the SpecSync cache after forced verification and pin generated checkout steps to v7.0.0.
 - Pin the validation dependency in both CI and the repository self-dogfood workflow.
 - Keep SpecSync out of the lifecycle lane so the composite Action owns contract installation and verification order.

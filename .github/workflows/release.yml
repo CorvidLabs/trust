@@ -84,9 +84,13 @@ jobs:
       - name: Create disposable governed repository
         env:
           FIXTURE: ${{ runner.temp }}/trust-tag-dogfood
+          ORIGIN: ${{ runner.temp }}/trust-tag-origin.git
         run: |
           set -euo pipefail
           bash tests/setup-action-fixture.sh "$FIXTURE"
+          git init --bare -q "$ORIGIN"
+          git -C "$FIXTURE" remote add origin "$ORIGIN"
+          git -C "$FIXTURE" push -q -u origin HEAD:main
           fledge trust adopt --dry-run --root "$FIXTURE"
           fledge trust adopt --root "$FIXTURE"
       - name: Install pinned SpecSync 5.0.1
@@ -122,6 +126,15 @@ jobs:
           ATTEST: ${{ steps.attest.outputs.binary }}
           COMPONENT_BIN: ${{ runner.temp }}/trust-component-bin
         run: bash scripts/expose_component_binaries.sh
+      - name: Seed enforced baseline provenance
+        env:
+          ATTEST: ${{ steps.attest.outputs.binary }}
+          FIXTURE: ${{ runner.temp }}/trust-tag-dogfood
+        run: |
+          set -euo pipefail
+          sed -i '/^mode = "soft"/c\mode = "enforce"\nscope = "baseline"' "$FIXTURE/.trust.toml"
+          "$ATTEST" sign -C "$FIXTURE" --commit HEAD~1 --reviewer agent:ci --confidence 1 --tests-passed
+          git -C "$FIXTURE" push -q origin refs/notes/attest
       - name: Verify through the installed Trust plugin
         env:
           FIXTURE: ${{ runner.temp }}/trust-tag-dogfood

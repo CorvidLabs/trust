@@ -31,11 +31,12 @@ optional upgrade after release.
   Trust's Public API table has exact active coverage with its dotted-symbol parser fix.
 - Immutable tag `v0.2.0` proved source and plugin installation but failed final
   dogfooding because suffixed Augur and Attest assets were not exposed under
-  canonical command names. Corrective tag `v0.2.1` must pass before Homebrew
-  publication and supported-channel promotion.
+  canonical command names. Corrective tag `v0.2.1`, its Homebrew bundle, and the
+  protected `v0` channel now pass consumer dogfooding.
 - Main-branch CI published `refs/notes/attest` for the landed readiness commit,
-  and local policy verification passes against `origin/main`. Repository policy
-  remains progressive until hard enforcement has a merge-safe attestation flow.
+  and local policy verification passes against `origin/main`. Baseline scope
+  makes enforcement merge-safe by proving the protected base before post-merge
+  CI records the newly landed commit.
 - Repositories opting into Atlas must configure GitHub Pages to use GitHub
   Actions before their first publication push.
 

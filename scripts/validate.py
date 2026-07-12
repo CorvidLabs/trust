@@ -134,8 +134,13 @@ if self_policy != {"requireAttestation": True, "requireTestsPassed": True}:
 
 with (ROOT / ".trust.toml").open("rb") as stream:
     self_trust = tomllib.load(stream)
-if self_trust.get("provenance") != {"mode": "soft", "policy": ".attest.json", "skip_reason": ""}:
-    fail("Trust self-provenance must remain enabled in bootstrap-safe soft mode until the ledger exists")
+if self_trust.get("provenance") != {
+    "mode": "enforce",
+    "scope": "baseline",
+    "policy": ".attest.json",
+    "skip_reason": "",
+}:
+    fail("Trust must enforce merge-safe baseline provenance for its own changes")
 
 plugin = (ROOT / "plugin.toml").read_text(encoding="utf-8")
 if 'name = "trust"' not in plugin or 'binary = "bin/fledge-trust"' not in plugin:
@@ -154,6 +159,9 @@ for required in (
     'fledge trust doctor --root "$FIXTURE"',
     'fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD',
     "bash scripts/expose_component_binaries.sh",
+    "Seed enforced baseline provenance",
+    'scope = "baseline"',
+    'push -q origin refs/notes/attest',
     "COMPONENT_BIN:",
     "Validate tagged source contract",
     "CorvidLabs/spec-sync@59bbfa766c6cce01ab815ab47db195b0629cc014 # v5.0.1",

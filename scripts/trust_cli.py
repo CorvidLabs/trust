@@ -63,6 +63,7 @@ class TrustConfig:
     contract_skip_reason: str
     risk_threshold: str
     provenance_mode: str
+    provenance_scope: str
     provenance_policy: str
     provenance_skip_reason: str
     atlas_enabled: bool
@@ -197,10 +198,13 @@ def load_config(path: Path) -> TrustConfig:
         raise TrustError("risk.threshold must be proceed, review, or block")
 
     provenance = table(document, "provenance")
-    reject_unknown_keys(provenance, "provenance", {"mode", "policy", "skip_reason"})
+    reject_unknown_keys(provenance, "provenance", {"mode", "scope", "policy", "skip_reason"})
     provenance_mode = text(provenance.get("mode", "soft"), "provenance.mode")
     if provenance_mode not in {"soft", "enforce", "off"}:
         raise TrustError("provenance.mode must be soft, enforce, or off")
+    provenance_scope = text(provenance.get("scope", "changes"), "provenance.scope")
+    if provenance_scope not in {"changes", "baseline"}:
+        raise TrustError("provenance.scope must be changes or baseline")
     policy = text(provenance.get("policy", ".attest.json"), "provenance.policy")
     if provenance_mode != "off" and not policy:
         raise TrustError("provenance.policy must be nonempty when provenance is enabled")
@@ -227,6 +231,7 @@ def load_config(path: Path) -> TrustConfig:
         contract_skip_reason=contract_reason,
         risk_threshold=threshold,
         provenance_mode=provenance_mode,
+        provenance_scope=provenance_scope,
         provenance_policy=policy,
         provenance_skip_reason=provenance_reason,
         atlas_enabled=atlas_enabled,
@@ -494,7 +499,7 @@ def load_config_text(content: str) -> TrustConfig:
         path.unlink(missing_ok=True)
 
 
-def pull_request_base_config(root: Path, config_path: str) -> TrustConfig | None:
+def pull_request_base_config(root: Path, config_path: str) -> tuple[TrustConfig, str] | None:
     if os.environ.get("GITHUB_EVENT_NAME") != "pull_request":
         return None
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
@@ -513,12 +518,75 @@ def pull_request_base_config(root: Path, config_path: str) -> TrustConfig | None
         relative = policy_path.relative_to(repository_root).as_posix()
     except ValueError as error:
         raise TrustError("Trust configuration must be inside the Git worktree") from error
-    result = run(["git", "show", f"{base}:{relative}"], cwd=repository_root, check=False, capture=True)
-    if result.returncode != 0:
+    base_object = run(
+        ["git", "cat-file", "-e", f"{base}^{{commit}}"],
+        cwd=repository_root,
+        check=False,
+        capture=True,
+    )
+    if base_object.returncode != 0:
+        raise TrustError("pull request base commit is unavailable; checkout must include full history")
+    config_object = run(
+        ["git", "cat-file", "-e", f"{base}:{relative}"],
+        cwd=repository_root,
+        check=False,
+        capture=True,
+    )
+    if config_object.returncode != 0:
         # Initial Trust adoption has no policy on the base branch. After adoption,
         # the base policy is authoritative for every pull request.
         return None
-    return load_config_text(result.stdout)
+    result = run(["git", "show", f"{base}:{relative}"], cwd=repository_root, capture=True)
+    return load_config_text(result.stdout), base
+
+
+def governs_github_event_repository(root: Path) -> bool:
+    repository = os.environ.get("GITHUB_REPOSITORY", "").strip()
+    if not repository:
+        return True
+    server = os.environ.get("GITHUB_SERVER_URL", "https://github.com").strip().rstrip("/")
+    server_host = server.split("://", 1)[-1]
+    remote = run(["git", "remote", "get-url", "origin"], cwd=root, check=False, capture=True)
+    if remote.returncode != 0:
+        return False
+    normalized = remote.stdout.strip().rstrip("/")
+    if normalized.endswith(".git"):
+        normalized = normalized[:-4]
+    return normalized in {
+        f"{server}/{repository}",
+        f"git@{server_host}:{repository}",
+        f"ssh://git@{server_host}/{repository}",
+    }
+
+
+def validate_pull_request_policy_content(
+    root: Path,
+    base_commit: str,
+    base: TrustConfig,
+    proposed: TrustConfig,
+) -> None:
+    if base.effective_provenance_mode == "off":
+        return
+    repository_root = git_root(str(root))
+    policy_path = (root / proposed.provenance_policy).resolve()
+    try:
+        relative = policy_path.relative_to(repository_root).as_posix()
+    except ValueError as error:
+        raise TrustError("provenance policy must be inside the Git worktree") from error
+    result = run(
+        ["git", "show", f"{base_commit}:{relative}"],
+        cwd=repository_root,
+        check=False,
+        capture=True,
+    )
+    if result.returncode != 0:
+        raise TrustError("cannot read the committed provenance policy from the pull request base")
+    try:
+        proposed_content = policy_path.read_text(encoding="utf-8")
+    except OSError as error:
+        raise TrustError(f"cannot read proposed provenance policy: {error}") from error
+    if proposed_content != result.stdout:
+        raise TrustError("pull request cannot change the committed provenance policy contents")
 
 
 def validate_policy_strength(base: TrustConfig, proposed: TrustConfig) -> None:
@@ -536,6 +604,15 @@ def validate_policy_strength(base: TrustConfig, proposed: TrustConfig) -> None:
         raise TrustError("pull request policy cannot soften provenance")
     if base.provenance_policy != proposed.provenance_policy:
         raise TrustError("pull request policy cannot change the provenance policy path")
+    if base.provenance_scope != proposed.provenance_scope:
+        merge_safe_transition = (
+            base.effective_provenance_mode == "soft"
+            and base.provenance_scope == "changes"
+            and proposed.effective_provenance_mode == "enforce"
+            and proposed.provenance_scope == "baseline"
+        )
+        if not merge_safe_transition:
+            raise TrustError("provenance scope may change only during a soft-to-enforced baseline transition")
     if base.atlas_enabled and not proposed.atlas_enabled:
         raise TrustError("pull request policy cannot disable Atlas")
 
@@ -549,9 +626,58 @@ def derive_range(root: Path, explicit: str | None) -> str:
     raise TrustError("cannot infer a comparison range; pass --range or configure an upstream branch")
 
 
-def action_range(root: Path, explicit: str | None) -> tuple[str, str, str]:
-    if explicit:
-        return explicit, "range", explicit
+def baseline_commit(root: Path, comparison: str) -> str:
+    if "..." in comparison:
+        left, right = comparison.split("...", 1)
+        left_value = left.strip()
+        right_value = right.strip() or "HEAD"
+        if not left_value:
+            raise TrustError("baseline provenance requires a nonempty range base")
+        result = run(["git", "merge-base", left_value, right_value], cwd=root, capture=True)
+        return result.stdout.strip()
+    if ".." not in comparison:
+        raise TrustError("baseline provenance requires a comparison range")
+    base = comparison.split("..", 1)[0].strip()
+    if not base:
+        raise TrustError("baseline provenance requires a nonempty range base")
+    result = run(["git", "rev-parse", f"{base}^{{commit}}"], cwd=root, capture=True)
+    return result.stdout.strip()
+
+
+def provenance_target(root: Path, comparison: str, scope: str) -> tuple[str, str]:
+    if scope == "baseline":
+        return "commit", baseline_commit(root, comparison)
+    return "range", comparison
+
+
+def validate_current_pull_request_base(root: Path, pull: dict[str, Any], base: str) -> None:
+    base_ref = pull.get("base", {}).get("ref")
+    if not isinstance(base_ref, str) or not base_ref:
+        raise TrustError("baseline pull request event is missing the base branch ref")
+    result = run(
+        ["git", "ls-remote", "--exit-code", "origin", f"refs/heads/{base_ref}"],
+        cwd=root,
+        check=False,
+        capture=True,
+    )
+    if result.returncode != 0 or not result.stdout.strip():
+        raise TrustError(f"cannot resolve protected base branch origin/{base_ref}")
+    tip = result.stdout.split()[0]
+    if tip != base:
+        raise TrustError("baseline provenance requires the pull request to be current with its base branch")
+
+
+def action_range(
+    root: Path,
+    explicit: str | None,
+    provenance_scope: str,
+    use_event_context: bool,
+) -> tuple[str, str, str]:
+    if not use_event_context:
+        if not explicit:
+            raise TrustError("external governed repositories require an explicit comparison range")
+        target, value = provenance_target(root, explicit, provenance_scope)
+        return explicit, target, value
     event_name = os.environ.get("GITHUB_EVENT_NAME", "")
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
     event: dict[str, Any] = {}
@@ -566,17 +692,27 @@ def action_range(root: Path, explicit: str | None) -> tuple[str, str, str]:
         head = pull.get("head", {}).get("sha")
         if base and head:
             comparison = f"{base}..{head}"
-            return comparison, "range", comparison
+            if explicit and explicit != comparison:
+                raise TrustError("native pull request range must match the event base and head commits")
+            if provenance_scope == "baseline":
+                validate_current_pull_request_base(root, pull, base)
+            target, value = provenance_target(root, comparison, provenance_scope)
+            return comparison, target, value
+    if explicit:
+        target, value = provenance_target(root, explicit, provenance_scope)
+        return explicit, target, value
     if event_name == "push":
         before = str(event.get("before", ""))
         current = str(event.get("after") or os.environ.get("GITHUB_SHA", "HEAD"))
         if before and set(before) != {"0"}:
             comparison = f"{before}..{current}"
-            return comparison, "range", comparison
+            target, value = provenance_target(root, comparison, provenance_scope)
+            return comparison, target, value
         empty_tree = run(["git", "hash-object", "-t", "tree", "/dev/null"], cwd=root, capture=True).stdout.strip()
         return f"{empty_tree}..{current}", "commit", current
     comparison = derive_range(root, None)
-    return comparison, "range", comparison
+    target, value = provenance_target(root, comparison, provenance_scope)
+    return comparison, target, value
 
 
 def write_github_outputs(values: dict[str, str]) -> None:
@@ -595,11 +731,19 @@ def action_resolve(arguments: argparse.Namespace) -> int:
     root = Path(arguments.working_directory).resolve()
     committed = load_config(root / arguments.config)
     validate_layer_files(root, committed)
-    base = pull_request_base_config(root, arguments.config)
-    if base is not None:
+    use_event_context = governs_github_event_repository(root)
+    base_policy = pull_request_base_config(root, arguments.config) if use_event_context else None
+    if base_policy is not None:
+        base, base_commit = base_policy
         validate_policy_strength(base, committed)
+        validate_pull_request_policy_content(root, base_commit, base, committed)
     config = apply_overrides(committed, arguments.profile or None, arguments.threshold or None)
-    comparison, attest_target, attest_value = action_range(root, arguments.range or None)
+    comparison, attest_target, attest_value = action_range(
+        root,
+        arguments.range or None,
+        config.provenance_scope,
+        use_event_context,
+    )
     outputs = {
         "profile": config.profile,
         "strict": str(config.strict).lower(),
@@ -607,6 +751,7 @@ def action_resolve(arguments: argparse.Namespace) -> int:
         "contract_coverage": str(config.effective_contract_coverage),
         "risk_threshold": config.risk_threshold,
         "provenance_mode": config.effective_provenance_mode,
+        "provenance_scope": config.provenance_scope,
         "provenance_policy": config.provenance_policy,
         "atlas_enabled": str(config.atlas_enabled).lower(),
         "range": comparison,
@@ -750,8 +895,9 @@ def verify(arguments: argparse.Namespace) -> int:
             raise TrustError(f"provenance policy is missing: {config.provenance_policy}")
         fetch_notes(root, mode)
         print("== provenance ==")
+        target, value = provenance_target(root, comparison, config.provenance_scope)
         result = run(
-            ["attest", "verify", "--range", comparison, "--policy", str(policy), "--json"],
+            ["attest", "verify", f"--{target}", value, "--policy", str(policy), "--json"],
             cwd=root,
             check=False,
             capture=True,
