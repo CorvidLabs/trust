@@ -10,3 +10,5 @@ artifact: tasks
 - [x] Preserve native validation and specialized workflows.
 - [x] Pass hosted pull-request checks.
 - [x] Require the green trust check on the protected branch.
+- [x] Track governance, Homebrew, and agent-integration paths in SDD policy.
+- [x] Make generated create-spec commands classify complete free-text requests.

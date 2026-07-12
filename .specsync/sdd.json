@@ -32,15 +32,19 @@
     "plugin.toml",
     "templates/",
     "Formula/",
+    "packaging/homebrew/",
     "bin/",
-    "scripts/"
+    "scripts/",
+    ".claude/",
+    ".codex/",
+    ".cursor/",
+    ".gemini/"
   ],
   "ignored_paths": [
-    ".specsync/",
     "specs/"
   ],
   "verification_commands": [
-    "bash tests/test.sh"
+    "fledge lanes run verify"
   ],
   "custom_artifacts": {},
   "principles_file": null
