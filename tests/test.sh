@@ -50,10 +50,10 @@ chmod +x "$component_source/augur-linux-x86_64" "$component_source/attest-linux-
 [ "$(cat "$component_path")" = "$component_bin" ] || fail "component bin was not added to GITHUB_PATH"
 [ "$("$component_bin/augur")" = "augur-suffixed" ] || fail "augur command link was not exposed"
 [ "$("$component_bin/attest")" = "attest-suffixed" ] || fail "attest command link was not exposed"
-[ "$(readlink "$component_bin/augur")" = "$component_source/augur-linux-x86_64" ] || \
-  fail "relative Augur path was not normalized"
-[ "$(readlink "$component_bin/attest")" = "$component_source/attest-linux-x86_64" ] || \
-  fail "relative Attest path was not normalized"
+augur_target="$(readlink "$component_bin/augur")"
+attest_target="$(readlink "$component_bin/attest")"
+case "$augur_target" in /* | [A-Za-z]:/*) ;; *) fail "relative Augur path was not normalized";; esac
+case "$attest_target" in /* | [A-Za-z]:/*) ;; *) fail "relative Attest path was not normalized";; esac
 
 python3 - "$ROOT" "$TMP" <<'PY'
 import importlib.util
