@@ -1,5 +1,21 @@
 # Changelog
 
+## [v0.2.0] - 2026-07-11
+
+### Build
+
+- bump actions/checkout from 5 to 7 (#2) (92675c7)
+
+### Features
+
+- scaffold unified trust orchestration (25c0ae4)
+
+### Other
+
+- Update: record provenance bootstrap (#6) (b13c576)
+- Prepare Trust for 1.0 dogfooding (#4) (c1448c7)
+- Add: stabilize Trust v0.1 policy and Action (#1) (46f61e0)
+
 ## [Unreleased]
 
 ### Added
