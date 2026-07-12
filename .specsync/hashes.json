@@ -4,7 +4,7 @@
     "action.yml": "fca61cb2165b1dad2f939f2f8c8a9f20b3e78848c3798d639b2d69ad1c860856",
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
     "plugin.toml": "95b20f48a158711d55d51bc3c78a62f947703f364925c7658816c5722e6556d7",
-    "scripts/expose_component_binaries.sh": "3ef7b9b7f871fa70ab8c1bde8f46f13e618f7635ea7e0a78550eae9bf2833f49",
+    "scripts/expose_component_binaries.sh": "434ee43c1409d9dc01dd48fec8f6afe6e97ad472a4eb12b3ed7032a63ebc4976",
     "scripts/normalize_specsync_cache.py": "2ce7b47fcabdd67fa75b72c635731767ffc1de0c17e30fc7ab80d03e301e406e",
     "scripts/record_provenance.sh": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
     "scripts/release_channel.py": "62cfa84ac0d1c31e2f24a0f08711566c5e7d74fe3e00346f7bc519356f43252b",
@@ -14,7 +14,7 @@
     "specs/trust/context.md": "81a1fc12acbcef496e40a918081cf981ab58561273e0095039e0ff935c412ad9",
     "specs/trust/requirements.md": "498eb53871c828f2db6b314776ff4951cc2c59f8ff1acf7317a915c3b50b0529",
     "specs/trust/tasks.md": "f1110ec42b089c49211f7f83d3bff0f1e2361bf6723577287277ed5e0972cc3e",
-    "specs/trust/testing.md": "04531f0aea355800854cff9e196553e81bc1099d80677d3e61f9a7880a7e5a9d",
+    "specs/trust/testing.md": "64eda7fefaf63dd202bf76bc2230635d5fd6cc9ea6574aa774b8bba2b38521d2",
     "specs/trust/trust.spec.md": "d9cd66ff0bbba1ec6fbb20d232cdf09a98632971b498fa64b0b6025c3b3c8f89",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }

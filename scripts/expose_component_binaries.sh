@@ -7,6 +7,16 @@ set -euo pipefail
 
 COMPONENT_BIN="${COMPONENT_BIN:-${RUNNER_TEMP:?RUNNER_TEMP must be set}/trust-component-bin}"
 mkdir -p "$COMPONENT_BIN"
+
+case "$AUGUR" in
+    /*) ;;
+    *) AUGUR="$PWD/$AUGUR" ;;
+esac
+case "$ATTEST" in
+    /*) ;;
+    *) ATTEST="$PWD/$ATTEST" ;;
+esac
+
 ln -sfn "$AUGUR" "$COMPONENT_BIN/augur"
 ln -sfn "$ATTEST" "$COMPONENT_BIN/attest"
 
