@@ -18,5 +18,5 @@ policy = ".attest.json"
 skip_reason = ""
 
 [atlas]
-enabled = true
-skip_reason = ""
+enabled = false
+skip_reason = "Atlas publication was not enabled during adoption"

@@ -18,6 +18,12 @@ spec: trust.spec.md
 - Verification runs lifecycle, contract, risk, and provenance in order.
 - The composite action exposes Augur verdict and risk outputs.
 - Status JSON is versioned and valid.
+- CLI and status output report the plugin manifest version.
+- Atlas publication is explicit opt-in and never runs for pull request events.
+- Enabled Atlas policy is verified locally and published by the generated workflow on pushes.
+- Tagged publication validates the Trust source contract with the pinned SpecSync release before exact-tag dogfooding.
+- Main provenance waits for the repository Trust gate in the same workflow and repairs insufficient existing notes.
+- The Homebrew bundle exposes `fledge-trust` as a concrete executable for Fledge PATH discovery.
 
 ## Constraints
 

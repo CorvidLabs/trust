@@ -18,6 +18,240 @@ make_repo() {
   git -C "$repo" config user.name Test
 }
 
+plugin_version="$(python3 - "$ROOT/plugin.toml" <<'PY'
+import sys
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
+
+with open(sys.argv[1], "rb") as stream:
+    print(tomllib.load(stream)["plugin"]["version"])
+PY
+)"
+[ "$("$TRUST" --version)" = "fledge trust $plugin_version" ] || fail "version output does not match plugin manifest"
+
+python3 - "$ROOT" "$TMP" <<'PY'
+import importlib.util
+import json
+from pathlib import Path
+import sys
+
+root = Path(sys.argv[1])
+temporary = Path(sys.argv[2])
+spec = importlib.util.spec_from_file_location(
+    "normalize_specsync_cache",
+    root / "scripts" / "normalize_specsync_cache.py",
+)
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load normalize_specsync_cache")
+normalizer = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = normalizer
+spec.loader.exec_module(normalizer)
+
+cache = temporary / "hashes.json"
+cache.write_text('{"hashes":{"z":"2","a":"1"}}', encoding="utf-8")
+normalizer.normalize(cache)
+if cache.read_text(encoding="utf-8") != '{\n  "hashes": {\n    "a": "1",\n    "z": "2"\n  }\n}\n':
+    raise AssertionError("spec-sync cache was not sorted with a trailing newline")
+
+invalid_cases = [
+    (temporary / "missing.json", "cannot read spec-sync cache"),
+    (temporary / "corrupt.json", "cannot read spec-sync cache"),
+    (temporary / "array.json", "root must be an object"),
+    (temporary / "invalid-map.json", "hashes must be a string map"),
+]
+(temporary / "corrupt.json").write_text("{", encoding="utf-8")
+(temporary / "array.json").write_text("[]", encoding="utf-8")
+(temporary / "invalid-map.json").write_text(json.dumps({"hashes": {"path": 1}}), encoding="utf-8")
+for path, expected in invalid_cases:
+    try:
+        normalizer.normalize(path)
+    except SystemExit as error:
+        if expected not in str(error):
+            raise AssertionError(f"unexpected cache error for {path}: {error}") from error
+    else:
+        raise AssertionError(f"invalid cache was accepted: {path}")
+PY
+
+python3 - "$ROOT" <<'PY'
+import importlib.util
+from pathlib import Path
+import subprocess
+import sys
+from unittest.mock import patch
+
+root = Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location("trust_cli", root / "scripts" / "trust_cli.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load trust_cli")
+trust_cli = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = trust_cli
+spec.loader.exec_module(trust_cli)
+completed = subprocess.CompletedProcess(["tool"], 0)
+with (
+    patch.object(trust_cli.os, "name", "nt"),
+    patch.object(trust_cli.shutil, "which", return_value="/usr/bin/bash"),
+    patch.object(trust_cli.subprocess, "run", side_effect=[FileNotFoundError(), completed]) as run,
+):
+    result = trust_cli.run(["tool", "arg with spaces"], cwd=root)
+if result is not completed:
+    raise AssertionError("Windows Bash fallback did not return the command result")
+fallback = run.call_args_list[1].args[0]
+if fallback != ["/usr/bin/bash", "-c", 'exec "$@"', "trust", "tool", "arg with spaces"]:
+    raise AssertionError(f"unexpected Windows Bash fallback: {fallback}")
+PY
+
+python3 - "$ROOT" <<'PY'
+import importlib.util
+from pathlib import Path
+import sys
+
+root = Path(sys.argv[1])
+spec = importlib.util.spec_from_file_location("release_channel", root / "scripts" / "release_channel.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load release_channel")
+release_channel = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = release_channel
+spec.loader.exec_module(release_channel)
+
+cases = [
+    ("v0.1.0", ["v0.1.0", "v0.2.0"], False, "v0"),
+    ("v0.3.0-rc.1", ["v0.2.0", "v0.3.0-rc.1"], True, "v0"),
+    ("v0.3.0", ["v0.3.0-rc.1", "v0.3.0"], True, "v0"),
+    ("v1.0.0-rc.1", ["v1.0.0-rc.1"], False, "v1"),
+    ("v1.0.0", ["v1.0.0", "v1.1.0-rc.1"], True, "v1"),
+    ("v1.0.0", ["v1.0.0", "v1.1.0"], False, "v1"),
+]
+for target, tags, expected, major in cases:
+    result = release_channel.decision(target, tags)
+    if result["promote"] is not expected or result["major"] != major:
+        raise AssertionError(f"unexpected release-channel decision for {target}: {result}")
+try:
+    release_channel.decision("not-a-version", [])
+except ValueError:
+    pass
+else:
+    raise AssertionError("invalid release tag was accepted")
+try:
+    release_channel.decision("v1.0.0+rebuilt", [])
+except ValueError:
+    pass
+else:
+    raise AssertionError("ambiguous build-metadata release tag was accepted")
+for invalid in ("v01.0.0", "v1.0.0-01", "v1.0.0-rc..1"):
+    try:
+        release_channel.decision(invalid, [])
+    except ValueError:
+        continue
+    raise AssertionError(f"invalid semantic release tag was accepted: {invalid}")
+PY
+
+python3 - "$ROOT" "$TMP" <<'PY'
+import importlib.util
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+
+root = Path(sys.argv[1])
+temporary = Path(sys.argv[2])
+scripts = root / "scripts"
+sys.path.insert(0, str(scripts))
+spec = importlib.util.spec_from_file_location("render_homebrew_formula", scripts / "render_homebrew_formula.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load render_homebrew_formula")
+renderer = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = renderer
+spec.loader.exec_module(renderer)
+
+digest = "a" * 64
+formula = renderer.render("0.2.0", digest, "5.0.1")
+for expected in ('version "0.2.0"', f'sha256 "{digest}"', 'assert_match "5.0.1"'):
+    if expected not in formula:
+        raise AssertionError(f"rendered formula is missing: {expected}")
+if "@TRUST_" in formula or "@SPECSYNC_" in formula:
+    raise AssertionError("rendered formula retained a placeholder")
+formula_path = temporary / "corvid-trust.rb"
+formula_path.write_text(formula, encoding="utf-8")
+if shutil.which("ruby") is not None:
+    subprocess.run(["ruby", "-c", str(formula_path)], check=True, capture_output=True, text=True)
+if shutil.which("brew") is not None:
+    cops = ",".join(
+        (
+            "FormulaAudit/ComponentsOrder",
+            "FormulaAudit/DependencyOrder",
+            "Homebrew/FormulaPathMethods",
+            "Layout/ArgumentAlignment",
+        )
+    )
+    homebrew_cache = temporary / "homebrew-cache"
+    homebrew_cache.mkdir(exist_ok=True)
+    environment = dict(os.environ)
+    environment.update({"HOMEBREW_CACHE": str(homebrew_cache), "HOMEBREW_NO_AUTO_UPDATE": "1"})
+    styled = subprocess.run(
+        ["brew", "style", "--only-cops", cops, str(formula_path)],
+        check=False,
+        capture_output=True,
+        text=True,
+        env=environment,
+    )
+    if styled.returncode != 0:
+        raise AssertionError(f"Homebrew formula style failed:\n{styled.stdout}{styled.stderr}")
+
+invalid = [
+    ("not-a-version", digest, "5.0.1"),
+    ("0.2.0", "ABC", "5.0.1"),
+    ("0.2.0", digest, "not-a-version"),
+]
+for arguments in invalid:
+    try:
+        renderer.render(*arguments)
+    except ValueError:
+        continue
+    raise AssertionError(f"invalid Homebrew render arguments were accepted: {arguments}")
+PY
+
+provenance_repo="$TMP/provenance-repo"
+provenance_origin="$TMP/provenance-origin.git"
+provenance_bin="$TMP/provenance-bin"
+provenance_log="$TMP/provenance-sign.log"
+mkdir -p "$provenance_bin"
+make_repo "$provenance_repo"
+printf '%s\n' initial > "$provenance_repo/source.txt"
+git -C "$provenance_repo" add source.txt
+git -C "$provenance_repo" commit -qm initial
+printf '%s\n' changed >> "$provenance_repo/source.txt"
+git -C "$provenance_repo" add source.txt
+git -C "$provenance_repo" commit -qm change
+git init --bare -q "$provenance_origin"
+git -C "$provenance_repo" remote add origin "$provenance_origin"
+git -C "$provenance_repo" push -q -u origin HEAD:main
+printf '%s\n' '{"requireAttestation":true,"requireTestsPassed":true}' > "$provenance_repo/.attest.json"
+printf '#!/usr/bin/env bash\nset -euo pipefail\ncase "$1" in\n  check) echo '\''{"verdict":"proceed","riskScore":12}'\'' ;;\n  *) exit 2 ;;\nesac\n' > "$provenance_bin/augur"
+printf '#!/usr/bin/env bash\nset -euo pipefail\ncommand="$1"; shift\ncase "$command" in\n  sign)\n    commit="HEAD"\n    while [ "$#" -gt 0 ]; do\n      if [ "$1" = --commit ]; then commit="$2"; shift 2; else shift; fi\n    done\n    git notes --ref=attest append -m '\''{"testsPassed":true}'\'' "$commit"\n    printf '\''signed\\n'\'' >> "%s"\n    ;;\n  verify) git notes --ref=attest show HEAD | grep -q '\''"testsPassed":true'\'' ;;\n  *) exit 2 ;;\nesac\n' "$provenance_log" > "$provenance_bin/attest"
+chmod +x "$provenance_bin/augur" "$provenance_bin/attest"
+git -C "$provenance_repo" notes --ref=attest add -m '{"testsPassed":false}' HEAD
+git -C "$provenance_repo" push -q origin refs/notes/attest
+(
+  cd "$provenance_repo"
+  ATTEST="$provenance_bin/attest" \
+  AUGUR="$provenance_bin/augur" \
+  RANGE="HEAD~1..HEAD" \
+  REPORT="$TMP/provenance-augur.json" \
+  bash "$ROOT/scripts/record_provenance.sh"
+  ATTEST="$provenance_bin/attest" \
+  AUGUR="$provenance_bin/augur" \
+  RANGE="HEAD~1..HEAD" \
+  REPORT="$TMP/provenance-augur.json" \
+  bash "$ROOT/scripts/record_provenance.sh"
+)
+git --git-dir="$provenance_origin" show-ref --verify --quiet refs/notes/attest || \
+  fail "provenance recorder did not publish the remote ledger"
+[ "$(wc -l < "$provenance_log" | tr -d ' ')" = 1 ] || fail "provenance recorder was not idempotent"
+
 repo="$TMP/repo with spaces"
 make_repo "$repo"
 repo="$(cd "$repo" && pwd -P)"
@@ -36,23 +270,42 @@ contains "$dry_output" "dry run complete"
 
 adopt_output="$(cd "$repo" && "$TRUST" adopt)"
 contains "$adopt_output" "trust adoption complete"
-for file in .trust.toml .specsync/config.toml .augur.toml .attest.json .atlasignore .github/workflows/trust.yml AGENTS.md; do
+for file in .trust.toml .specsync/config.toml .augur.toml .attest.json .github/workflows/trust.yml AGENTS.md; do
   assert_file "$repo/$file"
 done
+[ ! -e "$repo/.atlasignore" ] || fail "default adoption enabled Atlas without opt-in"
+grep -Fq 'enabled = false' "$repo/.trust.toml" || fail "default adoption did not record Atlas disabled"
 [ "$(cat "$repo/fledge.toml")" = "$expected_fledge" ] || fail "adopt replaced fledge.toml"
 
 mkdir -p "$repo/nested/package"
 (cd "$repo/nested/package" && "$TRUST" adopt >/dev/null)
 [ "$(grep -c 'CorvidLabs trust toolchain: BEGIN' "$repo/AGENTS.md")" = 1 ] || fail "managed block duplicated"
 
+python3 - "$repo/AGENTS.md" <<'PY'
+from pathlib import Path
+import sys
+
+path = Path(sys.argv[1])
+begin = "<!-- CorvidLabs trust toolchain: BEGIN (managed, do not edit inside) -->"
+end = "<!-- CorvidLabs trust toolchain: END -->"
+path.write_text(f"Project preface\n\n{begin}\nobsolete managed rules\n{end}\n\nProject suffix\n", encoding="utf-8")
+PY
+(cd "$repo" && "$TRUST" adopt >/dev/null)
+grep -Fq 'Project preface' "$repo/AGENTS.md" || fail "managed update removed AGENTS.md prefix"
+grep -Fq 'Project suffix' "$repo/AGENTS.md" || fail "managed update removed AGENTS.md suffix"
+if grep -Fq 'obsolete managed rules' "$repo/AGENTS.md"; then fail "managed update preserved obsolete block"; fi
+[ "$(grep -c 'CorvidLabs trust toolchain: BEGIN' "$repo/AGENTS.md")" = 1 ] || fail "managed update duplicated block"
+
 isolated_bin="$TMP/isolated-bin"
 mkdir -p "$isolated_bin"
 ln -s "$(command -v python3)" "$isolated_bin/python3"
+git_bin="$(dirname "$(command -v git)")"
 status_code=0
-status_json="$(cd "$repo" && PATH="$isolated_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
+status_json="$(cd "$repo" && PATH="$isolated_bin:$git_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
 [ "$status_code" -eq 0 ] || fail "status diagnostic returned failure"
 STATUS_JSON="$status_json" python3 -c 'import json, os; json.loads(os.environ["STATUS_JSON"])'
 contains "$status_json" '"schemaVersion": 1'
+contains "$status_json" "\"version\": \"$plugin_version\""
 contains "$status_json" '"healthy": false'
 
 skip_repo="$TMP/skip"
@@ -65,6 +318,17 @@ grep -Fq 'skip_reason = "CI only"' "$skip_repo/.trust.toml" || fail "attest skip
 if "$TRUST" action-resolve --working-directory "$skip_repo" --range HEAD~1..HEAD --profile strict >/dev/null 2>&1; then
   fail "strict override accepted a disabled contract layer"
 fi
+
+atlas_repo="$TMP/atlas-opt-in"
+make_repo "$atlas_repo"
+cp "$repo/fledge.toml" "$atlas_repo/fledge.toml"
+(cd "$atlas_repo" && "$TRUST" adopt --atlas >/dev/null)
+assert_file "$atlas_repo/.atlasignore"
+grep -Fq 'enabled = true' "$atlas_repo/.trust.toml" || fail "Atlas opt-in was not recorded"
+atlas_outputs="$TMP/atlas-action-outputs"
+GITHUB_OUTPUT="$atlas_outputs" "$TRUST" action-resolve \
+  --working-directory "$atlas_repo" --range HEAD~1..HEAD
+grep -Fxq 'true' "$atlas_outputs" || fail "Action resolution did not expose enabled Atlas"
 
 preserve_repo="$TMP/preserve-policy"
 cp -R "$repo" "$preserve_repo"
@@ -109,11 +373,26 @@ for command in fledge specsync augur; do
 done
 printf '#!/usr/bin/env bash\necho "attest $*" >> "%s"\ncase "$*" in *unknown-policy.json*) echo "unknown policy key" >&2; exit 2;; esac\necho '\''{"checkedCommits":1,"passed":true,"violations":[]}'\''\n' "$log" > "$fake/attest"
 chmod +x "$fake/attest"
+printf '#!/usr/bin/env bash\necho "fledge-atlas $*" >> "%s"\necho '\''{"verdict":"all governed","stats":{"coverage_pct":100}}'\''\n' "$log" > "$fake/fledge-atlas"
+chmod +x "$fake/fledge-atlas"
 verify_output="$(cd "$repo" && PATH="$fake:$PATH" "$TRUST" verify --range main..HEAD)"
 contains "$verify_output" "progressive provenance"
-expected="$(printf 'fledge lanes run verify\nspecsync check\naugur gate --range main..HEAD --threshold block\nattest verify --range main..HEAD --policy %s/.attest.json --json' "$repo")"
+policy_path="$(cd "$repo" && python3 -c 'from pathlib import Path; print(Path(".attest.json").resolve())')"
+expected="$(printf 'fledge lanes run verify\nspecsync check\naugur gate --range main..HEAD --threshold block\nattest verify --range main..HEAD --policy %s --json' "$policy_path")"
 actual="$(cat "$log")"
 [ "$actual" = "$expected" ] || { printf 'expected:\n%s\nactual:\n%s\n' "$expected" "$actual" >&2; fail "verification order or arguments differ"; }
+
+atlas_verify_repo="$TMP/atlas-verify"
+cp -R "$repo" "$atlas_verify_repo"
+sed -i.bak '/^\[atlas\]/,/^$/ { s/enabled = false/enabled = true/; s/skip_reason = .*/skip_reason = ""/; }' \
+  "$atlas_verify_repo/.trust.toml"
+rm -f "$atlas_verify_repo/.trust.toml.bak"
+cp "$ROOT/templates/atlasignore" "$atlas_verify_repo/.atlasignore"
+: > "$log"
+atlas_verify_output="$(cd "$atlas_verify_repo" && PATH="$fake:$PATH" "$TRUST" verify --range main..HEAD)"
+contains "$atlas_verify_output" "atlas: all governed"
+contains "$(cat "$log")" "fledge-atlas "
+contains "$(cat "$log")" " --json"
 
 attest_runtime_repo="$TMP/attest-runtime"
 cp -R "$repo" "$attest_runtime_repo"

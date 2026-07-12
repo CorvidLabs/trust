@@ -1,12 +1,20 @@
 {
   "hashes": {
-    "specs/trust/requirements.md": "48b9852824b340a0583d8c0841f3e40ae3a5d65df0b16f129c0b63d56d99c132",
-    "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
-    "specs/trust/testing.md": "48609e67165fa4fc5e6cf8a2b99f1cb6b0a9e2722ae94ac1c88b30605ec30dcb",
-    "action.yml": "b57f344cef5f6b8dcd1b9a5354110914fd11629b488db80b9d9cb75cc0ff8a52",
+    ".specsync/config.toml": "5c908e57c3db412919be19da1f66b616650b2db479bdaa5841649c426f18dca5",
+    "action.yml": "fca61cb2165b1dad2f939f2f8c8a9f20b3e78848c3798d639b2d69ad1c860856",
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
-    "specs/trust/trust.spec.md": "a9f7306e4e864de6969dfe17f4ba9ee351978f67d84d8d8db7d649a6bbd72f85",
-    "templates/trust.yml": "c226d08030b804b6e4ee8fab3d73d35c8a9b6cec0ef1ecb886ef29e46cdca6cf",
-    "specs/trust/tasks.md": "c4b6386a224313ccab17ed4b368112d1c7a93ae4584b09e3ba26ce5869695358"
+    "plugin.toml": "6a5c9a5fe1ff3970b26a8a820bbc3b72523166892b5283792bd31496417bd99b",
+    "scripts/normalize_specsync_cache.py": "2ce7b47fcabdd67fa75b72c635731767ffc1de0c17e30fc7ab80d03e301e406e",
+    "scripts/record_provenance.sh": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
+    "scripts/release_channel.py": "62cfa84ac0d1c31e2f24a0f08711566c5e7d74fe3e00346f7bc519356f43252b",
+    "scripts/render_homebrew_formula.py": "4cbbe5bd439da1ca946bf6252cf901648fb4ccf7715a83471cd3ddaa4ad48fb0",
+    "scripts/trust_cli.py": "0cea5f64745db937c0a0a1beb0e8600976bb2ab26f7c1ffcb58c3158aec8e63a",
+    "scripts/validate.py": "e3f46262b5e52829701a78bb42eb529a1f850545b44b11d91eca2984a33fd45e",
+    "specs/trust/context.md": "eb8b0a97152f93fdbf6f01c28654d5a0cc5e453e4bab68a5dcec51150aaf25d1",
+    "specs/trust/requirements.md": "ae1807cf76c43bd9ab776f1c1dd569a1b43402913798c92c7177b3944461f473",
+    "specs/trust/tasks.md": "b7adbc8fc394cda6381d661e56b902caffef512d9c24907c982b2ceccb3bf05d",
+    "specs/trust/testing.md": "ed3e88275643018fbad6a25b5116d2b9763a92127c249310f651993374a1d2fe",
+    "specs/trust/trust.spec.md": "6857f7b4541368caaba4100e0787be9e859101350fb9a2601958f6b0d3d40798",
+    "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }
 }

@@ -47,6 +47,9 @@ outputs:
   provenance-status:
     description: "Provenance gate status."
     value: ${{ steps.summary.outputs.provenance_status }}
+  atlas-enabled:
+    description: "Whether the committed policy enables Atlas publication."
+    value: ${{ steps.config.outputs.atlas_enabled }}
   verdict:
     description: "Augur verdict."
     value: ${{ steps.augur.outputs.verdict }}
@@ -124,13 +127,13 @@ runs:
           --working-directory . \
           --config "$TRUST_CONFIG"
 
-    # SpecSync action code at v4.7.1 (binary is also pinned to 4.7.1).
+    # SpecSync action code at v5.0.1 (binary is also pinned to 5.0.1).
     - name: Contract gate
       if: steps.config.outputs.contract_enabled == 'true'
       id: contract
-      uses: CorvidLabs/spec-sync@0cb1a57cf56105e28fea1288db698ff94d9b9f61
+      uses: CorvidLabs/spec-sync@59bbfa766c6cce01ab815ab47db195b0629cc014
       with:
-        version: "4.7.1"
+        version: "5.0.1"
         root: ${{ inputs.working-directory }}
         strict: ${{ steps.config.outputs.strict }}
         require-coverage: ${{ steps.config.outputs.contract_coverage }}

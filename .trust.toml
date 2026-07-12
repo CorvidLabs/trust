@@ -13,9 +13,9 @@ skip_reason = ""
 threshold = "block"
 
 [provenance]
-mode = "off"
+mode = "soft"
 policy = ".attest.json"
-skip_reason = "Trust does not have a release provenance ledger before v0.1.0"
+skip_reason = ""
 
 [atlas]
 enabled = false
