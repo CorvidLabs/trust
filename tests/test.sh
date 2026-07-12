@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Verifies REQ-trust-001, REQ-trust-action-001, REQ-trust-plugin-001,
+# REQ-trust-policy-001, and REQ-trust-provenance-001.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

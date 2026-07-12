@@ -1,0 +1,18 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783865089,
+      "digest": "dac915164c052f28769db2275d784f78fe55860df575a0950e301e88a9e62bc8",
+      "note": "Approved through the repository-by-repository SpecSync 5 interview."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783865330,
+      "digest": "5ba6a8d43f5c3ad37fe09a44f4ec70b0a26e44a27ccc71cb81d2300ec5952079",
+      "note": "Re-approved after adding focused companion scope and test evidence."
+    }
+  ]
+}
