@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.2.1] - 2026-07-11
+
+### Other
+
+- Fix: expose tagged component commands (#7) (82b38d0)
+
 ## [v0.2.0] - 2026-07-11
 
 ### Build
