@@ -3,7 +3,7 @@
     ".specsync/config.toml": "5c908e57c3db412919be19da1f66b616650b2db479bdaa5841649c426f18dca5",
     "action.yml": "fca61cb2165b1dad2f939f2f8c8a9f20b3e78848c3798d639b2d69ad1c860856",
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
-    "plugin.toml": "dbb42b1504a108f92b88914f2f828ca557332c87f4efff4bf80b7e1f05423cb2",
+    "plugin.toml": "bfca6827324d2faea208dfc33c0e179fad5baef90b574ce155533dc9054c13a9",
     "scripts/expose_component_binaries.sh": "434ee43c1409d9dc01dd48fec8f6afe6e97ad472a4eb12b3ed7032a63ebc4976",
     "scripts/normalize_specsync_cache.py": "2ce7b47fcabdd67fa75b72c635731767ffc1de0c17e30fc7ab80d03e301e406e",
     "scripts/record_provenance.sh": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
