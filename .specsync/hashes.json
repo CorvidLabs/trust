@@ -9,13 +9,13 @@
     "scripts/record_provenance.sh": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
     "scripts/release_channel.py": "62cfa84ac0d1c31e2f24a0f08711566c5e7d74fe3e00346f7bc519356f43252b",
     "scripts/render_homebrew_formula.py": "4cbbe5bd439da1ca946bf6252cf901648fb4ccf7715a83471cd3ddaa4ad48fb0",
-    "scripts/trust_cli.py": "27add8638ff5cb162eecf27074b6eaa13fa09bfd165317094cb4b1d2c7acf481",
-    "scripts/validate.py": "72f08791b815fc1a2c0c85e1fa3049668a6b6f9de2fe49301d3eb2a9008f76c7",
+    "scripts/trust_cli.py": "ae9f2e106efaf1b416d8183eb6aa136d36f648c5f2d971f5c6cf2c54579e8d0a",
+    "scripts/validate.py": "82b4ae059727c8252e26f13c2489d74fe73cb0ff82df8a735b2263c19aead62e",
     "specs/trust/context.md": "baea4ba1fb23a914aea414902dc3ce2eb34cbdf1c6f215304e182349f2856a66",
-    "specs/trust/requirements.md": "8ce98e9d50bec320959cfedf0db43f138952ba7a31205ae1d3bd7a7bc3895e4f",
+    "specs/trust/requirements.md": "34413b80e6dc593f73814f6b9ddf544a447ecef5c58da4d1be70a8c92d4f67e3",
     "specs/trust/tasks.md": "716287f1431891596879dc3bbeaa6e301874541c0743aba4ab764c88e49010d8",
-    "specs/trust/testing.md": "dde3889e725bacf3279b9fe97dc563a747a4a0d5f92ec513446d6e4117449e32",
-    "specs/trust/trust.spec.md": "745b899903ecebeb2e15d00771f68ba55e8dbdabf2e0831a47cd810a945f3638",
+    "specs/trust/testing.md": "dfbb0567d4eb7cc5b7962427f7f0cecc618ed1c4e8ccc2b31e954fb9d23e166f",
+    "specs/trust/trust.spec.md": "8bd60eeddead6825f7282c48b346a57376e3ddb771e13a15e8c4bcc43d9e516f",
     "templates/trust.yml": "72119a4dfbc28fd5a8d6a518d58a664a315e51877b5d91dfc9fca21cef8028c3"
   }
 }

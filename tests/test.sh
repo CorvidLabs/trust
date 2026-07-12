@@ -294,7 +294,7 @@ for file in .trust.toml .specsync/config.toml .augur.toml .attest.json .github/w
 done
 [ ! -e "$repo/.atlasignore" ] || fail "default adoption enabled Atlas without opt-in"
 grep -Fq 'enabled = false' "$repo/.trust.toml" || fail "default adoption did not record Atlas disabled"
-grep -Fq 'scope = "changes"' "$repo/.trust.toml" || fail "default adoption did not preserve changed-commit provenance"
+if grep -q '^scope = ' "$repo/.trust.toml"; then fail "default adoption emitted a channel-incompatible scope"; fi
 [ "$(cat "$repo/fledge.toml")" = "$expected_fledge" ] || fail "adopt replaced fledge.toml"
 
 mkdir -p "$repo/nested/package"
@@ -484,7 +484,9 @@ grep -Fxq "$base..$head" "$outputs" || fail "pull request range was not resolved
 
 baseline_repo="$TMP/baseline-provenance"
 "$ROOT/tests/setup-action-fixture.sh" "$baseline_repo"
-sed -i.bak 's/scope = "changes"/scope = "baseline"/' "$baseline_repo/.trust.toml"
+sed -i.bak '/^mode = "soft"/a\
+scope = "baseline"
+' "$baseline_repo/.trust.toml"
 rm -f "$baseline_repo/.trust.toml.bak"
 git -C "$baseline_repo" add .trust.toml
 git -C "$baseline_repo" commit -qm "enforce baseline provenance"
@@ -514,6 +516,29 @@ git -C "$baseline_repo" restore .trust.toml
 (cd "$baseline_repo" && PATH="$fake:$PATH" "$TRUST" verify --range "$baseline_base..$baseline_head" >/dev/null)
 contains "$(cat "$log")" "attest verify --commit $baseline_base"
 
+strict_scope_repo="$TMP/strict-scope"
+"$ROOT/tests/setup-action-fixture.sh" "$strict_scope_repo"
+sed -i.bak 's/profile = "standard"/profile = "strict"/' "$strict_scope_repo/.trust.toml"
+rm -f "$strict_scope_repo/.trust.toml.bak"
+git -C "$strict_scope_repo" add .trust.toml
+git -C "$strict_scope_repo" commit -qm "enforce strict profile"
+printf '\n# strict proposal\n' >> "$strict_scope_repo/src/example.py"
+git -C "$strict_scope_repo" add src/example.py
+git -C "$strict_scope_repo" commit -qm "strict proposal"
+strict_base="$(git -C "$strict_scope_repo" rev-parse HEAD~1)"
+strict_head="$(git -C "$strict_scope_repo" rev-parse HEAD)"
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' \
+  "$strict_base" "$strict_head" > "$event"
+sed -i.bak '/^mode = "soft"/c\
+mode = "enforce"\
+scope = "baseline"
+' "$strict_scope_repo/.trust.toml"
+rm -f "$strict_scope_repo/.trust.toml.bak"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$strict_scope_repo" >/dev/null 2>&1; then
+  fail "strict profile changed provenance scope without stronger effective enforcement"
+fi
+
 printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$head" > "$event"
 cp "$event_repo/.trust.toml" "$TMP/event-trust.toml"
 sed -i.bak '/^\[contract\]/,/^\[risk\]/ { s/enabled = true/enabled = false/; s/skip_reason = ""/skip_reason = "weakened in PR"/; }' "$event_repo/.trust.toml"
@@ -524,12 +549,30 @@ if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
 fi
 cp "$TMP/event-trust.toml" "$event_repo/.trust.toml"
 
+sed -i.bak '/^mode = "soft"/a\
+scope = "baseline"
+' "$event_repo/.trust.toml"
+rm -f "$event_repo/.trust.toml.bak"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "pull request changed provenance scope without enabling enforcement"
+fi
+cp "$TMP/event-trust.toml" "$event_repo/.trust.toml"
+
 mv "$event_repo/.attest.json" "$event_repo/.attest.json.saved"
 if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
   "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
   fail "Action accepted a missing enabled layer configuration"
 fi
 mv "$event_repo/.attest.json.saved" "$event_repo/.attest.json"
+
+cp "$event_repo/.attest.json" "$TMP/event-attest.json"
+printf '%s\n' '{"requireAttestation":false}' > "$event_repo/.attest.json"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" >/dev/null 2>&1; then
+  fail "pull request weakened the committed provenance policy contents"
+fi
+cp "$TMP/event-attest.json" "$event_repo/.attest.json"
 
 : > "$outputs"
 printf '{"before":"%s","after":"%s"}\n' "$base" "$head" > "$event"

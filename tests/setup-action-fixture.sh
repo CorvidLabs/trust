@@ -33,7 +33,6 @@ threshold = "block"
 
 [provenance]
 mode = "soft"
-scope = "changes"
 policy = ".attest.json"
 skip_reason = ""
 

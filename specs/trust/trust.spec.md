@@ -89,7 +89,8 @@ forcing them into a shared release cycle.
 11. Atlas is disabled by default and requires explicit adoption plus a recorded `.atlasignore`.
 12. Generated workflows publish Atlas only for pushes and isolate Pages write permissions to the deployment job.
 13. Baseline provenance verifies the range base without changing the lifecycle, contract, or risk comparison.
-14. Pull requests cannot weaken baseline provenance back to changed-commit verification.
+14. Provenance scope can change only during a simultaneous soft-to-enforced baseline migration.
+15. Pull requests cannot change the committed provenance policy contents.
 
 ## Behavioral Examples
 

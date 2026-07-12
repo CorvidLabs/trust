@@ -32,7 +32,6 @@ BEGIN = "<!-- CorvidLabs trust toolchain: BEGIN (managed, do not edit inside) --
 END = "<!-- CorvidLabs trust toolchain: END -->"
 RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
 PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
-PROVENANCE_SCOPE_ORDER = {"changes": 0, "baseline": 1}
 DEFAULT_ATLAS_SKIP_REASON = "Atlas publication was not enabled during adoption"
 
 
@@ -263,7 +262,6 @@ threshold = "block"
 
 [provenance]
 mode = "{'off' if no_attest else 'soft'}"
-scope = "changes"
 policy = ".attest.json"
 skip_reason = {json.dumps(no_attest)}
 
@@ -501,7 +499,7 @@ def load_config_text(content: str) -> TrustConfig:
         path.unlink(missing_ok=True)
 
 
-def pull_request_base_config(root: Path, config_path: str) -> TrustConfig | None:
+def pull_request_base_config(root: Path, config_path: str) -> tuple[TrustConfig, str] | None:
     if os.environ.get("GITHUB_EVENT_NAME") != "pull_request":
         return None
     event_path = os.environ.get("GITHUB_EVENT_PATH", "")
@@ -525,7 +523,37 @@ def pull_request_base_config(root: Path, config_path: str) -> TrustConfig | None
         # Initial Trust adoption has no policy on the base branch. After adoption,
         # the base policy is authoritative for every pull request.
         return None
-    return load_config_text(result.stdout)
+    return load_config_text(result.stdout), base
+
+
+def validate_pull_request_policy_content(
+    root: Path,
+    base_commit: str,
+    base: TrustConfig,
+    proposed: TrustConfig,
+) -> None:
+    if base.effective_provenance_mode == "off":
+        return
+    repository_root = git_root(str(root))
+    policy_path = (root / proposed.provenance_policy).resolve()
+    try:
+        relative = policy_path.relative_to(repository_root).as_posix()
+    except ValueError as error:
+        raise TrustError("provenance policy must be inside the Git worktree") from error
+    result = run(
+        ["git", "show", f"{base_commit}:{relative}"],
+        cwd=repository_root,
+        check=False,
+        capture=True,
+    )
+    if result.returncode != 0:
+        raise TrustError("cannot read the committed provenance policy from the pull request base")
+    try:
+        proposed_content = policy_path.read_text(encoding="utf-8")
+    except OSError as error:
+        raise TrustError(f"cannot read proposed provenance policy: {error}") from error
+    if proposed_content != result.stdout:
+        raise TrustError("pull request cannot change the committed provenance policy contents")
 
 
 def validate_policy_strength(base: TrustConfig, proposed: TrustConfig) -> None:
@@ -543,8 +571,15 @@ def validate_policy_strength(base: TrustConfig, proposed: TrustConfig) -> None:
         raise TrustError("pull request policy cannot soften provenance")
     if base.provenance_policy != proposed.provenance_policy:
         raise TrustError("pull request policy cannot change the provenance policy path")
-    if PROVENANCE_SCOPE_ORDER[proposed.provenance_scope] < PROVENANCE_SCOPE_ORDER[base.provenance_scope]:
-        raise TrustError("pull request policy cannot weaken the provenance verification scope")
+    if base.provenance_scope != proposed.provenance_scope:
+        merge_safe_transition = (
+            base.effective_provenance_mode == "soft"
+            and base.provenance_scope == "changes"
+            and proposed.effective_provenance_mode == "enforce"
+            and proposed.provenance_scope == "baseline"
+        )
+        if not merge_safe_transition:
+            raise TrustError("provenance scope may change only during a soft-to-enforced baseline transition")
     if base.atlas_enabled and not proposed.atlas_enabled:
         raise TrustError("pull request policy cannot disable Atlas")
 
@@ -634,9 +669,11 @@ def action_resolve(arguments: argparse.Namespace) -> int:
     root = Path(arguments.working_directory).resolve()
     committed = load_config(root / arguments.config)
     validate_layer_files(root, committed)
-    base = pull_request_base_config(root, arguments.config)
-    if base is not None:
+    base_policy = pull_request_base_config(root, arguments.config)
+    if base_policy is not None:
+        base, base_commit = base_policy
         validate_policy_strength(base, committed)
+        validate_pull_request_policy_content(root, base_commit, base, committed)
     config = apply_overrides(committed, arguments.profile or None, arguments.threshold or None)
     comparison, attest_target, attest_value = action_range(
         root,
