@@ -168,8 +168,8 @@ sys.modules[spec.name] = renderer
 spec.loader.exec_module(renderer)
 
 digest = "a" * 64
-formula = renderer.render("0.2.0", digest, "5.0.0")
-for expected in ('version "0.2.0"', f'sha256 "{digest}"', 'assert_match "5.0.0"'):
+formula = renderer.render("0.2.0", digest, "5.0.1")
+for expected in ('version "0.2.0"', f'sha256 "{digest}"', 'assert_match "5.0.1"'):
     if expected not in formula:
         raise AssertionError(f"rendered formula is missing: {expected}")
 if "@TRUST_" in formula or "@SPECSYNC_" in formula:
@@ -202,8 +202,8 @@ if shutil.which("brew") is not None:
         raise AssertionError(f"Homebrew formula style failed:\n{styled.stdout}{styled.stderr}")
 
 invalid = [
-    ("not-a-version", digest, "5.0.0"),
-    ("0.2.0", "ABC", "5.0.0"),
+    ("not-a-version", digest, "5.0.1"),
+    ("0.2.0", "ABC", "5.0.1"),
     ("0.2.0", digest, "not-a-version"),
 ]
 for arguments in invalid:

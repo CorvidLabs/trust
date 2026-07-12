@@ -154,8 +154,8 @@ for required in (
     'fledge trust doctor --root "$FIXTURE"',
     'fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD',
     "Validate tagged source contract",
-    "CorvidLabs/spec-sync@d6d8512f9a1d75f308df1e9a8f52b47ca9e839ee # v5.0.0",
-    'version: "5.0.0"',
+    "CorvidLabs/spec-sync@59bbfa766c6cce01ab815ab47db195b0629cc014 # v5.0.1",
+    'version: "5.0.1"',
     "needs: exact-tag-dogfood",
     "args=(release create",
     'python3 scripts/release_channel.py "$REF_NAME"',
@@ -169,7 +169,7 @@ action = (ROOT / "action.yml").read_text(encoding="utf-8")
 if "atlas-enabled:" not in action:
     fail("action.yml must expose the committed Atlas publication decision")
 dependencies = {
-    "CorvidLabs/spec-sync@d6d8512f9a1d75f308df1e9a8f52b47ca9e839ee": "5.0.0",
+    "CorvidLabs/spec-sync@59bbfa766c6cce01ab815ab47db195b0629cc014": "5.0.1",
     "CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0": "1.0.0",
     "CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2": "1.0.0",
 }

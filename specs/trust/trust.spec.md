@@ -1,7 +1,7 @@
 ---
 module: trust
 version: 1
-status: review
+status: active
 files:
   - bin/fledge-trust
   - scripts/trust_cli.py
@@ -132,4 +132,4 @@ And augur gates the range before attest verifies its provenance
 | Version | Date | Changes |
 | --- | --- | --- |
 | 1 | 2026-07-10 | Initial orchestration contract; corrected Action inputs and outputs before activation. |
-| 1 | 2026-07-11 | Validate against SpecSync 5.0.0, prepare exact active coverage for 5.0.1, and harden release gates. |
+| 1 | 2026-07-12 | Activate exact contract coverage with SpecSync 5.0.1. |

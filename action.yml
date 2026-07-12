@@ -127,13 +127,13 @@ runs:
           --working-directory . \
           --config "$TRUST_CONFIG"
 
-    # SpecSync action code at v5.0.0 (binary is also pinned to 5.0.0).
+    # SpecSync action code at v5.0.1 (binary is also pinned to 5.0.1).
     - name: Contract gate
       if: steps.config.outputs.contract_enabled == 'true'
       id: contract
-      uses: CorvidLabs/spec-sync@d6d8512f9a1d75f308df1e9a8f52b47ca9e839ee
+      uses: CorvidLabs/spec-sync@59bbfa766c6cce01ab815ab47db195b0629cc014
       with:
-        version: "5.0.0"
+        version: "5.0.1"
         root: ${{ inputs.working-directory }}
         strict: ${{ steps.config.outputs.strict }}
         require-coverage: ${{ steps.config.outputs.contract_coverage }}

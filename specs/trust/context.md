@@ -7,7 +7,7 @@ spec: trust.spec.md
 ## Release Intent
 
 Trust 1.0.0 is the first stable orchestration contract for the CorvidLabs trust
-toolchain. It must ship on spec-sync 5.0.0 rather than merely accepting it as an
+toolchain. It must ship on spec-sync 5.0.1 rather than merely accepting it as an
 optional upgrade after release.
 
 ## Architecture Decisions
@@ -27,10 +27,8 @@ optional upgrade after release.
 
 ## Current External Gates
 
-- spec-sync 5.0.0 is released and pinned for both local and composite Action verification.
-  The dotted-symbol parser fix is prepared in CorvidLabs/spec-sync#344 for 5.0.1,
-  and Trust's Public API table is aligned to reach exact active coverage with
-  that fix. The contract remains in review until 5.0.1 is released and pinned.
+- spec-sync 5.0.1 is released and pinned for both local and composite Action verification.
+  Trust's Public API table has exact active coverage with its dotted-symbol parser fix.
 - A tagged Trust release is required before the Homebrew bundle and tagged
   plugin installation path can be tested honestly.
 - Main-branch CI is prepared to bootstrap `refs/notes/attest` after the
@@ -48,7 +46,7 @@ The stable release requires all of the following evidence:
    through doctor and verify without relying on the source checkout.
 3. The Trust repository passes its own local and GitHub-hosted gate with an
    enabled provenance ledger.
-4. The contract is validated and promoted to active by spec-sync 5.0.0.
+4. The contract is validated and promoted to active by spec-sync 5.0.1.
 5. Atlas behavior is either fully published by the generated workflow or
    explicitly disabled with a recorded reason; enabled-but-unused policy is not
    acceptable.

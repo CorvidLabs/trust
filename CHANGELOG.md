@@ -9,7 +9,7 @@
 
 ### Changed
 
-- Upgrade the composed SpecSync action and binary to 5.0.0 and validate the governed Trust contract against it.
+- Upgrade the composed SpecSync action and binary to 5.0.1 and activate the governed Trust contract with exact coverage.
 - Require tagged source contract validation, a concrete Homebrew plugin wrapper, and an in-workflow Trust gate before provenance publication.
 - Repair insufficient existing provenance notes before verifying and publishing the durable ledger.
 - Align the governed Public API table for exact active coverage with the SpecSync 5.0.1 parser fix.
