@@ -19,3 +19,27 @@ Trust SHALL leave consumer note minting to independent signing workflows.
 Acceptance Criteria
 
 - The unified consumer action only fetches and verifies Attest notes.
+
+### REQ-trust-provenance-003
+
+Main provenance SHALL wait for the repository Trust gate and repair insufficient existing notes.
+
+Acceptance Criteria
+
+- Signing occurs only after a passing gate and produces policy-satisfying evidence.
+
+### REQ-trust-provenance-004
+
+Baseline provenance SHALL verify the protected base commit while lifecycle, contract, and risk gate the proposed range.
+
+Acceptance Criteria
+
+- Provenance scope and proposed-change scope remain explicit and independently reported.
+
+### REQ-trust-provenance-005
+
+Provenance scope changes SHALL be limited to a simultaneous soft-to-enforced baseline migration.
+
+Acceptance Criteria
+
+- A pull request cannot silently swap provenance scope without the associated policy transition.

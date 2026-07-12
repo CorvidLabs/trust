@@ -26,6 +26,12 @@
     ".specsync/config.toml",
     ".specsync/config.json",
     ".specsync/version",
+    ".trust.toml",
+    ".attest.json",
+    "fledge.toml",
+    "plugin.toml",
+    "templates/",
+    "Formula/",
     "bin/",
     "scripts/"
   ],

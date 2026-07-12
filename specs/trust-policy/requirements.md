@@ -27,3 +27,27 @@ Adoption SHALL preserve existing unmanaged repository content.
 Acceptance Criteria
 
 - Dry-run writes nothing and force is required before replacing existing managed files.
+
+### REQ-trust-policy-004
+
+Baseline pull requests SHALL fail when their event base is not the live remote branch tip.
+
+Acceptance Criteria
+
+- A stale base cannot satisfy protected-branch provenance policy.
+
+### REQ-trust-policy-005
+
+Pull requests SHALL NOT weaken or replace committed provenance policy contents.
+
+Acceptance Criteria
+
+- Policy comparison uses the protected base and fails on a weakening change.
+
+### REQ-trust-policy-006
+
+Pull request policy comparison SHALL fail closed when the base commit is unavailable.
+
+Acceptance Criteria
+
+- Missing history or fetch failure cannot degrade into a permissive policy result.
