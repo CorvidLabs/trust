@@ -544,13 +544,19 @@ def governs_github_event_repository(root: Path) -> bool:
     repository = os.environ.get("GITHUB_REPOSITORY", "").strip()
     if not repository:
         return True
+    server = os.environ.get("GITHUB_SERVER_URL", "https://github.com").strip().rstrip("/")
+    server_host = server.split("://", 1)[-1]
     remote = run(["git", "remote", "get-url", "origin"], cwd=root, check=False, capture=True)
     if remote.returncode != 0:
         return False
     normalized = remote.stdout.strip().rstrip("/")
     if normalized.endswith(".git"):
         normalized = normalized[:-4]
-    return normalized.endswith(f"/{repository}") or normalized.endswith(f":{repository}")
+    return normalized in {
+        f"{server}/{repository}",
+        f"git@{server_host}:{repository}",
+        f"ssh://git@{server_host}/{repository}",
+    }
 
 
 def validate_pull_request_policy_content(

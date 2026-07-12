@@ -476,6 +476,11 @@ if GITHUB_REPOSITORY=CorvidLabs/trust GITHUB_EVENT_NAME=pull_request GITHUB_EVEN
   "$TRUST" action-resolve --working-directory "$override_repo" >/dev/null 2>&1; then
   fail "external governed repository inherited host pull request context without an explicit range"
 fi
+git -C "$override_repo" remote add origin https://mirror.invalid/CorvidLabs/trust.git
+GITHUB_REPOSITORY=CorvidLabs/trust GITHUB_SERVER_URL=https://github.com \
+  GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$TMP/missing-event" \
+  "$TRUST" action-resolve --working-directory "$override_repo" --range HEAD~1..HEAD >/dev/null
+git -C "$override_repo" remote remove origin
 
 event_repo="$TMP/event-ranges"
 "$ROOT/tests/setup-action-fixture.sh" "$event_repo"

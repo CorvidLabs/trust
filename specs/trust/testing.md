@@ -31,6 +31,7 @@ spec: trust.spec.md
 | Policy immutability | Pull requests cannot weaken or replace the committed Attest policy contents. |
 | Base availability | Missing pull request base objects fail closed instead of bypassing policy comparison. |
 | External fixture isolation | Governed worktrees with a different origin require explicit ranges and ignore host PR metadata. |
+| Repository identity | Same-named repositories on another server remain external to the host GitHub event. |
 
 ## Manual Release Checks
 
