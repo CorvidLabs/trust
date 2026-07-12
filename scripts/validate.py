@@ -14,7 +14,7 @@ __all__ = []
 
 ROOT = Path(__file__).resolve().parent.parent
 FULL_ACTION_SHA = re.compile(r"^[^@\s]+@[0-9a-f]{40}$")
-ALLOWED_CHANNELS = {"CorvidLabs/trust@v0"}
+ALLOWED_CHANNELS = {"CorvidLabs/trust@v1"}
 
 
 def fail(message: str) -> None:

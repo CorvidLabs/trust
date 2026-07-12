@@ -72,7 +72,7 @@ forcing them into a shared release cycle.
 | `fledge trust doctor` | Fail when required commands or repository configuration are missing. |
 | `fledge trust --version` | Report the installed Trust plugin version. |
 | `fledge trust adopt --atlas` | Opt into Atlas verification and Pages publication. |
-| `CorvidLabs/trust@v0` | Composite GitHub Action exposing the unified CI gate. |
+| `CorvidLabs/trust@v1` | Stable composite GitHub Action exposing the unified CI gate. |
 
 ## Invariants
 

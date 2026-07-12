@@ -104,3 +104,15 @@ The same tag workflow publishes 1.0.0 as a stable GitHub release and selects
 maintainer-managed `v1` tag ruleset before the stable promotion.
 Major channels move monotonically: publishing or replaying an older release
 cannot roll `v0` or `v1` backward.
+
+After the exact `v1.0.0` tag workflow passes and an administrator promotes the
+protected `v1` channel, stable consumers install the immutable plugin tag and
+use the supported major Action channel:
+
+```bash
+fledge plugins install CorvidLabs/trust@v1.0.0
+```
+
+```yaml
+- uses: CorvidLabs/trust@v1
+```
