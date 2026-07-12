@@ -45,6 +45,7 @@
 - Enforce the bootstrapped and independently verified main provenance ledger through protected baseline verification.
 - Prevent pull requests from changing committed Attest policy contents or switching provenance scope outside migration.
 - Fail baseline pull requests whose base is stale or unavailable instead of relying only on repository settings.
+- Bind native pull request risk and provenance checks to the event's exact base-to-head range.
 - Normalize the SpecSync cache after forced verification and pin generated checkout steps to v7.0.0.
 - Pin the validation dependency in both CI and the repository self-dogfood workflow.
 - Keep SpecSync out of the lifecycle lane so the composite Action owns contract installation and verification order.

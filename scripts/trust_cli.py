@@ -691,14 +691,11 @@ def action_range(
         base = pull.get("base", {}).get("sha")
         head = pull.get("head", {}).get("sha")
         if base and head:
+            comparison = f"{base}..{head}"
+            if explicit and explicit != comparison:
+                raise TrustError("native pull request range must match the event base and head commits")
             if provenance_scope == "baseline":
                 validate_current_pull_request_base(root, pull, base)
-            if explicit:
-                target, value = provenance_target(root, explicit, provenance_scope)
-                if provenance_scope == "baseline" and value != base:
-                    raise TrustError("explicit baseline range must resolve to the pull request base commit")
-                return explicit, target, value
-            comparison = f"{base}..{head}"
             target, value = provenance_target(root, comparison, provenance_scope)
             return comparison, target, value
     if explicit:

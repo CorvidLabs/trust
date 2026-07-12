@@ -32,6 +32,7 @@ spec: trust.spec.md
 | Base availability | Missing pull request base objects fail closed instead of bypassing policy comparison. |
 | External fixture isolation | Governed worktrees with a different origin require explicit ranges and ignore host PR metadata. |
 | Repository identity | Same-named repositories on another server remain external to the host GitHub event. |
+| Canonical PR range | Native pull requests reject explicit ranges that omit or replace the event head. |
 
 ## Manual Release Checks
 

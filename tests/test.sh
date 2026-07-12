@@ -492,6 +492,12 @@ printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' "$base" "$
 GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \
   "$TRUST" action-resolve --working-directory "$event_repo"
 grep -Fxq "$base..$head" "$outputs" || fail "pull request range was not resolved"
+GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" --range "$base..$head" >/dev/null
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$event_repo" --range "$base..$base" >/dev/null 2>&1; then
+  fail "pull request explicit range omitted the proposed head"
+fi
 
 printf '{"pull_request":{"base":{"sha":"ffffffffffffffffffffffffffffffffffffffff"},"head":{"sha":"%s"}}}\n' \
   "$head" > "$event"

@@ -94,7 +94,9 @@ the next change merges.
 
 The composite Action reads the same `.trust.toml` and resolves pull request,
 push, and initial-push ranges from the GitHub event. Checkout must use full
-history because Augur and Attest inspect commits and git notes.
+history because Augur and Attest inspect commits and git notes. Native pull
+requests always use the canonical event `base..head`; workflow inputs cannot
+redirect the proposed-change range.
 
 ```yaml
 steps:

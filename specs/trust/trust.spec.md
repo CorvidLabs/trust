@@ -95,6 +95,7 @@ forcing them into a shared release cycle.
 17. Baseline pull requests fail unless their event base matches the live remote branch tip.
 18. External governed worktrees require explicit ranges and do not inherit host pull request metadata.
 19. Native event context requires an exact GitHub server and owner/repository origin match.
+20. Native pull request comparisons cannot differ from the canonical event base-to-head range.
 
 ## Behavioral Examples
 

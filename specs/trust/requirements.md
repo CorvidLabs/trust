@@ -33,6 +33,7 @@ spec: trust.spec.md
 - Pull request policy comparison fails closed when the base commit is unavailable.
 - External governed worktrees ignore the host GitHub event and require an explicit range.
 - GitHub event repository identity matches both server origin and owner/repository name.
+- Native pull request comparisons are fixed to the event base and head commits.
 
 ## Constraints
 
