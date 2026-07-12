@@ -32,6 +32,25 @@ PY
 )"
 [ "$("$TRUST" --version)" = "fledge trust $plugin_version" ] || fail "version output does not match plugin manifest"
 
+component_source="$TMP/component-source"
+component_bin="$TMP/component-bin"
+component_path="$TMP/github-path"
+mkdir -p "$component_source"
+printf '#!/usr/bin/env bash\nprintf '\''augur-suffixed\\n'\''\n' > "$component_source/augur-linux-x86_64"
+printf '#!/usr/bin/env bash\nprintf '\''attest-suffixed\\n'\''\n' > "$component_source/attest-linux-x86_64"
+chmod +x "$component_source/augur-linux-x86_64" "$component_source/attest-linux-x86_64"
+(
+  cd "$component_source"
+  GITHUB_PATH="$component_path" \
+  COMPONENT_BIN="$component_bin" \
+  AUGUR="augur-linux-x86_64" \
+  ATTEST="attest-linux-x86_64" \
+    bash "$ROOT/scripts/expose_component_binaries.sh"
+)
+[ "$(cat "$component_path")" = "$component_bin" ] || fail "component bin was not added to GITHUB_PATH"
+[ "$("$component_bin/augur")" = "augur-suffixed" ] || fail "augur command link was not exposed"
+[ "$("$component_bin/attest")" = "attest-suffixed" ] || fail "attest command link was not exposed"
+
 python3 - "$ROOT" "$TMP" <<'PY'
 import importlib.util
 import json

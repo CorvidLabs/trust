@@ -153,6 +153,8 @@ for required in (
     'fledge plugins install "$REPOSITORY@$REF_NAME"',
     'fledge trust doctor --root "$FIXTURE"',
     'fledge trust verify --root "$FIXTURE" --range HEAD~1..HEAD',
+    "bash scripts/expose_component_binaries.sh",
+    "COMPONENT_BIN:",
     "Validate tagged source contract",
     "CorvidLabs/spec-sync@59bbfa766c6cce01ab815ab47db195b0629cc014 # v5.0.1",
     'version: "5.0.1"',

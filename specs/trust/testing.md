@@ -22,6 +22,7 @@ spec: trust.spec.md
 | Atlas opt-in | Default adoption records Atlas off; explicit adoption verifies reports and renders publication assets. |
 | Windows plugin | The complete manifest and plugin behavior suite runs under Git Bash on `windows-latest`. |
 | Tagged release | Source contract validation, tag/version identity, exact-tag installation, pinned tools, and monotonic channel selection. |
+| Component exposure | Relative suffixed Augur and Attest assets resolve to absolute executable canonical command links. |
 | Main provenance | The in-workflow Trust gate passes before CI repairs, verifies, and durably publishes a risk-bound git note. |
 | Homebrew renderer | Release version, archive digest, dependency version, executable wrapper target, placeholders, Ruby syntax, and style validate. |
 | Active contract | Released SpecSync 5.0.1 reports 30/30 exports, zero warnings, and zero failures. |

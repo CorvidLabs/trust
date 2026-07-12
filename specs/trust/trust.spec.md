@@ -6,6 +6,7 @@ files:
   - bin/fledge-trust
   - scripts/trust_cli.py
   - scripts/validate.py
+  - scripts/expose_component_binaries.sh
   - scripts/normalize_specsync_cache.py
   - scripts/release_channel.py
   - scripts/record_provenance.sh
@@ -132,4 +133,4 @@ And augur gates the range before attest verifies its provenance
 | Version | Date | Changes |
 | --- | --- | --- |
 | 1 | 2026-07-10 | Initial orchestration contract; corrected Action inputs and outputs before activation. |
-| 1 | 2026-07-12 | Activate exact contract coverage with SpecSync 5.0.1. |
+| 1 | 2026-07-12 | Activate exact coverage and expose pinned release binaries under canonical command names. |

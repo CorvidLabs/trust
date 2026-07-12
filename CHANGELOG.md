@@ -18,6 +18,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Expose suffixed Augur and Attest release assets under the canonical commands required by exact-tag dogfooding.
+
 ### Added
 
 - Add CLI and status version reporting so installed plugin builds can be identified.

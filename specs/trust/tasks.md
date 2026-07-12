@@ -26,10 +26,11 @@ spec: trust.spec.md
 - [x] Align the Public API contract for exact active coverage with the SpecSync 5.0.1 parser fix.
 - [x] Promote the exact-coverage spec from review to active with released spec-sync 5.0.1.
 - [x] Enable, publish, and independently verify the Trust repository's provenance ledger.
+- [x] Retain the immutable failed `v0.2.0` tag and correct its exact-tag component exposure defect.
 
 ## Next
 
-- [ ] Tag and dogfood a pre-1.0 release through the supported plugin installation path.
+- [ ] Tag and dogfood corrective `v0.2.1` through the supported plugin installation path.
 - [ ] Add a Homebrew `corvid-trust` bundle after the first tagged release.
 - [ ] Design a merge-safe transition from progressive to enforced self-provenance before Trust 1.0.0.
 - [ ] Add a maintainer-managed `v1` tag ruleset before promoting the stable Action channel.

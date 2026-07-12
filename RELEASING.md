@@ -4,20 +4,23 @@ Trust releases must prove both the repository implementation and its governed
 contract. Run releases only from a clean `main` commit after its hosted checks
 pass.
 
-## First pre-1.0 tag
+## Corrective pre-1.0 tag
 
-The intended first dogfood tag is `v0.2.0`. Rehearse it without changing git:
+The immutable `v0.2.0` tag proved source validation and plugin installation but
+failed final dogfooding because suffixed component assets were not exposed as
+canonical commands. Do not move or overwrite it. Rehearse `v0.2.1` without
+changing git:
 
 ```bash
 fledge lanes run release
-fledge release 0.2.0 --dry-run --pre-lane release --non-interactive
+fledge release 0.2.1 --dry-run --pre-lane release --non-interactive
 ```
 
 After reviewing the version and generated changelog, create and push the exact
 release through Fledge:
 
 ```bash
-fledge release 0.2.0 --pre-lane release --push --non-interactive
+fledge release 0.2.1 --pre-lane release --push --non-interactive
 ```
 
 The tag workflow then validates tag/version identity, installs the exact tag
@@ -31,7 +34,7 @@ workflow summary and promotes the protected channel:
 
 ```bash
 git fetch --tags
-git tag -f v0 v0.2.0
+git tag -f v0 v0.2.1
 git push origin -f refs/tags/v0
 ```
 
@@ -39,7 +42,7 @@ Install the immutable tag into a disposable repository rather than using the
 Trust source checkout:
 
 ```bash
-fledge plugins install CorvidLabs/trust@v0.2.0
+fledge plugins install CorvidLabs/trust@v0.2.1
 fledge trust adopt --dry-run
 fledge trust adopt
 fledge trust doctor
@@ -47,7 +50,7 @@ fledge trust verify
 ```
 
 Only after exact-tag dogfooding and the generated GitHub workflow pass should
-the supported `v0` Action channel be created at `v0.2.0`.
+the supported `v0` Action channel be created at `v0.2.1`.
 
 ## Provenance bootstrap
 
@@ -76,7 +79,7 @@ After the immutable tag exists, download its GitHub source archive, calculate
 the SHA-256, and render the formula with the matching SpecSync version:
 
 ```bash
-python3 scripts/render_homebrew_formula.py 0.2.0 ARCHIVE_SHA256 \
+python3 scripts/render_homebrew_formula.py 0.2.1 ARCHIVE_SHA256 \
   --specsync-version 5.0.1
 ```
 
