@@ -1,0 +1,19 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783959870,
+      "digest": "f1f7a7dc332b52a9ed304ca6efe5d9b0aeaaef30342214574ae9f15a8918e06f",
+      "note": "Definition approval for the reviewed Trust self-host bootstrap: defaults remain released SpecSync 5.0.1, while a narrowly validated authority-free file mirror confined beneath RUNNER_TEMP supports SpecSync’s own CI."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783962762,
+      "digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+      "note": "Fresh definition approval after the explicitly authorized lifecycle reset; governed scope now includes manifest pairing validation and the semantic delta preserves the complete public contract."
+    }
+  ],
+  "reopenings": []
+}

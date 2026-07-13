@@ -27,6 +27,14 @@ inputs:
     description: "Optional stricter risk threshold override."
     required: false
     default: ""
+  specsync-version:
+    description: "Exact SpecSync version; normal consumers keep the released 5.0.1 default."
+    required: false
+    default: "5.0.1"
+  specsync-download-base-url:
+    description: "Advanced self-hosting mirror: an authority-free file URL confined beneath runner.temp."
+    required: false
+    default: ""
 
 outputs:
   status:
@@ -69,6 +77,9 @@ runs:
         RANGE: ${{ inputs.range }}
         PROFILE: ${{ inputs.profile }}
         THRESHOLD: ${{ inputs.augur-threshold }}
+        SPECSYNC_VERSION: ${{ inputs.specsync-version }}
+        SPECSYNC_DOWNLOAD_BASE_URL: ${{ inputs.specsync-download-base-url }}
+        RUNNER_TEMP: ${{ runner.temp }}
       run: |
         set -euo pipefail
         python3 "$GITHUB_ACTION_PATH/scripts/trust_cli.py" action-resolve \
@@ -76,7 +87,10 @@ runs:
           --config "$CONFIG" \
           --range "$RANGE" \
           --profile "$PROFILE" \
-          --threshold "$THRESHOLD"
+          --threshold "$THRESHOLD" \
+          --specsync-version "$SPECSYNC_VERSION" \
+          --specsync-download-base-url "$SPECSYNC_DOWNLOAD_BASE_URL" \
+          --runner-temp "$RUNNER_TEMP"
 
     - name: Install pinned Fledge 1.7.0
       shell: bash
@@ -127,13 +141,15 @@ runs:
           --working-directory . \
           --config "$TRUST_CONFIG"
 
-    # SpecSync action code at v5.0.1 (binary is also pinned to 5.0.1).
+    # SpecSync action code is pinned at v5.0.1. The binary defaults to 5.0.1;
+    # a governed self-host workflow may select a validated runner-local mirror.
     - name: Contract gate
       if: steps.config.outputs.contract_enabled == 'true'
       id: contract
       uses: CorvidLabs/spec-sync@59bbfa766c6cce01ab815ab47db195b0629cc014
       with:
-        version: "5.0.1"
+        version: ${{ steps.config.outputs.specsync_version }}
+        download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}
         root: ${{ inputs.working-directory }}
         strict: ${{ steps.config.outputs.strict }}
         require-coverage: ${{ steps.config.outputs.contract_coverage }}

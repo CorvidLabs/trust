@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+  "slug": "add-trusted-specsync-self-host-artifact-inputs",
+  "title": "Add trusted SpecSync self-host artifact inputs",
+  "description": "Add trusted SpecSync self-host artifact inputs",
+  "kind": "feature",
+  "state": "implementing",
+  "base_commit": "2ede269961e37951a99bd3a5cd2f3424a6d430f8",
+  "created_at": 1783959790,
+  "updated_at": 1783962762,
+  "affected_specs": [
+    "trust-action"
+  ],
+  "affected_paths": [
+    "action.yml",
+    "scripts/trust_cli.py",
+    "scripts/validate.py",
+    "tests/test.sh",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "Trust exposes SpecSync version and download-base inputs with released 5.0.1 defaults; only an empty mirror or a canonical local file URL confined beneath RUNNER_TEMP is accepted; invalid authority",
+    "traversal",
+    "symlink escape",
+    "and non-local schemes fail before lifecycle execution; the nested immutable SpecSync action receives validated values; manifest and runtime regressions pass"
+  ],
+  "selected_artifacts": [
+    "context",
+    "requirements",
+    "plan",
+    "tasks",
+    "testing",
+    "docs",
+    "design",
+    "research"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "yes"
+  }
+}

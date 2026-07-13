@@ -3,7 +3,8 @@
 # REQ-trust-001, REQ-trust-002, REQ-trust-003, REQ-trust-004;
 # REQ-trust-action-001, REQ-trust-action-002, REQ-trust-action-003,
 # REQ-trust-action-004, REQ-trust-action-006,
-# REQ-trust-action-007, REQ-trust-action-008, REQ-trust-action-009;
+# REQ-trust-action-007, REQ-trust-action-008, REQ-trust-action-009,
+# REQ-trust-action-010;
 # REQ-trust-plugin-001, REQ-trust-plugin-002, REQ-trust-plugin-003,
 # REQ-trust-plugin-004, REQ-trust-plugin-005, REQ-trust-plugin-006,
 # REQ-trust-plugin-007;
@@ -52,6 +53,65 @@ if grep -q 'CorvidLabs/trust@v0' "$ROOT/templates/trust.yml"; then
 fi
 grep -q 'CorvidLabs/trust@v1.0.0' "$ROOT/README.md" || fail "README must install the stable immutable tag"
 grep -q 'latest `1.x` release line' "$ROOT/SECURITY.md" || fail "security policy must support 1.x"
+grep -q '^  specsync-version:' "$ROOT/action.yml" || fail "action is missing specsync-version input"
+grep -q '^  specsync-download-base-url:' "$ROOT/action.yml" || fail "action is missing SpecSync mirror input"
+grep -Fq 'version: ${{ steps.config.outputs.specsync_version }}' "$ROOT/action.yml" || fail "nested SpecSync version bypasses validated output"
+grep -Fq 'download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}' "$ROOT/action.yml" || fail "nested SpecSync mirror bypasses validated output"
+
+python3 - "$ROOT" "$TMP" <<'PY'
+import importlib.util
+from pathlib import Path
+import sys
+
+root = Path(sys.argv[1])
+temporary = Path(sys.argv[2])
+spec = importlib.util.spec_from_file_location("trust_cli_inputs", root / "scripts" / "trust_cli.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load trust_cli")
+trust_cli = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = trust_cli
+spec.loader.exec_module(trust_cli)
+
+runner_temp = temporary / "runner-temp"
+mirror = runner_temp / "specsync-mirror"
+outside = temporary / "outside"
+mirror.mkdir(parents=True)
+outside.mkdir()
+version, base = trust_cli.resolve_specsync_inputs("5.0.1", "", "")
+if (version, base) != ("5.0.1", ""):
+    raise AssertionError("released defaults changed")
+version, base = trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
+if (version, base) != ("5.0.1", mirror.resolve().as_uri()):
+    raise AssertionError("valid confined mirror was not canonicalized")
+
+invalid = [
+    ("latest", mirror.as_uri(), str(runner_temp)),
+    ("v5.0.1", mirror.as_uri(), str(runner_temp)),
+    ("5.0", mirror.as_uri(), str(runner_temp)),
+    ("5.0.1", "https://example.invalid/specsync", str(runner_temp)),
+    ("5.0.1", "file://example.invalid/specsync", str(runner_temp)),
+    ("5.0.1", "file://localhost/specsync", str(runner_temp)),
+    ("5.0.1", "file:relative/mirror", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "\nignored", str(runner_temp)),
+    ("5.0.1", runner_temp.as_uri(), str(runner_temp)),
+    ("5.0.1", outside.as_uri(), str(runner_temp)),
+    ("5.0.1", (runner_temp / "missing").as_uri(), str(runner_temp)),
+    ("5.0.1", f"file://{runner_temp}/child/../specsync-mirror", str(runner_temp)),
+    ("5.0.1", f"file://{runner_temp}/%2e%2e/outside", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "?asset=other", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "#fragment", str(runner_temp)),
+    ("5.0.1", mirror.as_uri(), ""),
+]
+link = runner_temp / "escape-link"
+link.symlink_to(outside, target_is_directory=True)
+invalid.append(("5.0.1", link.as_uri(), str(runner_temp)))
+for candidate in invalid:
+    try:
+        trust_cli.resolve_specsync_inputs(*candidate)
+    except trust_cli.TrustError:
+        continue
+    raise AssertionError(f"unsafe SpecSync action input was accepted: {candidate}")
+PY
 
 component_source="$TMP/component-source"
 component_bin="$TMP/component-bin"
