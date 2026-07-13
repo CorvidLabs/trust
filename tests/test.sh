@@ -90,6 +90,8 @@ if (version, base) != ("5.0.1-alpha.0+build.01", spaced_mirror.resolve().as_uri(
     raise AssertionError("valid percent-encoded mirror path or semantic version was rejected")
 
 invalid = [
+    ("5.0.2", "", ""),
+    ("5.0.1-alpha.0+build.01", "", ""),
     ("latest", mirror.as_uri(), str(runner_temp)),
     ("v5.0.1", mirror.as_uri(), str(runner_temp)),
     ("5.0", mirror.as_uri(), str(runner_temp)),
@@ -101,6 +103,7 @@ invalid = [
     ("5.0.1", "https://example.invalid/specsync", str(runner_temp)),
     ("5.0.1", "file://example.invalid/specsync", str(runner_temp)),
     ("5.0.1", "file://localhost/specsync", str(runner_temp)),
+    ("5.0.1", "file://[::1/specsync", str(runner_temp)),
     ("5.0.1", "file:relative/mirror", str(runner_temp)),
     ("5.0.1", mirror.as_uri() + "\nignored", str(runner_temp)),
     ("5.0.1", runner_temp.as_uri(), str(runner_temp)),
@@ -125,6 +128,17 @@ for candidate in invalid:
     except trust_cli.TrustError:
         continue
     raise AssertionError(f"unsafe SpecSync action input was accepted: {candidate}")
+
+outside_asset = outside / "specsync.sha256"
+outside_asset.write_text("not trusted\n", encoding="utf-8")
+linked_asset = mirror / "specsync.sha256"
+linked_asset.symlink_to(outside_asset)
+try:
+    trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
+except trust_cli.TrustError:
+    pass
+else:
+    raise AssertionError("file symlink inside SpecSync mirror was accepted")
 PY
 
 component_source="$TMP/component-source"
