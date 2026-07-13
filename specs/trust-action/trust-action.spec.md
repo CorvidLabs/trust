@@ -6,6 +6,7 @@ files:
   - action.yml
   - templates/trust.yml
   - scripts/trust_cli.py
+  - scripts/normalize_specsync_cache.py
 db_tables: []
 depends_on: [trust-policy, trust-provenance]
 ---
