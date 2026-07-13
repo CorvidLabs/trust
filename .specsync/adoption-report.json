@@ -1,0 +1,15 @@
+{
+  "bootstrap_policy": {
+    "base_commit": "9d32b5786d2e9e4d39fc581c0091c721ee3d4226",
+    "digest": "45e788263287669e86327c196044cf7b20693928c567798248a3f19cb9768b44",
+    "path": ".specsync/sdd.json"
+  },
+  "generated_at": 1783830418,
+  "requirements_needing_ids": [
+    {
+      "action": "review and assign one stable ID per durable requirement",
+      "path": "specs/trust/requirements.md",
+      "suggested_first_id": "REQ-trust-001"
+    }
+  ]
+}

@@ -11,29 +11,37 @@ spec: trust.spec.md
 
 ## Acceptance Criteria
 
-- `adopt --dry-run` reports changes and writes nothing.
-- Repeated adoption is idempotent.
-- Existing files are preserved unless `--force` is passed.
-- The managed AGENTS block is present exactly once.
-- Verification runs lifecycle, contract, risk, and provenance in order.
-- The composite action exposes Augur verdict and risk outputs.
-- Status JSON is versioned and valid.
-- CLI and status output report the plugin manifest version.
-- Atlas publication is explicit opt-in and never runs for pull request events.
-- Enabled Atlas policy is verified locally and published by the generated workflow on pushes.
-- Tagged publication validates the Trust source contract with the pinned SpecSync release before exact-tag dogfooding.
-- Exact-tag dogfooding exposes suffixed release assets through canonical `augur` and `attest` command names.
-- Exact-tag dogfooding verifies an installed release against an enforced, satisfied baseline ledger.
-- Main provenance waits for the repository Trust gate in the same workflow and repairs insufficient existing notes.
-- The Homebrew bundle exposes `fledge-trust` as a concrete executable for Fledge PATH discovery.
-- Baseline provenance verifies the protected base commit while lifecycle, contract, and risk gate the proposed range.
-- Baseline pull requests fail when their event base is not the live remote branch tip.
-- Provenance scope changes are limited to a simultaneous soft-to-enforced baseline migration.
-- Pull requests cannot change the committed provenance policy contents.
-- Pull request policy comparison fails closed when the base commit is unavailable.
-- External governed worktrees ignore the host GitHub event and require an explicit range.
-- GitHub event repository identity matches both server origin and owner/repository name.
-- Native pull request comparisons are fixed to the event base and head commits.
+### REQ-trust-001
+
+Tagged publication SHALL validate the Trust source contract with the pinned SpecSync release before exact-tag dogfooding.
+
+Acceptance Criteria
+
+- Release validation completes before installation tests use the new tag.
+
+### REQ-trust-002
+
+Exact-tag dogfooding SHALL expose suffixed release assets through canonical `augur` and `attest` command names.
+
+Acceptance Criteria
+
+- A tagged installation resolves and executes both component binaries.
+
+### REQ-trust-003
+
+Exact-tag dogfooding SHALL verify an installed release against an enforced, satisfied baseline ledger.
+
+Acceptance Criteria
+
+- The installed bundle passes its own Trust verification using tagged artifacts.
+
+### REQ-trust-004
+
+The Homebrew bundle SHALL expose `fledge-trust` as a concrete executable for Fledge PATH discovery.
+
+Acceptance Criteria
+
+- A fresh bundle installation exposes `fledge trust` without repository-local shims.
 
 ## Constraints
 
