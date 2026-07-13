@@ -13,6 +13,13 @@
       "timestamp": 1783962762,
       "digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
       "note": "Fresh definition approval after the explicitly authorized lifecycle reset; governed scope now includes manifest pairing validation and the semantic delta preserves the complete public contract."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783963447,
+      "digest": "494b71fbc9451bd547986a1652960a86341b74d750a89a50ed81046eb3c43644",
+      "note": "Closing approval after full Trust action/plugin/template validation and exhaustive self-host mirror security regressions passed on the committed head."
     }
   ],
   "reopenings": []
