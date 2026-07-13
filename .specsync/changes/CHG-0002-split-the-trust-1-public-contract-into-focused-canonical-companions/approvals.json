@@ -48,6 +48,13 @@
       "timestamp": 1783908405,
       "digest": "171d2b9ee02bc193f64c72326ab539f99642bd0bb0db06623ab26c917163df94",
       "note": "Accepted after fresh verification of the delayed-review Action ownership and public-document governance fixes."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783963416,
+      "digest": "6ccfa94bd78a7810623521988195893f19602774c040422cbf428194c9273a8d",
+      "note": "Fresh closing approval after committed-head full Trust action/plugin/template verification passed; canonical successor deltas remain applied exactly once."
     }
   ],
   "reopenings": [
