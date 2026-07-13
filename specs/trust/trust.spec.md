@@ -27,6 +27,17 @@ The distribution surface accepts semantic release tags and released checksums,
 decides whether stable and major channels advance, and renders the
 `corvid-trust` Homebrew formula containing Trust and SpecSync.
 
+| Export | Description |
+| --- | --- |
+| `name` | Release workflow display name. |
+| `on` | Tag and manual release triggers. |
+| `permissions` | Least-privilege release permissions. |
+| `jobs` | Release workflow job map. |
+| `permissions.contents` | Repository-content permission used to publish releases. |
+| `jobs.validate-tag` | Validate the tag, source contract, and release inputs. |
+| `jobs.exact-tag-dogfood` | Verify the just-published immutable bundle and component binaries. |
+| `jobs.publish` | Publish release artifacts and stable channels after validation. |
+
 ## Invariants
 
 1. Stable and major channels advance only when the target version is newer.

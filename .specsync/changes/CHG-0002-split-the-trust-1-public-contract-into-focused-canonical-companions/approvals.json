@@ -20,13 +20,6 @@
       "timestamp": 1783900625,
       "digest": "f4cb2bc8b117db4e615c169c96be36fa5c121858ed617c589289ca8a17add4a7",
       "note": "Reviewed accurate public-contract metadata, complete semantic deltas for all 31 stable requirements, and removal of superseded placeholder requirements."
-    },
-    {
-      "gate": "acceptance",
-      "actor": "0xLeif",
-      "timestamp": 1783900654,
-      "digest": "f2c01aa9d06b45af8c6ae4ced4ec25dbf2e26c5af4944ccb321879d8b639ac5f",
-      "note": "Approved after strict verification of the accurate public-contract metadata and complete 31-requirement semantic delta."
     }
   ]
 }

@@ -47,3 +47,11 @@ Pull request policy comparison SHALL fail closed when the base commit is unavail
 Acceptance Criteria
 
 - Missing history or fetch failure cannot degrade into a permissive policy result.
+
+### REQUIREMENT REQ-trust-policy-007
+
+The Trust CLI SHALL emit versioned, valid status JSON.
+
+Acceptance Criteria
+
+- Consumers can parse overall and component status without scraping logs; Action resolution exposes canonical component settings.
