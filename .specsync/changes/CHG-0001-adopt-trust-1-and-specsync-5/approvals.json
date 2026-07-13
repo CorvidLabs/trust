@@ -20,6 +20,13 @@
       "timestamp": 1783908432,
       "digest": "792c48ee0b6e0b600313dca080fde68e58f4c9c40653616c7fb1be22b2968999",
       "note": "Accepted after fresh verification of the complete post-review Trust 1 and SpecSync 5 rollout state."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783963792,
+      "digest": "ebcf715e63449cfb83295754dadc59c246743c55ced7ca000d954251b8393e7c",
+      "note": "Fresh closing approval after full committed-head Trust validation passed; canonical migration deltas remained applied exactly once."
     }
   ],
   "reopenings": [
