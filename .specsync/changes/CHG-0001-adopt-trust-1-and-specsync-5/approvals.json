@@ -13,13 +13,6 @@
       "timestamp": 1783900661,
       "digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
       "note": "Reviewed current Trust 1 and SpecSync 5 adoption artifacts after completing the focused public-contract dependency."
-    },
-    {
-      "gate": "acceptance",
-      "actor": "0xLeif",
-      "timestamp": 1783907859,
-      "digest": "29373771db52e8cf674bbffc661d76039d16f851b21137da3c7379f5af5c97fe",
-      "note": "Accepted after fresh full verification of the post-review Trust 1 and SpecSync 5 rollout state."
     }
   ]
 }

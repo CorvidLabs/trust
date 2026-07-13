@@ -41,13 +41,6 @@
       "timestamp": 1783907749,
       "digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
       "note": "Approved replay-safe modified deltas matching the already-applied canonical companions and all final review fixes."
-    },
-    {
-      "gate": "acceptance",
-      "actor": "0xLeif",
-      "timestamp": 1783907803,
-      "digest": "27050d22952ae88a3f024ea3883dd823f018f12a5fc18ef4e024c50538d06596",
-      "note": "Accepted after fresh verification of all final review fixes against replay-safe canonical companion deltas."
     }
   ]
 }

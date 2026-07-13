@@ -5,7 +5,7 @@ status: stable
 files:
   - action.yml
   - templates/trust.yml
-  - scripts/normalize_specsync_cache.py
+  - scripts/trust_cli.py
 db_tables: []
 depends_on: [trust-policy, trust-provenance]
 ---
