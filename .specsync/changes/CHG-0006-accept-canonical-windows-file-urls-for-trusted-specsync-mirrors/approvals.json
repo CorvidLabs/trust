@@ -13,6 +13,13 @@
       "timestamp": 1783966048,
       "digest": "37c2811e502832878e68b3920e461e8a3845fb49cf993aa4f17ada6f1bd790c5",
       "note": "Cross-platform native Trust verification passed on committed implementation 6f2f7d8; hosted Windows matrix will be rerun before merge."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783966789,
+      "digest": "31927d90f82f6ed3f3323a7980b5da85e79b36dbd4713ff63efcc08bc20f8360",
+      "note": "Final native verification passed after CHG7 mirror hardening; previously applied canonical delta was not replayed."
     }
   ],
   "reopenings": [

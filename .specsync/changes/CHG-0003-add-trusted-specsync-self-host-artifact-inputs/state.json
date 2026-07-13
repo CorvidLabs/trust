@@ -5,11 +5,11 @@
   "title": "Add trusted SpecSync self-host artifact inputs",
   "description": "Add trusted SpecSync self-host artifact inputs",
   "kind": "feature",
-  "state": "verifying",
+  "state": "accepted",
   "canonical_applied": true,
   "base_commit": "2ede269961e37951a99bd3a5cd2f3424a6d430f8",
   "created_at": 1783959790,
-  "updated_at": 1783966545,
+  "updated_at": 1783966753,
   "affected_specs": [
     "trust-action"
   ],

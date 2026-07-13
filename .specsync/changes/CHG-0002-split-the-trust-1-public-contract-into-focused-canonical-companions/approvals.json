@@ -97,6 +97,13 @@
       "timestamp": 1783966134,
       "digest": "4ced4ad7b870ba81f1eba4bf7b50047bf517c64f93cb259460dbd043bc5e77aa",
       "note": "Final native verification passed after CHG-0006 canonicalization; 31 prior requirement deltas were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783966735,
+      "digest": "22d1066f8b94c06421a48d479f1935448d20b4d3b9bb6191a7db1c930f6604e1",
+      "note": "Final native verification passed after CHG7 mirror hardening; previously applied canonical delta was not replayed."
     }
   ],
   "reopenings": [
