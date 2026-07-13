@@ -41,6 +41,13 @@
       "timestamp": 1783965255,
       "digest": "263dbd6ab5875b8499bf79d6c3c64ace7ab9480c60ee2d153e1985f33a794a46",
       "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; no prior delta replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783966103,
+      "digest": "59c871d64ba62ed69878e561a269dd0c52171a0b4f3277716da419c016a8b05c",
+      "note": "Final native verification passed after CHG-0006 canonicalization; no delta replayed."
     }
   ],
   "reopenings": [
@@ -145,6 +152,40 @@
       },
       "stale_acceptance_input_digest": "ff1fe7ee9e4d285d21023d3d0ebc8294f828944f8f1d68b0fa03130834c78318",
       "current_acceptance_input_digest": "70f24dee312eb2125d55f0b2b202653001dc99c899db964d36807b795143aa38"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0006 finalized the canonical cross-platform Action mirror requirement after this evidence was recorded.",
+      "timestamp": 1783966072,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783965255,
+        "digest": "263dbd6ab5875b8499bf79d6c3c64ace7ab9480c60ee2d153e1985f33a794a46",
+        "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; no prior delta replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783965250,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "49f23c663ea45be0dff30ac2d32504b4575d55fc6bba2cf746a4718bce71d73c",
+        "acceptance_input_digest": "70f24dee312eb2125d55f0b2b202653001dc99c899db964d36807b795143aa38",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "70f24dee312eb2125d55f0b2b202653001dc99c899db964d36807b795143aa38",
+      "current_acceptance_input_digest": "55790a57014326dbeb11582bbb52326ecdf982bb60303a21588c5a281158ec03"
     }
   ]
 }

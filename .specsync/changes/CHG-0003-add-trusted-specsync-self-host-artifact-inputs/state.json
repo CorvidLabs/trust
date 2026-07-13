@@ -9,7 +9,7 @@
   "canonical_applied": true,
   "base_commit": "2ede269961e37951a99bd3a5cd2f3424a6d430f8",
   "created_at": 1783959790,
-  "updated_at": 1783965987,
+  "updated_at": 1783966165,
   "affected_specs": [
     "trust-action"
   ],
