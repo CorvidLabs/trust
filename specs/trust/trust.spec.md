@@ -1,10 +1,13 @@
 ---
 module: trust
-version: 2
+version: 3
 status: active
 files:
   - scripts/render_homebrew_formula.py
   - scripts/release_channel.py
+  - scripts/expose_component_binaries.sh
+  - .github/workflows/release.yml
+  - packaging/homebrew/corvid-trust.rb.in
 
 db_tables: []
 depends_on: []
@@ -69,3 +72,4 @@ Then the formula installs both components under the corvid-trust bundle
 | 1 | 2026-07-12 | Activate exact coverage and expose pinned release binaries under canonical command names. |
 | 1 | 2026-07-12 | Split focused public contracts into dedicated companions. |
 | 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
+| 3 | 2026-07-13 | Map release workflow, component exposure, and Homebrew formula artifacts to the distribution contract. |

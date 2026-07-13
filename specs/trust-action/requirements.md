@@ -36,14 +36,6 @@ Acceptance Criteria
 
 - A failed earlier layer cannot be hidden by a later component result.
 
-### REQ-trust-action-005
-
-The action SHALL emit versioned, valid status JSON and expose Augur verdict and risk outputs.
-
-Acceptance Criteria
-
-- Consumers can parse overall and component status without scraping logs.
-
 ### REQ-trust-action-006
 
 Atlas publication SHALL require explicit policy opt-in and SHALL NOT run for pull request events.
@@ -75,4 +67,3 @@ Native pull request comparisons SHALL be fixed to the event base and head commit
 Acceptance Criteria
 
 - The action does not silently widen or move a pull request comparison.
-

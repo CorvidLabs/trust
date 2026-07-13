@@ -28,6 +28,8 @@
     ".specsync/version",
     ".trust.toml",
     ".attest.json",
+    ".augur.toml",
+    "AGENTS.md",
     "fledge.toml",
     "plugin.toml",
     "templates/",
@@ -40,9 +42,7 @@
     ".cursor/",
     ".gemini/"
   ],
-  "ignored_paths": [
-    "specs/"
-  ],
+  "ignored_paths": [],
   "verification_commands": [
     "fledge lanes run verify"
   ],

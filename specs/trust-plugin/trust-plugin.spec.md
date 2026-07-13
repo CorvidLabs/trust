@@ -1,10 +1,11 @@
 ---
 module: trust-plugin
-version: 2
+version: 3
 status: stable
 files:
   - bin/fledge-trust
   - plugin.toml
+  - scripts/trust_cli.py
 db_tables: []
 depends_on: [trust-policy]
 ---
@@ -55,3 +56,4 @@ And returns its exact exit status
 | --- | --- | --- |
 | 1 | 2026-07-12 | Stable Trust 1.0 plugin contract. |
 | 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
+| 3 | 2026-07-13 | Map CLI adoption, status, and version behavior to its implementation. |

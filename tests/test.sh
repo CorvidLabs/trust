@@ -2,13 +2,14 @@
 # Direct evidence for every stable Trust contract requirement:
 # REQ-trust-001, REQ-trust-002, REQ-trust-003, REQ-trust-004;
 # REQ-trust-action-001, REQ-trust-action-002, REQ-trust-action-003,
-# REQ-trust-action-004, REQ-trust-action-005, REQ-trust-action-006,
+# REQ-trust-action-004, REQ-trust-action-006,
 # REQ-trust-action-007, REQ-trust-action-008, REQ-trust-action-009;
 # REQ-trust-plugin-001, REQ-trust-plugin-002, REQ-trust-plugin-003,
 # REQ-trust-plugin-004, REQ-trust-plugin-005, REQ-trust-plugin-006,
 # REQ-trust-plugin-007;
 # REQ-trust-policy-001, REQ-trust-policy-002, REQ-trust-policy-003,
-# REQ-trust-policy-004, REQ-trust-policy-005, REQ-trust-policy-006;
+# REQ-trust-policy-004, REQ-trust-policy-005, REQ-trust-policy-006,
+# REQ-trust-policy-007;
 # REQ-trust-provenance-001, REQ-trust-provenance-002,
 # REQ-trust-provenance-003, REQ-trust-provenance-004,
 # REQ-trust-provenance-005.
