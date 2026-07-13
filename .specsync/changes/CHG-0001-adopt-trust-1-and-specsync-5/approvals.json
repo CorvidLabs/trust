@@ -21,5 +21,41 @@
       "digest": "792c48ee0b6e0b600313dca080fde68e58f4c9c40653616c7fb1be22b2968999",
       "note": "Accepted after fresh verification of the complete post-review Trust 1 and SpecSync 5 rollout state."
     }
+  ],
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "Fresh verification is required after the accepted Trust self-host contract changed current delivery inputs and the historical verification was squash-merged.",
+      "timestamp": 1783963759,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "0xLeif",
+        "timestamp": 1783908432,
+        "digest": "792c48ee0b6e0b600313dca080fde68e58f4c9c40653616c7fb1be22b2968999",
+        "note": "Accepted after fresh verification of the complete post-review Trust 1 and SpecSync 5 rollout state."
+      },
+      "prior_verification": {
+        "timestamp": 1783908427,
+        "commit": "d29684a1aadb6b227acda4603ab20d53c552a6db",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "6df4e5e969beee85928fbe6a17469f08bdb2822e59e9b17d165442987720f809",
+        "acceptance_input_digest": "bc792201f03ac78f2d50dfdbbdc9654a09d35ca1116cea5e9f770f59fc1e07c7",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "bc792201f03ac78f2d50dfdbbdc9654a09d35ca1116cea5e9f770f59fc1e07c7",
+      "current_acceptance_input_digest": "cfc6e3d51b3e6ae2681200e47e0de160eb97dfd6666e36654ecd258349ac4d5f"
+    }
   ]
 }
