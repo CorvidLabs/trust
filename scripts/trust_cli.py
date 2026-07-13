@@ -13,7 +13,8 @@ import sys
 import tempfile
 from typing import Any
 import uuid
-from urllib.parse import unquote, urlsplit
+from urllib.parse import urlsplit
+from urllib.request import url2pathname
 
 
 __all__ = []
@@ -758,7 +759,7 @@ def resolve_specsync_inputs(version: str, download_base_url: str, runner_temp: s
         raise TrustError("specsync-download-base-url contains invalid percent encoding")
     if ENCODED_SEPARATOR_PATTERN.search(parsed.path):
         raise TrustError("specsync-download-base-url must not contain encoded path separators")
-    decoded_path = unquote(parsed.path)
+    decoded_path = url2pathname(parsed.path)
     if any(ord(character) < 32 or ord(character) == 127 for character in decoded_path):
         raise TrustError("specsync-download-base-url must not contain encoded control characters")
     candidate = Path(decoded_path)

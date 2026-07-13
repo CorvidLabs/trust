@@ -1,0 +1,12 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965876,
+      "digest": "095f58810440e61be9eef7ae96edd025a4f077fc834f9a9bce6cbaa369cc21e3",
+      "note": "Approved narrow cross-platform file-URL correction after hosted Windows diagnosis and security-boundary review."
+    }
+  ],
+  "reopenings": []
+}
