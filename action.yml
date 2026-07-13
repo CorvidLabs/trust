@@ -141,6 +141,20 @@ runs:
           --working-directory . \
           --config "$TRUST_CONFIG"
 
+    - name: Revalidate SpecSync contract inputs
+      if: steps.config.outputs.contract_enabled == 'true'
+      shell: bash
+      env:
+        SPECSYNC_VERSION: ${{ steps.config.outputs.specsync_version }}
+        SPECSYNC_DOWNLOAD_BASE_URL: ${{ steps.config.outputs.specsync_download_base_url }}
+        RUNNER_TEMP: ${{ runner.temp }}
+      run: |
+        set -euo pipefail
+        python3 "$GITHUB_ACTION_PATH/scripts/trust_cli.py" action-revalidate-specsync \
+          --specsync-version "$SPECSYNC_VERSION" \
+          --specsync-download-base-url "$SPECSYNC_DOWNLOAD_BASE_URL" \
+          --runner-temp "$RUNNER_TEMP"
+
     # SpecSync action code is pinned at v5.0.1. The binary defaults to 5.0.1;
     # a governed self-host workflow may select a validated runner-local mirror.
     - name: Contract gate

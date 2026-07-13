@@ -57,6 +57,19 @@ grep -q '^  specsync-version:' "$ROOT/action.yml" || fail "action is missing spe
 grep -q '^  specsync-download-base-url:' "$ROOT/action.yml" || fail "action is missing SpecSync mirror input"
 grep -Fq 'version: ${{ steps.config.outputs.specsync_version }}' "$ROOT/action.yml" || fail "nested SpecSync version bypasses validated output"
 grep -Fq 'download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}' "$ROOT/action.yml" || fail "nested SpecSync mirror bypasses validated output"
+python3 - "$ROOT/action.yml" <<'PY'
+from pathlib import Path
+import sys
+
+action = Path(sys.argv[1]).read_text(encoding="utf-8")
+lifecycle = action.index("    - name: Lifecycle verification")
+revalidation = action.index("    - name: Revalidate SpecSync contract inputs")
+contract = action.index("    - name: Contract gate")
+if not lifecycle < revalidation < contract:
+    raise AssertionError("SpecSync mirror revalidation must run after lifecycle and immediately before contract")
+if "action-revalidate-specsync" not in action[revalidation:contract]:
+    raise AssertionError("pre-contract step does not invoke the focused SpecSync revalidation command")
+PY
 
 python3 - "$ROOT" "$TMP" <<'PY'
 import importlib.util
@@ -139,6 +152,27 @@ except trust_cli.TrustError:
     pass
 else:
     raise AssertionError("file symlink inside SpecSync mirror was accepted")
+
+linked_asset.unlink()
+linked_asset.write_text("initially trusted\n", encoding="utf-8")
+trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
+linked_asset.unlink()
+linked_asset.symlink_to(outside_asset)
+arguments = type(
+    "Arguments",
+    (),
+    {
+        "specsync_version": "5.0.1",
+        "specsync_download_base_url": mirror.as_uri(),
+        "runner_temp": str(runner_temp),
+    },
+)()
+try:
+    trust_cli.action_revalidate_specsync(arguments)
+except trust_cli.TrustError:
+    pass
+else:
+    raise AssertionError("lifecycle-time SpecSync mirror replacement survived pre-contract revalidation")
 PY
 
 component_source="$TMP/component-source"

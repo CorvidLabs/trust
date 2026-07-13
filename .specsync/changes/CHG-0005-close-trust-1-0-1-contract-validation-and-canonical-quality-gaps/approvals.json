@@ -41,6 +41,13 @@
       "timestamp": 1783966771,
       "digest": "bfc35223d0b42810d53e4b27c69138a5b7b3e77863ff95f92bb75104f3b9e670",
       "note": "Final native verification passed after CHG7 mirror hardening; previously applied canonical delta was not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783983457,
+      "digest": "9a36a809f8a44805dcde74042eddcf366be1bcfc7c42463af1110e74ce7c2bc3",
+      "note": "Fresh native verification passed with CHG-0008 present; the previously applied canonical delta was not replayed. Hosted CI remains required before promotion and is not claimed here."
     }
   ],
   "reopenings": [
@@ -195,6 +202,44 @@
       },
       "stale_acceptance_input_digest": "9de53d6df77d5d2e45ba3850fe7c86c6a8e0c26b20c5ccd5b3366560b9c366be",
       "current_acceptance_input_digest": "151da8b9dd7b98c4c52506d998cf299a4ad40c6d72f577b1c31a6736747c9c98"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0008 changed shared Trust action delivery inputs by adding the post-lifecycle mirror revalidation boundary.",
+      "timestamp": 1783983363,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783966771,
+        "digest": "bfc35223d0b42810d53e4b27c69138a5b7b3e77863ff95f92bb75104f3b9e670",
+        "note": "Final native verification passed after CHG7 mirror hardening; previously applied canonical delta was not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783966771,
+        "commit": "e1fe26ab03080124b9d4d0c55d83018eba8dd161",
+        "contract_digest": "c3192df69b0e06d27f6da30de6d43b7dc84fc8f20c2b74fa799314c818157866",
+        "workspace_digest": "eb2a41af14983f0abf03d4faf9bda9d49508b1a7b43b788fc385402da3f78f0f",
+        "acceptance_input_digest": "ec66a825db270e1930d2e13255bbcc5cc0f500f661aaef92546d144b648ba612",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-002",
+          "REQ-trust-action-010",
+          "REQ-trust-policy-007"
+        ]
+      },
+      "stale_acceptance_input_digest": "ec66a825db270e1930d2e13255bbcc5cc0f500f661aaef92546d144b648ba612",
+      "current_acceptance_input_digest": "6e7073e33a442be1cafe52d2f8d20674603964bf4777189c99e78ecab231eb2d"
     }
   ]
 }

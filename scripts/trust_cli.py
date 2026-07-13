@@ -855,6 +855,15 @@ def action_resolve(arguments: argparse.Namespace) -> int:
     return 0
 
 
+def action_revalidate_specsync(arguments: argparse.Namespace) -> int:
+    resolve_specsync_inputs(
+        arguments.specsync_version,
+        arguments.specsync_download_base_url,
+        arguments.runner_temp,
+    )
+    return 0
+
+
 def status_document(root: Path, config_path: Path) -> tuple[dict[str, Any], bool]:
     errors: list[str] = []
     try:
@@ -1073,6 +1082,11 @@ def parser() -> argparse.ArgumentParser:
     action_parser.add_argument("--specsync-download-base-url", default="")
     action_parser.add_argument("--runner-temp", default="")
     action_parser.set_defaults(handler=action_resolve)
+    revalidate_parser = commands.add_parser("action-revalidate-specsync", help=argparse.SUPPRESS)
+    revalidate_parser.add_argument("--specsync-version", default=DEFAULT_SPECSYNC_VERSION)
+    revalidate_parser.add_argument("--specsync-download-base-url", default="")
+    revalidate_parser.add_argument("--runner-temp", default="")
+    revalidate_parser.set_defaults(handler=action_revalidate_specsync)
     lifecycle_parser = commands.add_parser("action-lifecycle", help=argparse.SUPPRESS)
     lifecycle_parser.add_argument("--working-directory", default=".")
     lifecycle_parser.add_argument("--config", default=".trust.toml")

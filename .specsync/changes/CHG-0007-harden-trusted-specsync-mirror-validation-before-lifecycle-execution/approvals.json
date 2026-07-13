@@ -20,7 +20,51 @@
       "timestamp": 1783966704,
       "digest": "b7591b104e9dc6f3773247d1e57f26fd496551d14fa0036475078778b743872b",
       "note": "Native Trust verification passed on committed implementation 655e3e9; hosted Linux, macOS, Windows, and action-consumer checks remain required before merge."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783983497,
+      "digest": "a48776fb9b0c36cbe8f59adc8f2f21113dc2835715637579349e2b92527cc61f",
+      "note": "Fresh native verification passed with CHG-0008 present; the previously applied canonical delta was not replayed. Hosted CI remains required before promotion and is not claimed here."
     }
   ],
-  "reopenings": []
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0007-harden-trusted-specsync-mirror-validation-before-lifecycle-execution",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0008 changed shared Trust action delivery inputs by adding the post-lifecycle mirror revalidation boundary.",
+      "timestamp": 1783983363,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783966704,
+        "digest": "b7591b104e9dc6f3773247d1e57f26fd496551d14fa0036475078778b743872b",
+        "note": "Native Trust verification passed on committed implementation 655e3e9; hosted Linux, macOS, Windows, and action-consumer checks remain required before merge."
+      },
+      "prior_verification": {
+        "timestamp": 1783966695,
+        "commit": "5e0e808efc7428b1be7d8cc67929bed668b307e4",
+        "contract_digest": "e49d54e3a597ddddcd791f2b609d4b0be9c97ac45b659ae4974af786e0e81ae2",
+        "workspace_digest": "34143a2db124e7122f85aaf7ba33468b89fd0274087ca681691e2d7df92d615b",
+        "acceptance_input_digest": "041ddfadeeb7158c673a0302e8978b32e6673c05a51d331d5e01199a61774e59",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "041ddfadeeb7158c673a0302e8978b32e6673c05a51d331d5e01199a61774e59",
+      "current_acceptance_input_digest": "1159e3853f34e18c13ead58d7628e3874e137b85b89a6e2c7c78ac2c0f37d84f"
+    }
+  ]
 }

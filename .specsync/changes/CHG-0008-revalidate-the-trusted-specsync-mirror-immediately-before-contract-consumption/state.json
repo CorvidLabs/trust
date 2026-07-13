@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0008-revalidate-the-trusted-specsync-mirror-immediately-before-contract-consumption",
+  "slug": "revalidate-the-trusted-specsync-mirror-immediately-before-contract-consumption",
+  "title": "Revalidate the trusted SpecSync mirror immediately before contract consumption",
+  "description": "Revalidate the trusted SpecSync mirror immediately before contract consumption",
+  "kind": "bug_fix",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "d34acd9d206291dd9d337a427db6f1fd137eb544",
+  "created_at": 1783983098,
+  "updated_at": 1783983341,
+  "affected_specs": [
+    "trust-action"
+  ],
+  "affected_paths": [
+    "action.yml",
+    "scripts/trust_cli.py",
+    "tests/test.sh"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "The composite action revalidates any configured runner-local SpecSync mirror after lifecycle verification and immediately before the pinned contract action; a regression proves lifecycle-time symlink replacement is rejected before contract consumption; native verification",
+    "strict SpecSync validation",
+    "and the hosted Linux/macOS/Windows action matrix pass."
+  ],
+  "selected_artifacts": [
+    "context",
+    "testing",
+    "tasks",
+    "requirements",
+    "docs",
+    "research",
+    "design",
+    "plan"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "yes"
+  }
+}

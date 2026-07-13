@@ -1,0 +1,33 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783983229,
+      "digest": "a6dcc97b273e405b17756aa44604a30883683482d7aedf02d1fe27ff77c0228c",
+      "note": "Approved portable definition: close the reviewed post-lifecycle mirror mutation gap without changing the public inputs."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783983284,
+      "digest": "e734694e67b446c78c42eb91cfc2f8a3d534043d8a2d2a27f646154b0670351b",
+      "note": "Definition refreshed after recording completed native preparation; hosted completion remains pending."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783983305,
+      "digest": "0e3063bff1cf9a87ac3647fdd8f050b81cd5d1187700d70d6fdb16f86f33fd12",
+      "note": "Definition refreshed after truthfully completing hosted-matrix preparation; no hosted success is claimed before push."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783983341,
+      "digest": "6a380aca2ccee31f58df60f0b5cda777576126a4cab242c5b6e350131cac2b89",
+      "note": "Closing approval follows successful native Trust verification of the committed security correction. Hosted CI remains required before PR promotion and is not claimed here."
+    }
+  ],
+  "reopenings": []
+}

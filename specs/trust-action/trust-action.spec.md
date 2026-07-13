@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 9
+version: 10
 status: stable
 files:
   - action.yml
@@ -98,3 +98,4 @@ And missing provenance may report degraded rather than failed
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
 | 2026-07-13 | CHG-0006-accept-canonical-windows-file-urls-for-trusted-specsync-mirrors: Accept canonical Windows file URLs for trusted SpecSync mirrors |
 | 2026-07-13 | CHG-0007-harden-trusted-specsync-mirror-validation-before-lifecycle-execution: Harden trusted SpecSync mirror validation before lifecycle execution |
+| 2026-07-13 | CHG-0008-revalidate-the-trusted-specsync-mirror-immediately-before-contract-consumption: Revalidate the trusted SpecSync mirror immediately before contract consumption |
