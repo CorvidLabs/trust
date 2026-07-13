@@ -27,6 +27,13 @@
       "timestamp": 1783907422,
       "digest": "b009bfd2d3aa77b3c8155cbbbefc838ece2c6493ff43b4a9ef0e191a3b1db00a",
       "note": "Approved the final review-driven ownership maps, status JSON requirement move, and complete public export evidence."
+    },
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1783907605,
+      "digest": "c0e15b1144ab40ca80ae57050685f0910f1a83c780715df1f454608ab7a9f11b",
+      "note": "Approved the idempotent reopened delta, final review-driven ownership maps, status JSON requirement move, and complete public export evidence."
     }
   ]
 }

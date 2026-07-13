@@ -1,4 +1,4 @@
-## ADDED
+## MODIFIED
 
 ### REQUIREMENT REQ-trust-action-001
 
