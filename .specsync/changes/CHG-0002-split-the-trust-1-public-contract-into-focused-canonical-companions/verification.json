@@ -1,9 +1,8 @@
 {
-  "timestamp": 1783900645,
-  "commit": "923ce3eda6f04bf485c76a78dc1f1a2676e81b08",
-  "contract_digest": "f4cb2bc8b117db4e615c169c96be36fa5c121858ed617c589289ca8a17add4a7",
-  "workspace_digest": "f4b8d1f4c3f7e71adeb314964bf20d8f7925d90d97f591fc0a48c527e1901c5a",
-  "acceptance_input_digest": "ec6950da888fbc32ae133ec1b9bde84364d7347439977fc1dcdf02456144d2fe",
+  "timestamp": 1783907449,
+  "commit": "5761cf97a096495756cae93c4eeafbb69387a81c",
+  "contract_digest": "b009bfd2d3aa77b3c8155cbbbefc838ece2c6493ff43b4a9ef0e191a3b1db00a",
+  "workspace_digest": "ef7a65bc80505ed8c5be9f3f832042b9f09a163716bea21f65c22cb2f56aa16f",
   "passed": true,
   "commands": [
     {
@@ -21,7 +20,6 @@
     "REQ-trust-action-002",
     "REQ-trust-action-003",
     "REQ-trust-action-004",
-    "REQ-trust-action-005",
     "REQ-trust-action-006",
     "REQ-trust-action-007",
     "REQ-trust-action-008",
@@ -39,6 +37,7 @@
     "REQ-trust-policy-004",
     "REQ-trust-policy-005",
     "REQ-trust-policy-006",
+    "REQ-trust-policy-007",
     "REQ-trust-provenance-001",
     "REQ-trust-provenance-002",
     "REQ-trust-provenance-003",
