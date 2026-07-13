@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 3
+version: 4
 status: stable
 files:
   - action.yml
@@ -91,3 +91,4 @@ And missing provenance may report degraded rather than failed
 | 1 | 2026-07-12 | Stable Trust 1.0 action contract. |
 | 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
 | 3 | 2026-07-13 | Keep release-only component exposure under the distribution contract. |
+| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
