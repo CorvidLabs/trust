@@ -6,12 +6,15 @@ from dataclasses import asdict, dataclass
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
 import tempfile
 from typing import Any
 import uuid
+from urllib.parse import urlsplit
+from urllib.request import url2pathname
 
 
 __all__ = []
@@ -33,6 +36,17 @@ END = "<!-- CorvidLabs trust toolchain: END -->"
 RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
 PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
 DEFAULT_ATLAS_SKIP_REASON = "Atlas publication was not enabled during adoption"
+DEFAULT_SPECSYNC_VERSION = "5.0.1"
+SPECSYNC_VERSION_PATTERN = re.compile(
+    r"^(?:0|[1-9][0-9]*)\."
+    r"(?:0|[1-9][0-9]*)\."
+    r"(?:0|[1-9][0-9]*)"
+    r"(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)"
+    r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+)
+PERCENT_ESCAPE_PATTERN = re.compile(r"%[0-9A-Fa-f]{2}")
+ENCODED_SEPARATOR_PATTERN = re.compile(r"%(?:2[fF]|5[cC])")
 
 
 class TrustError(RuntimeError):
@@ -727,6 +741,78 @@ def write_github_outputs(values: dict[str, str]) -> None:
             print(f"{key}={value}")
 
 
+def validate_specsync_mirror_entries(mirror: Path, boundary: Path) -> None:
+    pending = [mirror]
+    while pending:
+        directory = pending.pop()
+        try:
+            entries = list(directory.iterdir())
+        except OSError as error:
+            raise TrustError(f"cannot inspect SpecSync local mirror: {error}") from error
+        for entry in entries:
+            if entry.is_symlink():
+                raise TrustError("SpecSync local mirror must not contain symlink entries")
+            try:
+                resolved_entry = entry.resolve(strict=True)
+            except OSError as error:
+                raise TrustError(f"cannot resolve SpecSync local mirror entry: {error}") from error
+            try:
+                resolved_entry.relative_to(boundary)
+            except ValueError as error:
+                raise TrustError("SpecSync local mirror entries must resolve beneath RUNNER_TEMP") from error
+            if resolved_entry.is_dir():
+                pending.append(resolved_entry)
+
+
+def resolve_specsync_inputs(version: str, download_base_url: str, runner_temp: str) -> tuple[str, str]:
+    if SPECSYNC_VERSION_PATTERN.fullmatch(version) is None:
+        raise TrustError("specsync-version must be an exact semantic version")
+    if not download_base_url:
+        if version != DEFAULT_SPECSYNC_VERSION:
+            raise TrustError("non-default specsync-version requires a validated local mirror")
+        return version, ""
+    if any(ord(character) < 32 or ord(character) == 127 for character in download_base_url):
+        raise TrustError("specsync-download-base-url must not contain control characters")
+    try:
+        parsed = urlsplit(download_base_url)
+    except ValueError as error:
+        raise TrustError("specsync-download-base-url is malformed") from error
+    if parsed.scheme != "file":
+        raise TrustError("specsync-download-base-url must use the local file scheme")
+    if parsed.netloc:
+        raise TrustError("specsync-download-base-url must not contain a file authority")
+    if parsed.query or parsed.fragment:
+        raise TrustError("specsync-download-base-url must not contain a query or fragment")
+    escapes = PERCENT_ESCAPE_PATTERN.findall(parsed.path)
+    if parsed.path.count("%") != len(escapes):
+        raise TrustError("specsync-download-base-url contains invalid percent encoding")
+    if ENCODED_SEPARATOR_PATTERN.search(parsed.path):
+        raise TrustError("specsync-download-base-url must not contain encoded path separators")
+    decoded_path = url2pathname(parsed.path)
+    if any(ord(character) < 32 or ord(character) == 127 for character in decoded_path):
+        raise TrustError("specsync-download-base-url must not contain encoded control characters")
+    candidate = Path(decoded_path)
+    if not candidate.is_absolute() or ".." in candidate.parts:
+        raise TrustError("specsync-download-base-url must be an absolute traversal-free path")
+    if not runner_temp:
+        raise TrustError("RUNNER_TEMP is required for a SpecSync local mirror")
+    try:
+        boundary = Path(runner_temp).resolve(strict=True)
+        mirror = candidate.resolve(strict=True)
+    except OSError as error:
+        raise TrustError(f"cannot resolve SpecSync local mirror: {error}") from error
+    if not boundary.is_dir() or not mirror.is_dir():
+        raise TrustError("SpecSync local mirror and RUNNER_TEMP must be directories")
+    try:
+        relative = mirror.relative_to(boundary)
+    except ValueError as error:
+        raise TrustError("SpecSync local mirror must resolve beneath RUNNER_TEMP") from error
+    if not relative.parts:
+        raise TrustError("SpecSync local mirror must be a child of RUNNER_TEMP")
+    validate_specsync_mirror_entries(mirror, boundary)
+    return version, mirror.as_uri()
+
+
 def action_resolve(arguments: argparse.Namespace) -> int:
     root = Path(arguments.working_directory).resolve()
     committed = load_config(root / arguments.config)
@@ -738,6 +824,11 @@ def action_resolve(arguments: argparse.Namespace) -> int:
         validate_policy_strength(base, committed)
         validate_pull_request_policy_content(root, base_commit, base, committed)
     config = apply_overrides(committed, arguments.profile or None, arguments.threshold or None)
+    specsync_version, specsync_download_base_url = resolve_specsync_inputs(
+        arguments.specsync_version,
+        arguments.specsync_download_base_url,
+        arguments.runner_temp,
+    )
     comparison, attest_target, attest_value = action_range(
         root,
         arguments.range or None,
@@ -757,8 +848,19 @@ def action_resolve(arguments: argparse.Namespace) -> int:
         "range": comparison,
         "attest_target": attest_target,
         "attest_value": attest_value,
+        "specsync_version": specsync_version,
+        "specsync_download_base_url": specsync_download_base_url,
     }
     write_github_outputs(outputs)
+    return 0
+
+
+def action_revalidate_specsync(arguments: argparse.Namespace) -> int:
+    resolve_specsync_inputs(
+        arguments.specsync_version,
+        arguments.specsync_download_base_url,
+        arguments.runner_temp,
+    )
     return 0
 
 
@@ -976,7 +1078,15 @@ def parser() -> argparse.ArgumentParser:
     action_parser.add_argument("--range", default="")
     action_parser.add_argument("--profile", default="")
     action_parser.add_argument("--threshold", default="")
+    action_parser.add_argument("--specsync-version", default=DEFAULT_SPECSYNC_VERSION)
+    action_parser.add_argument("--specsync-download-base-url", default="")
+    action_parser.add_argument("--runner-temp", default="")
     action_parser.set_defaults(handler=action_resolve)
+    revalidate_parser = commands.add_parser("action-revalidate-specsync", help=argparse.SUPPRESS)
+    revalidate_parser.add_argument("--specsync-version", default=DEFAULT_SPECSYNC_VERSION)
+    revalidate_parser.add_argument("--specsync-download-base-url", default="")
+    revalidate_parser.add_argument("--runner-temp", default="")
+    revalidate_parser.set_defaults(handler=action_revalidate_specsync)
     lifecycle_parser = commands.add_parser("action-lifecycle", help=argparse.SUPPRESS)
     lifecycle_parser.add_argument("--working-directory", default=".")
     lifecycle_parser.add_argument("--config", default=".trust.toml")

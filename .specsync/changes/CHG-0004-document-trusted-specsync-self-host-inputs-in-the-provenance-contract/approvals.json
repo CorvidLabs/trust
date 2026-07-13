@@ -1,0 +1,61 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783963998,
+      "digest": "4638cfd27fc64c41f0cb9a89c63d1571d73c5951e7c94e170dc77c4c068d8014",
+      "note": "Approved as part of making the SpecSync 5 and Trust 1 self-host contract complete and strictly documented."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783964605,
+      "digest": "bbd4d3e572f7edc37aaccc12d0695d8ca8eae0cfb5158e6ed5d764c7d30579f2",
+      "note": "Native Trust validation passed and strict contract coverage requires both existing self-host inputs in the provenance API table."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965339,
+      "digest": "d47ba9d0e61fdcca5bf3d126d8fa579f851fe5a7ffd2d744a084b853f7291011",
+      "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; the prior documentation delta was not replayed."
+    }
+  ],
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0004-document-trusted-specsync-self-host-inputs-in-the-provenance-contract",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0005 completed the final canonical Trust 1.0.1 audit corrections after this acceptance evidence was recorded.",
+      "timestamp": 1783965228,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783964605,
+        "digest": "bbd4d3e572f7edc37aaccc12d0695d8ca8eae0cfb5158e6ed5d764c7d30579f2",
+        "note": "Native Trust validation passed and strict contract coverage requires both existing self-host inputs in the provenance API table."
+      },
+      "prior_verification": {
+        "timestamp": 1783964594,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "4638cfd27fc64c41f0cb9a89c63d1571d73c5951e7c94e170dc77c4c068d8014",
+        "workspace_digest": "966f435adf5477fbfb6fb033220eacbfc58bb3a5040475bac06e844acd0d684e",
+        "acceptance_input_digest": "2ee5bb23de1d7c9970edc9f9563aa0fb7626837f416d617bfc59acd94f127c75",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "2ee5bb23de1d7c9970edc9f9563aa0fb7626837f416d617bfc59acd94f127c75",
+      "current_acceptance_input_digest": "03f46c8a888b51c46d377e56a42b4a9048beb7b2b20c3446690864be9af4886e"
+    }
+  ]
+}

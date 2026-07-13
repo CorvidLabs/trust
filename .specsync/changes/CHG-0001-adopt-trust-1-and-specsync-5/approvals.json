@@ -20,6 +20,254 @@
       "timestamp": 1783908432,
       "digest": "792c48ee0b6e0b600313dca080fde68e58f4c9c40653616c7fb1be22b2968999",
       "note": "Accepted after fresh verification of the complete post-review Trust 1 and SpecSync 5 rollout state."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783963792,
+      "digest": "ebcf715e63449cfb83295754dadc59c246743c55ced7ca000d954251b8393e7c",
+      "note": "Fresh closing approval after full committed-head Trust validation passed; canonical migration deltas remained applied exactly once."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783964697,
+      "digest": "c926793f2f5c93bf15a201e6b5b2fde4eee1fd1f096d010ebe65c3e1c7e8108a",
+      "note": "Fresh full Trust verification passed after the provenance contract completion; canonical deltas were already applied and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965255,
+      "digest": "263dbd6ab5875b8499bf79d6c3c64ace7ab9480c60ee2d153e1985f33a794a46",
+      "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; no prior delta replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783966103,
+      "digest": "59c871d64ba62ed69878e561a269dd0c52171a0b4f3277716da419c016a8b05c",
+      "note": "Final native verification passed after CHG-0006 canonicalization; no delta replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783966841,
+      "digest": "8a3e4cd03ac465617f90798c23321405b24b05d264d1fc53d43b5a3783da59b7",
+      "note": "Final native verification passed after CHG7 canonical hardening; the accepted no-spec-change delivery was not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783983394,
+      "digest": "f093a42cfef3241d36dd7d36b4ad00bebe00179104671077f48329bacec9fbef",
+      "note": "Fresh native verification passed with CHG-0008 present; the previously applied canonical delta was not replayed. Hosted CI remains required before promotion and is not claimed here."
+    }
+  ],
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "Fresh verification is required after the accepted Trust self-host contract changed current delivery inputs and the historical verification was squash-merged.",
+      "timestamp": 1783963759,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "0xLeif",
+        "timestamp": 1783908432,
+        "digest": "792c48ee0b6e0b600313dca080fde68e58f4c9c40653616c7fb1be22b2968999",
+        "note": "Accepted after fresh verification of the complete post-review Trust 1 and SpecSync 5 rollout state."
+      },
+      "prior_verification": {
+        "timestamp": 1783908427,
+        "commit": "d29684a1aadb6b227acda4603ab20d53c552a6db",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "6df4e5e969beee85928fbe6a17469f08bdb2822e59e9b17d165442987720f809",
+        "acceptance_input_digest": "bc792201f03ac78f2d50dfdbbdc9654a09d35ca1116cea5e9f770f59fc1e07c7",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "bc792201f03ac78f2d50dfdbbdc9654a09d35ca1116cea5e9f770f59fc1e07c7",
+      "current_acceptance_input_digest": "cfc6e3d51b3e6ae2681200e47e0de160eb97dfd6666e36654ecd258349ac4d5f"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0004 truthfully completed the shared provenance action API, changing governed delivery inputs after the prior acceptance.",
+      "timestamp": 1783964662,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783963792,
+        "digest": "ebcf715e63449cfb83295754dadc59c246743c55ced7ca000d954251b8393e7c",
+        "note": "Fresh closing approval after full committed-head Trust validation passed; canonical migration deltas remained applied exactly once."
+      },
+      "prior_verification": {
+        "timestamp": 1783963787,
+        "commit": "4b2ce71bd1ea0b99a673fcd759d0b061bc13873c",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "966f435adf5477fbfb6fb033220eacbfc58bb3a5040475bac06e844acd0d684e",
+        "acceptance_input_digest": "cfc6e3d51b3e6ae2681200e47e0de160eb97dfd6666e36654ecd258349ac4d5f",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "cfc6e3d51b3e6ae2681200e47e0de160eb97dfd6666e36654ecd258349ac4d5f",
+      "current_acceptance_input_digest": "ff1fe7ee9e4d285d21023d3d0ebc8294f828944f8f1d68b0fa03130834c78318"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0005 completed the final canonical Trust 1.0.1 audit corrections after this acceptance evidence was recorded.",
+      "timestamp": 1783965227,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783964697,
+        "digest": "c926793f2f5c93bf15a201e6b5b2fde4eee1fd1f096d010ebe65c3e1c7e8108a",
+        "note": "Fresh full Trust verification passed after the provenance contract completion; canonical deltas were already applied and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783964689,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "ae2d8ac25fe6a12c9d1c00cef82d11429d0c9ed180fe591e42c42ae1a7260e1f",
+        "acceptance_input_digest": "ff1fe7ee9e4d285d21023d3d0ebc8294f828944f8f1d68b0fa03130834c78318",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "ff1fe7ee9e4d285d21023d3d0ebc8294f828944f8f1d68b0fa03130834c78318",
+      "current_acceptance_input_digest": "70f24dee312eb2125d55f0b2b202653001dc99c899db964d36807b795143aa38"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0006 finalized the canonical cross-platform Action mirror requirement after this evidence was recorded.",
+      "timestamp": 1783966072,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783965255,
+        "digest": "263dbd6ab5875b8499bf79d6c3c64ace7ab9480c60ee2d153e1985f33a794a46",
+        "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; no prior delta replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783965250,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "49f23c663ea45be0dff30ac2d32504b4575d55fc6bba2cf746a4718bce71d73c",
+        "acceptance_input_digest": "70f24dee312eb2125d55f0b2b202653001dc99c899db964d36807b795143aa38",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "70f24dee312eb2125d55f0b2b202653001dc99c899db964d36807b795143aa38",
+      "current_acceptance_input_digest": "55790a57014326dbeb11582bbb52326ecdf982bb60303a21588c5a281158ec03"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG7 intentionally updates the accepted Trust action contract and invalidates this canonical delivery evidence",
+      "timestamp": 1783966812,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783966103,
+        "digest": "59c871d64ba62ed69878e561a269dd0c52171a0b4f3277716da419c016a8b05c",
+        "note": "Final native verification passed after CHG-0006 canonicalization; no delta replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783966097,
+        "commit": "041106211fc92e690cac97c6478f95f93105261c",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "259575416f01bbd9a3b7180aaa42e9c673b8c18ba57c83490913fb0656901fd1",
+        "acceptance_input_digest": "55790a57014326dbeb11582bbb52326ecdf982bb60303a21588c5a281158ec03",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "55790a57014326dbeb11582bbb52326ecdf982bb60303a21588c5a281158ec03",
+      "current_acceptance_input_digest": "cd694abd95913bc71138836158a8bbf0fe6975783b4bf567b555cf43ee15f88e"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0008 changed shared Trust action delivery inputs by adding the post-lifecycle mirror revalidation boundary.",
+      "timestamp": 1783983362,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783966841,
+        "digest": "8a3e4cd03ac465617f90798c23321405b24b05d264d1fc53d43b5a3783da59b7",
+        "note": "Final native verification passed after CHG7 canonical hardening; the accepted no-spec-change delivery was not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783966836,
+        "commit": "71435afe0883572926294638a51b1c255953c28e",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "eb2a41af14983f0abf03d4faf9bda9d49508b1a7b43b788fc385402da3f78f0f",
+        "acceptance_input_digest": "cd694abd95913bc71138836158a8bbf0fe6975783b4bf567b555cf43ee15f88e",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "cd694abd95913bc71138836158a8bbf0fe6975783b4bf567b555cf43ee15f88e",
+      "current_acceptance_input_digest": "5f15c56f32aa1131aab04a9414a1bc1cd2c6afc25495b53feb848bad9423d7cf"
     }
   ]
 }

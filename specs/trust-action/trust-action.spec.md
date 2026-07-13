@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 5
+version: 10
 status: stable
 files:
   - action.yml
@@ -34,6 +34,8 @@ Augur risk, progressive Attest provenance, and optional Atlas publication.
 | `inputs.range` | Optional explicit comparison range. |
 | `inputs.profile` | Optional stricter profile override. |
 | `inputs.augur-threshold` | Optional stricter risk threshold. |
+| `inputs.specsync-version` | Exact SpecSync version, defaulting to released 5.0.1. |
+| `inputs.specsync-download-base-url` | Optional authority-free runner-local mirror URL for governed self-hosting. |
 | `outputs.status` | Overall passed, degraded, or failed status. |
 | `outputs.range` | Canonical comparison range. |
 | `outputs.lifecycle-status` | Lifecycle result. |
@@ -60,6 +62,7 @@ Augur risk, progressive Attest provenance, and optional Atlas publication.
 3. Soft provenance may degrade but never hides lifecycle, contract, or risk failure.
 4. Atlas is disabled unless committed policy explicitly enables it.
 5. Generated workflows keep Pages write permissions outside the Trust job.
+6. SpecSync artifact overrides are local, checksummed, confined beneath `RUNNER_TEMP`, and resolved before lifecycle execution.
 
 ## Behavioral Examples
 
@@ -87,10 +90,12 @@ And missing provenance may report degraded rather than failed
 
 ## Change Log
 
-| Version | Date | Changes |
-| --- | --- | --- |
-| 1 | 2026-07-12 | Stable Trust 1.0 action contract. |
-| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 3 | 2026-07-13 | Keep release-only component exposure under the distribution contract. |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
+| Date | Change |
+| --- | --- |
+| 2026-07-12 | Stable Trust 1.0 action contract. |
+| 2026-07-13 | Keep release-only component exposure under the distribution contract. |
+| 2026-07-13 | Add trusted SpecSync self-host artifact inputs. |
+| 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
+| 2026-07-13 | CHG-0006-accept-canonical-windows-file-urls-for-trusted-specsync-mirrors: Accept canonical Windows file URLs for trusted SpecSync mirrors |
+| 2026-07-13 | CHG-0007-harden-trusted-specsync-mirror-validation-before-lifecycle-execution: Harden trusted SpecSync mirror validation before lifecycle execution |
+| 2026-07-13 | CHG-0008-revalidate-the-trusted-specsync-mirror-immediately-before-contract-consumption: Revalidate the trusted SpecSync mirror immediately before contract consumption |

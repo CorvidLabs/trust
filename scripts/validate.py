@@ -198,7 +198,14 @@ for step in action_steps:
         continue
     expected_version = dependencies[step["uses"]]
     inputs = step.get("with", {})
-    if not isinstance(inputs, dict) or inputs.get("version") != expected_version:
+    if not isinstance(inputs, dict):
+        fail(f"action.yml must configure {step['uses']}")
+    if step["uses"].startswith("CorvidLabs/spec-sync@"):
+        if inputs.get("version") != "${{ steps.config.outputs.specsync_version }}":
+            fail("action.yml must pass the validated SpecSync version output")
+        if inputs.get("download-base-url") != "${{ steps.config.outputs.specsync_download_base_url }}":
+            fail("action.yml must pass the validated SpecSync mirror output")
+    elif inputs.get("version") != expected_version:
         fail(f"action.yml must pair {step['uses']} with binary version {expected_version}")
 
 print("trust validation passed")

@@ -1,6 +1,6 @@
 ---
 module: trust-policy
-version: 5
+version: 6
 status: stable
 files:
   - scripts/trust_cli.py
@@ -27,9 +27,10 @@ context, prevents enforcement downgrades, and derives canonical comparison range
 ## Public API
 
 The policy surface provides adoption, status, doctor, local verification, and
-composite-action resolution. It accepts a committed policy path, optional
-explicit range, and only stricter profile or risk overrides. Machine status is
-schema-versioned and Action resolution emits the canonical component settings.
+internal composite-action resolution. It accepts a committed policy path,
+optional explicit range, and only stricter profile or risk overrides. Machine
+status is schema-versioned configuration health; composite Action outputs expose
+gate component results.
 
 ## Invariants
 
@@ -65,10 +66,8 @@ But rejects any attempt to disable contract or provenance enforcement
 
 ## Change Log
 
-| Version | Date | Changes |
-| --- | --- | --- |
-| 1 | 2026-07-12 | Stable Trust 1.0 policy contract. |
-| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 3 | 2026-07-13 | Map committed policies, generated defaults, managed rules, and status JSON to policy resolution. |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
+| Date | Change |
+| --- | --- |
+| 2026-07-12 | Stable Trust 1.0 policy contract. |
+| 2026-07-13 | Map committed policies, generated defaults, managed rules, and status JSON to policy resolution. |
+| 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |

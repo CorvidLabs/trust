@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0004-document-trusted-specsync-self-host-inputs-in-the-provenance-contract",
+  "slug": "document-trusted-specsync-self-host-inputs-in-the-provenance-contract",
+  "title": "Document trusted SpecSync self-host inputs in the provenance contract",
+  "description": "Document trusted SpecSync self-host inputs in the provenance contract",
+  "kind": "documentation",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+  "created_at": 1783963948,
+  "updated_at": 1783965339,
+  "affected_specs": [
+    "trust-provenance"
+  ],
+  "affected_paths": [
+    "specs/trust-provenance/trust-provenance.spec.md"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "The trust-provenance Public API table documents inputs.specsync-version and inputs.specsync-download-base-url with descriptions consistent with action.yml; strict SpecSync validation reports 100% coverage with no undocumented exports."
+  ],
+  "selected_artifacts": [
+    "context",
+    "docs"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "no",
+    "public_contract": "no"
+  }
+}

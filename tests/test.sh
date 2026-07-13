@@ -3,7 +3,8 @@
 # REQ-trust-001, REQ-trust-002, REQ-trust-003, REQ-trust-004;
 # REQ-trust-action-001, REQ-trust-action-002, REQ-trust-action-003,
 # REQ-trust-action-004, REQ-trust-action-006,
-# REQ-trust-action-007, REQ-trust-action-008, REQ-trust-action-009;
+# REQ-trust-action-007, REQ-trust-action-008, REQ-trust-action-009,
+# REQ-trust-action-010;
 # REQ-trust-plugin-001, REQ-trust-plugin-002, REQ-trust-plugin-003,
 # REQ-trust-plugin-004, REQ-trust-plugin-005, REQ-trust-plugin-006,
 # REQ-trust-plugin-007;
@@ -52,6 +53,127 @@ if grep -q 'CorvidLabs/trust@v0' "$ROOT/templates/trust.yml"; then
 fi
 grep -q 'CorvidLabs/trust@v1.0.0' "$ROOT/README.md" || fail "README must install the stable immutable tag"
 grep -q 'latest `1.x` release line' "$ROOT/SECURITY.md" || fail "security policy must support 1.x"
+grep -q '^  specsync-version:' "$ROOT/action.yml" || fail "action is missing specsync-version input"
+grep -q '^  specsync-download-base-url:' "$ROOT/action.yml" || fail "action is missing SpecSync mirror input"
+grep -Fq 'version: ${{ steps.config.outputs.specsync_version }}' "$ROOT/action.yml" || fail "nested SpecSync version bypasses validated output"
+grep -Fq 'download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}' "$ROOT/action.yml" || fail "nested SpecSync mirror bypasses validated output"
+python3 - "$ROOT/action.yml" <<'PY'
+from pathlib import Path
+import sys
+
+action = Path(sys.argv[1]).read_text(encoding="utf-8")
+lifecycle = action.index("    - name: Lifecycle verification")
+revalidation = action.index("    - name: Revalidate SpecSync contract inputs")
+contract = action.index("    - name: Contract gate")
+if not lifecycle < revalidation < contract:
+    raise AssertionError("SpecSync mirror revalidation must run after lifecycle and immediately before contract")
+if "action-revalidate-specsync" not in action[revalidation:contract]:
+    raise AssertionError("pre-contract step does not invoke the focused SpecSync revalidation command")
+PY
+
+python3 - "$ROOT" "$TMP" <<'PY'
+import importlib.util
+from pathlib import Path
+import sys
+
+root = Path(sys.argv[1])
+temporary = Path(sys.argv[2])
+spec = importlib.util.spec_from_file_location("trust_cli_inputs", root / "scripts" / "trust_cli.py")
+if spec is None or spec.loader is None:
+    raise RuntimeError("could not load trust_cli")
+trust_cli = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = trust_cli
+spec.loader.exec_module(trust_cli)
+
+runner_temp = temporary / "runner-temp"
+mirror = runner_temp / "specsync-mirror"
+spaced_mirror = runner_temp / "specsync mirror"
+outside = temporary / "outside"
+mirror.mkdir(parents=True)
+spaced_mirror.mkdir()
+outside.mkdir()
+version, base = trust_cli.resolve_specsync_inputs("5.0.1", "", "")
+if (version, base) != ("5.0.1", ""):
+    raise AssertionError("released defaults changed")
+version, base = trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
+if (version, base) != ("5.0.1", mirror.resolve().as_uri()):
+    raise AssertionError("valid confined mirror was not canonicalized")
+version, base = trust_cli.resolve_specsync_inputs("5.0.1-alpha.0+build.01", spaced_mirror.as_uri(), str(runner_temp))
+if (version, base) != ("5.0.1-alpha.0+build.01", spaced_mirror.resolve().as_uri()):
+    raise AssertionError("valid percent-encoded mirror path or semantic version was rejected")
+
+invalid = [
+    ("5.0.2", "", ""),
+    ("5.0.1-alpha.0+build.01", "", ""),
+    ("latest", mirror.as_uri(), str(runner_temp)),
+    ("v5.0.1", mirror.as_uri(), str(runner_temp)),
+    ("5.0", mirror.as_uri(), str(runner_temp)),
+    ("01.0.0", mirror.as_uri(), str(runner_temp)),
+    ("1.00.0", mirror.as_uri(), str(runner_temp)),
+    ("1.0.00", mirror.as_uri(), str(runner_temp)),
+    ("1.0.0-01", mirror.as_uri(), str(runner_temp)),
+    ("1.0.0-alpha.01", mirror.as_uri(), str(runner_temp)),
+    ("5.0.1", "https://example.invalid/specsync", str(runner_temp)),
+    ("5.0.1", "file://example.invalid/specsync", str(runner_temp)),
+    ("5.0.1", "file://localhost/specsync", str(runner_temp)),
+    ("5.0.1", "file://[::1/specsync", str(runner_temp)),
+    ("5.0.1", "file:relative/mirror", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "\nignored", str(runner_temp)),
+    ("5.0.1", runner_temp.as_uri(), str(runner_temp)),
+    ("5.0.1", outside.as_uri(), str(runner_temp)),
+    ("5.0.1", (runner_temp / "missing").as_uri(), str(runner_temp)),
+    ("5.0.1", f"file://{runner_temp}/child/../specsync-mirror", str(runner_temp)),
+    ("5.0.1", f"file://{runner_temp}/%2e%2e/outside", str(runner_temp)),
+    ("5.0.1", mirror.as_uri().replace("specsync-mirror", "specsync%2fmirror"), str(runner_temp)),
+    ("5.0.1", mirror.as_uri().replace("specsync-mirror", "specsync%5Cmirror"), str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "%", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "%00", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "?asset=other", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "#fragment", str(runner_temp)),
+    ("5.0.1", mirror.as_uri(), ""),
+]
+link = runner_temp / "escape-link"
+link.symlink_to(outside, target_is_directory=True)
+invalid.append(("5.0.1", link.as_uri(), str(runner_temp)))
+for candidate in invalid:
+    try:
+        trust_cli.resolve_specsync_inputs(*candidate)
+    except trust_cli.TrustError:
+        continue
+    raise AssertionError(f"unsafe SpecSync action input was accepted: {candidate}")
+
+outside_asset = outside / "specsync.sha256"
+outside_asset.write_text("not trusted\n", encoding="utf-8")
+linked_asset = mirror / "specsync.sha256"
+linked_asset.symlink_to(outside_asset)
+try:
+    trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
+except trust_cli.TrustError:
+    pass
+else:
+    raise AssertionError("file symlink inside SpecSync mirror was accepted")
+
+linked_asset.unlink()
+linked_asset.write_text("initially trusted\n", encoding="utf-8")
+trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
+linked_asset.unlink()
+linked_asset.symlink_to(outside_asset)
+arguments = type(
+    "Arguments",
+    (),
+    {
+        "specsync_version": "5.0.1",
+        "specsync_download_base_url": mirror.as_uri(),
+        "runner_temp": str(runner_temp),
+    },
+)()
+try:
+    trust_cli.action_revalidate_specsync(arguments)
+except trust_cli.TrustError:
+    pass
+else:
+    raise AssertionError("lifecycle-time SpecSync mirror replacement survived pre-contract revalidation")
+PY
 
 component_source="$TMP/component-source"
 component_bin="$TMP/component-bin"
@@ -345,6 +467,19 @@ status_code=0
 status_json="$(cd "$repo" && PATH="$isolated_bin:$git_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
 [ "$status_code" -eq 0 ] || fail "status diagnostic returned failure"
 STATUS_JSON="$status_json" python3 -c 'import json, os; json.loads(os.environ["STATUS_JSON"])'
+STATUS_JSON="$status_json" python3 - <<'PY'
+import json
+import os
+
+document = json.loads(os.environ["STATUS_JSON"])
+expected = {"schemaVersion", "version", "healthy", "profile", "tools", "files", "errors"}
+if set(document) != expected:
+    raise AssertionError(f"status schema drifted: {sorted(document)}")
+if set(document["tools"]) != {"fledge", "specsync", "augur", "attest", "atlas"}:
+    raise AssertionError("status tool readiness is incomplete")
+if set(document["files"]) != {"fledge", "workflow", "rules"}:
+    raise AssertionError("status managed-file readiness is incomplete")
+PY
 contains "$status_json" '"schemaVersion": 1'
 contains "$status_json" "\"version\": \"$plugin_version\""
 contains "$status_json" '"healthy": false'

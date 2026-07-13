@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Add narrowly validated SpecSync version and runner-local mirror inputs for checksummed self-host contract validation while preserving released 5.0.1 defaults for consumers.
+
 ## [v1.0.0] - 2026-07-11
 
 ### Features
