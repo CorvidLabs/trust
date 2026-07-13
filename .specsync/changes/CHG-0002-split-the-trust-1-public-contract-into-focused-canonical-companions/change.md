@@ -1,6 +1,6 @@
 ---
 id: CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions
-state: implementing
+state: accepted
 type: documentation
 base_commit: e5827e83212f2716a65bbd0a72147fa8297b97b4
 ---
