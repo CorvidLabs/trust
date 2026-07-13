@@ -76,7 +76,7 @@ The Trust action SHALL allow a governed self-hosting workflow to select a checks
 Acceptance Criteria
 
 - Defaults select released SpecSync 5.0.1 and exact version input follows SemVer 2.0 numeric-identifier rules.
-- A mirror override accepts only an authority-free local `file://` URL resolving to a directory strictly beneath `RUNNER_TEMP`.
+- A mirror override accepts only an authority-free local `file://` URL resolving to a directory strictly beneath `RUNNER_TEMP` on Windows, Linux, and macOS.
 - Canonical percent-encoding for safe path characters is accepted, while traversal, encoded separators, symlink escape, query, fragment, remote authority, and non-local schemes fail before lifecycle execution.
 - The immutable nested SpecSync action receives only resolver-validated values.
 

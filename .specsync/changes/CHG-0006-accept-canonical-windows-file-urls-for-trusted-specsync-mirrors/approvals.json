@@ -6,6 +6,13 @@
       "timestamp": 1783965876,
       "digest": "095f58810440e61be9eef7ae96edd025a4f077fc834f9a9bce6cbaa369cc21e3",
       "note": "Approved narrow cross-platform file-URL correction after hosted Windows diagnosis and security-boundary review."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783966048,
+      "digest": "37c2811e502832878e68b3920e461e8a3845fb49cf993aa4f17ada6f1bd790c5",
+      "note": "Cross-platform native Trust verification passed on committed implementation 6f2f7d8; hosted Windows matrix will be rerun before merge."
     }
   ],
   "reopenings": []

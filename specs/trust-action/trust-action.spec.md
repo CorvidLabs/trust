@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 7
+version: 8
 status: stable
 files:
   - action.yml
@@ -96,3 +96,4 @@ And missing provenance may report degraded rather than failed
 | 2026-07-13 | Keep release-only component exposure under the distribution contract. |
 | 2026-07-13 | Add trusted SpecSync self-host artifact inputs. |
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
+| 2026-07-13 | CHG-0006-accept-canonical-windows-file-urls-for-trusted-specsync-mirrors: Accept canonical Windows file URLs for trusted SpecSync mirrors |

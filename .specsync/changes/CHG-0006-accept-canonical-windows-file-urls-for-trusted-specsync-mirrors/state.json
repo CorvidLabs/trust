@@ -5,10 +5,11 @@
   "title": "Accept canonical Windows file URLs for trusted SpecSync mirrors",
   "description": "Accept canonical Windows file URLs for trusted SpecSync mirrors",
   "kind": "bug_fix",
-  "state": "implementing",
+  "state": "accepted",
+  "canonical_applied": true,
   "base_commit": "1677ec3f68e5d07352f19b7fbe643d516675bc19",
   "created_at": 1783965830,
-  "updated_at": 1783965876,
+  "updated_at": 1783966048,
   "affected_specs": [
     "trust-action"
   ],
