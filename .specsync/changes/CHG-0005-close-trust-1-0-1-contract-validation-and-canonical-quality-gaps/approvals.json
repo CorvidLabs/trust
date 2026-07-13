@@ -13,7 +13,53 @@
       "timestamp": 1783965159,
       "digest": "3aba0a57cae54da4c253696e222f7b990ea9b353d9824139ef8e0e0793dfd7f4",
       "note": "Independent audit findings were reproduced and corrected; the full native Trust verify lane passed with exact-version, safe URL, status-contract, internal-interface, template, and canonical-history fixes."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965482,
+      "digest": "a7bbcc65155d8d52a1053f487642ebbfcc4d45be7b080ed1276ade41a85d76fc",
+      "note": "Fresh native verification passed on committed implementation bd85c64; canonical CHG5 deltas were already applied and were not replayed."
     }
   ],
-  "reopenings": []
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps",
+      "actor": "user:0xLeif",
+      "reason": "Implementation and accepted canonical state were committed at bd85c64 after the prior working-tree verification.",
+      "timestamp": 1783965455,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783965159,
+        "digest": "3aba0a57cae54da4c253696e222f7b990ea9b353d9824139ef8e0e0793dfd7f4",
+        "note": "Independent audit findings were reproduced and corrected; the full native Trust verify lane passed with exact-version, safe URL, status-contract, internal-interface, template, and canonical-history fixes."
+      },
+      "prior_verification": {
+        "timestamp": 1783965152,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "c3192df69b0e06d27f6da30de6d43b7dc84fc8f20c2b74fa799314c818157866",
+        "workspace_digest": "b160aa912b7fb23ba026be326ae96ab8da7e66d208352f94525bbab9b6d28027",
+        "acceptance_input_digest": "50f23515576152f32d05a535977ebc4460939f1ff64242897fd2d77a44acc7d0",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-002",
+          "REQ-trust-action-010",
+          "REQ-trust-policy-007"
+        ]
+      },
+      "stale_acceptance_input_digest": "50f23515576152f32d05a535977ebc4460939f1ff64242897fd2d77a44acc7d0",
+      "current_acceptance_input_digest": "17c52166760c6afbf955490809bb4357f1ab0134f3484267367cced376040a80"
+    }
+  ]
 }
