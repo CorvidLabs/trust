@@ -6,6 +6,13 @@
       "timestamp": 1783966495,
       "digest": "aa8618d3bd400d6f0b36f834ea6db573485e59c6e3835135fbe2108bdaf5dff8",
       "note": "Approved review correction scope for Trust PR #12"
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783966667,
+      "digest": "e49d54e3a597ddddcd791f2b609d4b0be9c97ac45b659ae4974af786e0e81ae2",
+      "note": "Reapproved after correcting the implementation checklist to separate completed native preparation from subsequent lifecycle transitions"
     }
   ]
 }

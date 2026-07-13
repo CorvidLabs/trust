@@ -5,8 +5,8 @@ artifact: tasks
 
 # Tasks
 
-- [ ] Convert URL parser failures into a stable Trust error.
-- [ ] Bind mirror omission to the released default SpecSync version.
-- [ ] Validate every recursive mirror entry before returning action inputs.
-- [ ] Add focused regressions for malformed IPv6, non-default versions, and file symlinks.
-- [ ] Run native and governed verification, then accept the canonical delta.
+- [x] Convert URL parser failures into a stable Trust error.
+- [x] Bind mirror omission to the released default SpecSync version.
+- [x] Validate every recursive mirror entry before returning action inputs.
+- [x] Add focused regressions for malformed IPv6, non-default versions, and file symlinks.
+- [x] Run the native verification gate before recording governed verification evidence.
