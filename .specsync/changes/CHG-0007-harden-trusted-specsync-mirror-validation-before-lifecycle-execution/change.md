@@ -1,6 +1,6 @@
 ---
 id: CHG-0007-harden-trusted-specsync-mirror-validation-before-lifecycle-execution
-state: implementing
+state: accepted
 type: bug_fix
 base_commit: 1c7b2c43f44b256570a8a5a5bfbd4c4c224f1560
 ---
