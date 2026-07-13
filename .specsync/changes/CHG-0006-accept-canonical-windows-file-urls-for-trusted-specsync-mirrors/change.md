@@ -1,6 +1,6 @@
 ---
 id: CHG-0006-accept-canonical-windows-file-urls-for-trusted-specsync-mirrors
-state: accepted
+state: verifying
 type: bug_fix
 base_commit: 1677ec3f68e5d07352f19b7fbe643d516675bc19
 ---

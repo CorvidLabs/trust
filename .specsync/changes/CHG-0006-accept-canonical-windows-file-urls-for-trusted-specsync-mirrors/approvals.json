@@ -15,5 +15,42 @@
       "note": "Cross-platform native Trust verification passed on committed implementation 6f2f7d8; hosted Windows matrix will be rerun before merge."
     }
   ],
-  "reopenings": []
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0006-accept-canonical-windows-file-urls-for-trusted-specsync-mirrors",
+      "actor": "user:0xLeif",
+      "reason": "CHG7 intentionally hardens shared Trust action resolver delivery inputs and invalidates prior verification evidence",
+      "timestamp": 1783966545,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783966048,
+        "digest": "37c2811e502832878e68b3920e461e8a3845fb49cf993aa4f17ada6f1bd790c5",
+        "note": "Cross-platform native Trust verification passed on committed implementation 6f2f7d8; hosted Windows matrix will be rerun before merge."
+      },
+      "prior_verification": {
+        "timestamp": 1783966044,
+        "commit": "6f2f7d8fb0523abf6aa0daf55682dbcbf9109e01",
+        "contract_digest": "095f58810440e61be9eef7ae96edd025a4f077fc834f9a9bce6cbaa369cc21e3",
+        "workspace_digest": "bf73cf7b66691ed8f0969ae8a2feb9454dedd530af52f2d225ed90e81aeb625e",
+        "acceptance_input_digest": "7c4a79fa61eae8dd17e95438c530a77f8b0582a1818137860058dd983e826490",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "7c4a79fa61eae8dd17e95438c530a77f8b0582a1818137860058dd983e826490",
+      "current_acceptance_input_digest": "e067403f3554c85acbcd7e1e6a4d5541b5a7f06741f20ebd10ba911265257888"
+    }
+  ]
 }
