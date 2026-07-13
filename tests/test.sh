@@ -74,8 +74,10 @@ spec.loader.exec_module(trust_cli)
 
 runner_temp = temporary / "runner-temp"
 mirror = runner_temp / "specsync-mirror"
+spaced_mirror = runner_temp / "specsync mirror"
 outside = temporary / "outside"
 mirror.mkdir(parents=True)
+spaced_mirror.mkdir()
 outside.mkdir()
 version, base = trust_cli.resolve_specsync_inputs("5.0.1", "", "")
 if (version, base) != ("5.0.1", ""):
@@ -83,11 +85,19 @@ if (version, base) != ("5.0.1", ""):
 version, base = trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
 if (version, base) != ("5.0.1", mirror.resolve().as_uri()):
     raise AssertionError("valid confined mirror was not canonicalized")
+version, base = trust_cli.resolve_specsync_inputs("5.0.1-alpha.0+build.01", spaced_mirror.as_uri(), str(runner_temp))
+if (version, base) != ("5.0.1-alpha.0+build.01", spaced_mirror.resolve().as_uri()):
+    raise AssertionError("valid percent-encoded mirror path or semantic version was rejected")
 
 invalid = [
     ("latest", mirror.as_uri(), str(runner_temp)),
     ("v5.0.1", mirror.as_uri(), str(runner_temp)),
     ("5.0", mirror.as_uri(), str(runner_temp)),
+    ("01.0.0", mirror.as_uri(), str(runner_temp)),
+    ("1.00.0", mirror.as_uri(), str(runner_temp)),
+    ("1.0.00", mirror.as_uri(), str(runner_temp)),
+    ("1.0.0-01", mirror.as_uri(), str(runner_temp)),
+    ("1.0.0-alpha.01", mirror.as_uri(), str(runner_temp)),
     ("5.0.1", "https://example.invalid/specsync", str(runner_temp)),
     ("5.0.1", "file://example.invalid/specsync", str(runner_temp)),
     ("5.0.1", "file://localhost/specsync", str(runner_temp)),
@@ -98,6 +108,10 @@ invalid = [
     ("5.0.1", (runner_temp / "missing").as_uri(), str(runner_temp)),
     ("5.0.1", f"file://{runner_temp}/child/../specsync-mirror", str(runner_temp)),
     ("5.0.1", f"file://{runner_temp}/%2e%2e/outside", str(runner_temp)),
+    ("5.0.1", mirror.as_uri().replace("specsync-mirror", "specsync%2fmirror"), str(runner_temp)),
+    ("5.0.1", mirror.as_uri().replace("specsync-mirror", "specsync%5Cmirror"), str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "%", str(runner_temp)),
+    ("5.0.1", mirror.as_uri() + "%00", str(runner_temp)),
     ("5.0.1", mirror.as_uri() + "?asset=other", str(runner_temp)),
     ("5.0.1", mirror.as_uri() + "#fragment", str(runner_temp)),
     ("5.0.1", mirror.as_uri(), ""),
@@ -405,6 +419,19 @@ status_code=0
 status_json="$(cd "$repo" && PATH="$isolated_bin:$git_bin:/usr/bin:/bin" "$TRUST" status --json)" || status_code=$?
 [ "$status_code" -eq 0 ] || fail "status diagnostic returned failure"
 STATUS_JSON="$status_json" python3 -c 'import json, os; json.loads(os.environ["STATUS_JSON"])'
+STATUS_JSON="$status_json" python3 - <<'PY'
+import json
+import os
+
+document = json.loads(os.environ["STATUS_JSON"])
+expected = {"schemaVersion", "version", "healthy", "profile", "tools", "files", "errors"}
+if set(document) != expected:
+    raise AssertionError(f"status schema drifted: {sorted(document)}")
+if set(document["tools"]) != {"fledge", "specsync", "augur", "attest", "atlas"}:
+    raise AssertionError("status tool readiness is incomplete")
+if set(document["files"]) != {"fledge", "workflow", "rules"}:
+    raise AssertionError("status managed-file readiness is incomplete")
+PY
 contains "$status_json" '"schemaVersion": 1'
 contains "$status_json" "\"version\": \"$plugin_version\""
 contains "$status_json" '"healthy": false'

@@ -1,6 +1,6 @@
 ---
 module: trust-plugin
-version: 5
+version: 6
 status: stable
 files:
   - bin/fledge-trust
@@ -19,8 +19,10 @@ behavior to the Python implementation without changing arguments or exit codes.
 
 ## Public API
 
-The plugin registers the trust command and exposes adopt, status, doctor,
-verify, action resolution, lifecycle execution, and version reporting.
+The plugin registers the public `trust` command and exposes adopt, status,
+doctor, verify, and version reporting. Suppressed action-resolution and
+lifecycle-execution subcommands are internal composite-action plumbing and are
+not supported as public CLI interfaces.
 
 ## Invariants
 
@@ -52,10 +54,8 @@ And returns its exact exit status
 
 ## Change Log
 
-| Version | Date | Changes |
-| --- | --- | --- |
-| 1 | 2026-07-12 | Stable Trust 1.0 plugin contract. |
-| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 3 | 2026-07-13 | Map CLI adoption, status, and version behavior to its implementation. |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
+| Date | Change |
+| --- | --- |
+| 2026-07-12 | Stable Trust 1.0 plugin contract. |
+| 2026-07-13 | Map CLI adoption, status, and version behavior to its implementation. |
+| 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |

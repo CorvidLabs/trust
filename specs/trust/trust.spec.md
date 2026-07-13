@@ -1,6 +1,6 @@
 ---
 module: trust
-version: 5
+version: 6
 status: active
 files:
   - scripts/render_homebrew_formula.py
@@ -77,12 +77,10 @@ Then the formula installs both components under the corvid-trust bundle
 
 ## Change Log
 
-| Version | Date | Changes |
-| --- | --- | --- |
-| 1 | 2026-07-10 | Initial orchestration contract; corrected Action inputs and outputs before activation. |
-| 1 | 2026-07-12 | Activate exact coverage and expose pinned release binaries under canonical command names. |
-| 1 | 2026-07-12 | Split focused public contracts into dedicated companions. |
-| 2026-07-12 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 3 | 2026-07-13 | Map release workflow, component exposure, and Homebrew formula artifacts to the distribution contract. |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
-| 2026-07-13 | CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions: Split the Trust 1 public contract into focused canonical companions |
+| Date | Change |
+| --- | --- |
+| 2026-07-10 | Initial orchestration contract and corrected Action inputs and outputs before activation. |
+| 2026-07-12 | Activate exact coverage and expose pinned release binaries under canonical command names. |
+| 2026-07-12 | Split focused public contracts into dedicated companions. |
+| 2026-07-13 | Map release workflow, component exposure, and Homebrew formula artifacts to the distribution contract. |
+| 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |

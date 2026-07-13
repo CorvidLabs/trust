@@ -1,0 +1,19 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783964956,
+      "digest": "c3192df69b0e06d27f6da30de6d43b7dc84fc8f20c2b74fa799314c818157866",
+      "note": "Approved exact audit-driven Trust 1.0.1 hardening scope after reproduction and contract review."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965159,
+      "digest": "3aba0a57cae54da4c253696e222f7b990ea9b353d9824139ef8e0e0793dfd7f4",
+      "note": "Independent audit findings were reproduced and corrected; the full native Trust verify lane passed with exact-version, safe URL, status-contract, internal-interface, template, and canonical-history fixes."
+    }
+  ],
+  "reopenings": []
+}

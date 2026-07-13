@@ -20,7 +20,94 @@
       "timestamp": 1783963447,
       "digest": "494b71fbc9451bd547986a1652960a86341b74d750a89a50ed81046eb3c43644",
       "note": "Closing approval after full Trust action/plugin/template validation and exhaustive self-host mirror security regressions passed on the committed head."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965127,
+      "digest": "afaf97d0cbd45bb118257c60a239ca3ba3e64d36251cca72772f04544e314e83",
+      "note": "Full native Trust verification passed with exact SemVer and safe local-mirror corrections; the existing self-host delta was not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965309,
+      "digest": "271edf208bd6ab81c808322653bbd067204776c6db318444b56f08dc00269d00",
+      "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; the prior self-host delta was not replayed."
     }
   ],
-  "reopenings": []
+  "reopenings": [
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0005 implements audited Trust 1.0.1 validation and contract corrections within this accepted change's governed paths.",
+      "timestamp": 1783965058,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783963447,
+        "digest": "494b71fbc9451bd547986a1652960a86341b74d750a89a50ed81046eb3c43644",
+        "note": "Closing approval after full Trust action/plugin/template validation and exhaustive self-host mirror security regressions passed on the committed head."
+      },
+      "prior_verification": {
+        "timestamp": 1783963442,
+        "commit": "e675ea03f2e066a8bf85ea4d4cee0084a1b49f5a",
+        "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+        "workspace_digest": "cd958861054bd2f369d871f4aa385278ca7bb8c3ae34c3c5127fb4a3006f125b",
+        "acceptance_input_digest": "e460b967d86ab80f9b1076ec391eddc9be08e01e4cc73376190e4cd15405f958",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "e460b967d86ab80f9b1076ec391eddc9be08e01e4cc73376190e4cd15405f958",
+      "current_acceptance_input_digest": "7bcf0d26f124d53ce1c4d2b7e7dbdca7a61e5fa8964bfa0ba1db9647e8c371f9"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0005 completed the final canonical Trust 1.0.1 audit corrections after this acceptance evidence was recorded.",
+      "timestamp": 1783965228,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783965127,
+        "digest": "afaf97d0cbd45bb118257c60a239ca3ba3e64d36251cca72772f04544e314e83",
+        "note": "Full native Trust verification passed with exact SemVer and safe local-mirror corrections; the existing self-host delta was not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783965119,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+        "workspace_digest": "b160aa912b7fb23ba026be326ae96ab8da7e66d208352f94525bbab9b6d28027",
+        "acceptance_input_digest": "7bcf0d26f124d53ce1c4d2b7e7dbdca7a61e5fa8964bfa0ba1db9647e8c371f9",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "7bcf0d26f124d53ce1c4d2b7e7dbdca7a61e5fa8964bfa0ba1db9647e8c371f9",
+      "current_acceptance_input_digest": "027983fd50f8ac241684a5faa996fa7fdc001d562f05c1740d94ab167e6fa981"
+    }
+  ]
 }

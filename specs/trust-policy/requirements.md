@@ -54,9 +54,11 @@ Acceptance Criteria
 
 ### REQ-trust-policy-007
 
-The Trust CLI SHALL emit versioned, valid status JSON.
+The Trust CLI SHALL emit versioned, valid configuration-health JSON.
 
 Acceptance Criteria
 
-- Consumers can parse overall and component status without scraping logs; Action resolution exposes canonical component settings.
+- Consumers can parse overall readiness, tool availability, managed-file state, profile, and errors without scraping logs.
+- Composite Action outputs remain the public source for lifecycle, contract, risk, and provenance gate results.
+- Internal Action resolution emits canonical component settings without being presented as a public CLI command.
 

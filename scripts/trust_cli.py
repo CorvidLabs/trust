@@ -13,7 +13,7 @@ import sys
 import tempfile
 from typing import Any
 import uuid
-from urllib.parse import urlsplit
+from urllib.parse import unquote, urlsplit
 
 
 __all__ = []
@@ -35,7 +35,16 @@ END = "<!-- CorvidLabs trust toolchain: END -->"
 RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
 PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
 DEFAULT_ATLAS_SKIP_REASON = "Atlas publication was not enabled during adoption"
-SPECSYNC_VERSION_PATTERN = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?$")
+SPECSYNC_VERSION_PATTERN = re.compile(
+    r"^(?:0|[1-9][0-9]*)\."
+    r"(?:0|[1-9][0-9]*)\."
+    r"(?:0|[1-9][0-9]*)"
+    r"(?:-(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*)"
+    r"(?:\.(?:0|[1-9][0-9]*|[0-9]*[A-Za-z-][0-9A-Za-z-]*))*)?"
+    r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
+)
+PERCENT_ESCAPE_PATTERN = re.compile(r"%[0-9A-Fa-f]{2}")
+ENCODED_SEPARATOR_PATTERN = re.compile(r"%(?:2[fF]|5[cC])")
 
 
 class TrustError(RuntimeError):
@@ -744,9 +753,15 @@ def resolve_specsync_inputs(version: str, download_base_url: str, runner_temp: s
         raise TrustError("specsync-download-base-url must not contain a file authority")
     if parsed.query or parsed.fragment:
         raise TrustError("specsync-download-base-url must not contain a query or fragment")
-    if "%" in parsed.path:
-        raise TrustError("specsync-download-base-url must not contain percent-encoded path data")
-    candidate = Path(parsed.path)
+    escapes = PERCENT_ESCAPE_PATTERN.findall(parsed.path)
+    if parsed.path.count("%") != len(escapes):
+        raise TrustError("specsync-download-base-url contains invalid percent encoding")
+    if ENCODED_SEPARATOR_PATTERN.search(parsed.path):
+        raise TrustError("specsync-download-base-url must not contain encoded path separators")
+    decoded_path = unquote(parsed.path)
+    if any(ord(character) < 32 or ord(character) == 127 for character in decoded_path):
+        raise TrustError("specsync-download-base-url must not contain encoded control characters")
+    candidate = Path(decoded_path)
     if not candidate.is_absolute() or ".." in candidate.parts:
         raise TrustError("specsync-download-base-url must be an absolute traversal-free path")
     if not runner_temp:

@@ -1,6 +1,0 @@
-[tasks]
-test = "echo 'Configure the project test command'"
-
-[lanes.verify]
-description = "The single project verification gate"
-steps = ["test"]

@@ -27,6 +27,20 @@
       "timestamp": 1783963792,
       "digest": "ebcf715e63449cfb83295754dadc59c246743c55ced7ca000d954251b8393e7c",
       "note": "Fresh closing approval after full committed-head Trust validation passed; canonical migration deltas remained applied exactly once."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783964697,
+      "digest": "c926793f2f5c93bf15a201e6b5b2fde4eee1fd1f096d010ebe65c3e1c7e8108a",
+      "note": "Fresh full Trust verification passed after the provenance contract completion; canonical deltas were already applied and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965255,
+      "digest": "263dbd6ab5875b8499bf79d6c3c64ace7ab9480c60ee2d153e1985f33a794a46",
+      "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; no prior delta replayed."
     }
   ],
   "reopenings": [
@@ -63,6 +77,74 @@
       },
       "stale_acceptance_input_digest": "bc792201f03ac78f2d50dfdbbdc9654a09d35ca1116cea5e9f770f59fc1e07c7",
       "current_acceptance_input_digest": "cfc6e3d51b3e6ae2681200e47e0de160eb97dfd6666e36654ecd258349ac4d5f"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0004 truthfully completed the shared provenance action API, changing governed delivery inputs after the prior acceptance.",
+      "timestamp": 1783964662,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783963792,
+        "digest": "ebcf715e63449cfb83295754dadc59c246743c55ced7ca000d954251b8393e7c",
+        "note": "Fresh closing approval after full committed-head Trust validation passed; canonical migration deltas remained applied exactly once."
+      },
+      "prior_verification": {
+        "timestamp": 1783963787,
+        "commit": "4b2ce71bd1ea0b99a673fcd759d0b061bc13873c",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "966f435adf5477fbfb6fb033220eacbfc58bb3a5040475bac06e844acd0d684e",
+        "acceptance_input_digest": "cfc6e3d51b3e6ae2681200e47e0de160eb97dfd6666e36654ecd258349ac4d5f",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "cfc6e3d51b3e6ae2681200e47e0de160eb97dfd6666e36654ecd258349ac4d5f",
+      "current_acceptance_input_digest": "ff1fe7ee9e4d285d21023d3d0ebc8294f828944f8f1d68b0fa03130834c78318"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0001-adopt-trust-1-and-specsync-5",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0005 completed the final canonical Trust 1.0.1 audit corrections after this acceptance evidence was recorded.",
+      "timestamp": 1783965227,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783964697,
+        "digest": "c926793f2f5c93bf15a201e6b5b2fde4eee1fd1f096d010ebe65c3e1c7e8108a",
+        "note": "Fresh full Trust verification passed after the provenance contract completion; canonical deltas were already applied and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783964689,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
+        "workspace_digest": "ae2d8ac25fe6a12c9d1c00cef82d11429d0c9ed180fe591e42c42ae1a7260e1f",
+        "acceptance_input_digest": "ff1fe7ee9e4d285d21023d3d0ebc8294f828944f8f1d68b0fa03130834c78318",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": []
+      },
+      "stale_acceptance_input_digest": "ff1fe7ee9e4d285d21023d3d0ebc8294f828944f8f1d68b0fa03130834c78318",
+      "current_acceptance_input_digest": "70f24dee312eb2125d55f0b2b202653001dc99c899db964d36807b795143aa38"
     }
   ]
 }

@@ -62,6 +62,27 @@
       "timestamp": 1783963826,
       "digest": "5c09da68c8417c7d9a4cb5bcb04254f3383eb09adb0f2fb568040778154d3498",
       "note": "Fresh closing approval after the full focused Trust contract suite passed on the final accepted self-host workspace; canonical deltas remained applied once."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783964745,
+      "digest": "7e2f9cac885de0ff043e6cf87532702aa69c4c4eeb683c78b7b15dce562776e5",
+      "note": "Fresh full Trust verification passed after the shared action/provenance contract correction; the 31 canonical requirement deltas were already applied and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965097,
+      "digest": "f4e7c179d83d93599eec9e44f9b426e9ae95f7831dafef63c43e3a9181c1a9b5",
+      "note": "Full native Trust verification passed with the CHG-0005 audit corrections present; existing canonical deltas were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1783965283,
+      "digest": "bea0c1c1d4e064f086d1a818725a55d792113c2b2554b6d993aa14327f41e857",
+      "note": "Final native verification passed against the complete CHG-0005 Trust 1.0.1 canonical state; 31 prior requirement deltas were not replayed."
     }
   ],
   "reopenings": [
@@ -196,6 +217,204 @@
       },
       "stale_acceptance_input_digest": "9346ea707d10f847ab2afd6254ff49bb47619d271393927796033ea8dccbad2d",
       "current_acceptance_input_digest": "7bab5ca526dcb34556c01de1736f0e06a98339e29522304ea219298009225ad2"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0004 truthfully completed the shared provenance action API, changing governed delivery inputs after the prior acceptance.",
+      "timestamp": 1783964662,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783963826,
+        "digest": "5c09da68c8417c7d9a4cb5bcb04254f3383eb09adb0f2fb568040778154d3498",
+        "note": "Fresh closing approval after the full focused Trust contract suite passed on the final accepted self-host workspace; canonical deltas remained applied once."
+      },
+      "prior_verification": {
+        "timestamp": 1783963817,
+        "commit": "72f1ffbba90e5223b27802511143c509c4c405e7",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "966f435adf5477fbfb6fb033220eacbfc58bb3a5040475bac06e844acd0d684e",
+        "acceptance_input_digest": "7bab5ca526dcb34556c01de1736f0e06a98339e29522304ea219298009225ad2",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      },
+      "stale_acceptance_input_digest": "7bab5ca526dcb34556c01de1736f0e06a98339e29522304ea219298009225ad2",
+      "current_acceptance_input_digest": "d01117af80560ad692a07a49be25ec9eb8e1bc3b7a2ff74fc6c2231a4b4b4ec1"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0005 implements audited Trust 1.0.1 validation and contract corrections within this accepted change's governed paths.",
+      "timestamp": 1783965058,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783964745,
+        "digest": "7e2f9cac885de0ff043e6cf87532702aa69c4c4eeb683c78b7b15dce562776e5",
+        "note": "Fresh full Trust verification passed after the shared action/provenance contract correction; the 31 canonical requirement deltas were already applied and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783964740,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "ae2d8ac25fe6a12c9d1c00cef82d11429d0c9ed180fe591e42c42ae1a7260e1f",
+        "acceptance_input_digest": "d01117af80560ad692a07a49be25ec9eb8e1bc3b7a2ff74fc6c2231a4b4b4ec1",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      },
+      "stale_acceptance_input_digest": "d01117af80560ad692a07a49be25ec9eb8e1bc3b7a2ff74fc6c2231a4b4b4ec1",
+      "current_acceptance_input_digest": "c49b16c1e747de6019a48eda67a2db3ad80d0ce970ec440d7f005602a29c4b8e"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0005 completed the final canonical Trust 1.0.1 audit corrections after this acceptance evidence was recorded.",
+      "timestamp": 1783965227,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783965097,
+        "digest": "f4e7c179d83d93599eec9e44f9b426e9ae95f7831dafef63c43e3a9181c1a9b5",
+        "note": "Full native Trust verification passed with the CHG-0005 audit corrections present; existing canonical deltas were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1783965092,
+        "commit": "5e531ed98e1af0f224e0d5a84104238c679fc393",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "b160aa912b7fb23ba026be326ae96ab8da7e66d208352f94525bbab9b6d28027",
+        "acceptance_input_digest": "c49b16c1e747de6019a48eda67a2db3ad80d0ce970ec440d7f005602a29c4b8e",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      },
+      "stale_acceptance_input_digest": "c49b16c1e747de6019a48eda67a2db3ad80d0ce970ec440d7f005602a29c4b8e",
+      "current_acceptance_input_digest": "9ba644bb8e167f193545b932374460904f9d8a75568fc725bd807cca4ae16dc3"
     }
   ]
 }
