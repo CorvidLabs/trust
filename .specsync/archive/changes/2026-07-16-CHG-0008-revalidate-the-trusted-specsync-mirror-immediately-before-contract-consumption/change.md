@@ -1,6 +1,6 @@
 ---
 id: CHG-0008-revalidate-the-trusted-specsync-mirror-immediately-before-contract-consumption
-state: accepted
+state: archived
 type: bug_fix
 base_commit: d34acd9d206291dd9d337a427db6f1fd137eb544
 ---
