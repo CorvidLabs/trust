@@ -1,6 +1,6 @@
 ---
 id: CHG-0004-document-trusted-specsync-self-host-inputs-in-the-provenance-contract
-state: accepted
+state: archived
 type: documentation
 base_commit: 5e531ed98e1af0f224e0d5a84104238c679fc393
 ---

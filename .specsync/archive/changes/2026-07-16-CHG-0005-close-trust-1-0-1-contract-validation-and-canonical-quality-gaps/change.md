@@ -1,6 +1,6 @@
 ---
 id: CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps
-state: accepted
+state: archived
 type: bug_fix
 base_commit: 5e531ed98e1af0f224e0d5a84104238c679fc393
 ---
