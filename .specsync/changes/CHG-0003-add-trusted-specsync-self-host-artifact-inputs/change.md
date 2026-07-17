@@ -1,6 +1,6 @@
 ---
 id: CHG-0003-add-trusted-specsync-self-host-artifact-inputs
-state: accepted
+state: verifying
 type: feature
 base_commit: 2ede269961e37951a99bd3a5cd2f3424a6d430f8
 ---
