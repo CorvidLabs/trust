@@ -69,6 +69,13 @@
       "timestamp": 1784319272,
       "digest": "2b839eecc62682f861b92a493c293d44fd52dd432ad93100dfc68fbe6bd584e7",
       "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed verification evidence; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784325969,
+      "digest": "5c718f4ed41b8358b73e137b8e4010ff961c9a1644623247cf95d8966ed01ddf",
+      "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed main-head evidence; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
