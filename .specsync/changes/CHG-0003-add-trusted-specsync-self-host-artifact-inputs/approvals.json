@@ -69,6 +69,20 @@
       "timestamp": 1784319272,
       "digest": "2b839eecc62682f861b92a493c293d44fd52dd432ad93100dfc68fbe6bd584e7",
       "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed verification evidence; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784325969,
+      "digest": "5c718f4ed41b8358b73e137b8e4010ff961c9a1644623247cf95d8966ed01ddf",
+      "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed main-head evidence; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784331115,
+      "digest": "1f8c15304d633a063dc1ec6b51a52ee937ed2381d729d7eceb384f47f430f05a",
+      "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against pre-merge main head c18715c so the accepted evidence remains in main history after this PR's squash merge; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
@@ -306,6 +320,74 @@
       "prior_verification": {
         "timestamp": 1783983436,
         "commit": "d34acd9d206291dd9d337a427db6f1fd137eb544",
+        "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+        "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
+        "acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "agent:kimi",
+      "reason": "Accepted verification commit eb1129bc965f2c3444f2dd87f01d2bfb95eb540c is not in main history after the squash merge of PR #13; refreshing evidence on the new main head c18715c so future branches inherit in-history accepted evidence. No delivery inputs changed.",
+      "timestamp": 1784322683,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784319272,
+        "digest": "2b839eecc62682f861b92a493c293d44fd52dd432ad93100dfc68fbe6bd584e7",
+        "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed verification evidence; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784319272,
+        "commit": "eb1129bc965f2c3444f2dd87f01d2bfb95eb540c",
+        "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+        "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
+        "acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "agent:kimi",
+      "reason": "Accepted verification commits recorded on this PR's branch would not remain in main history because the repository allows squash merges only, which rewrite the branch into a single new commit; re-recording verification against the pre-merge main head c18715c484d51533cd0c11202f1275f153154ef0 so the accepted evidence points at a commit that stays in main history after the squash. No delivery inputs changed.",
+      "timestamp": 1784327559,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784325969,
+        "digest": "5c718f4ed41b8358b73e137b8e4010ff961c9a1644623247cf95d8966ed01ddf",
+        "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed main-head evidence; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784325960,
+        "commit": "e3c5255d362d91b189c7a3e84bdbdeb8ccb22caf",
         "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
         "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
         "acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",

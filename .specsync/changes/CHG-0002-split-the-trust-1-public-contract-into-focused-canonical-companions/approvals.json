@@ -118,6 +118,20 @@
       "timestamp": 1784319265,
       "digest": "5f58b4e8a902be39bcca0ba92add29f824fb8b234f659c4821e88370e03e611f",
       "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed verification evidence; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784325969,
+      "digest": "d1c62fd9ccbbff1a455627a2b865cff7b9ceb653d3f9f690b47f8f79e366f9d8",
+      "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed main-head evidence; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784331115,
+      "digest": "3e016f05d692261a4aa91da3bba32f9d8b645eed5fe0a7981805cc4461af4e2a",
+      "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against pre-merge main head c18715c so the accepted evidence remains in main history after this PR's squash merge; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
@@ -733,6 +747,134 @@
       "prior_verification": {
         "timestamp": 1783983414,
         "commit": "d34acd9d206291dd9d337a427db6f1fd137eb544",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
+        "acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "agent:kimi",
+      "reason": "Accepted verification commit eb1129bc965f2c3444f2dd87f01d2bfb95eb540c is not in main history after the squash merge of PR #13; refreshing evidence on the new main head c18715c so future branches inherit in-history accepted evidence. No delivery inputs changed.",
+      "timestamp": 1784322683,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784319265,
+        "digest": "5f58b4e8a902be39bcca0ba92add29f824fb8b234f659c4821e88370e03e611f",
+        "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed verification evidence; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784319265,
+        "commit": "eb1129bc965f2c3444f2dd87f01d2bfb95eb540c",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
+        "acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      }
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "agent:kimi",
+      "reason": "Accepted verification commits recorded on this PR's branch would not remain in main history because the repository allows squash merges only, which rewrite the branch into a single new commit; re-recording verification against the pre-merge main head c18715c484d51533cd0c11202f1275f153154ef0 so the accepted evidence points at a commit that stays in main history after the squash. No delivery inputs changed.",
+      "timestamp": 1784327559,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784325969,
+        "digest": "d1c62fd9ccbbff1a455627a2b865cff7b9ceb653d3f9f690b47f8f79e366f9d8",
+        "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed main-head evidence; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784325946,
+        "commit": "e3c5255d362d91b189c7a3e84bdbdeb8ccb22caf",
         "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
         "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
         "acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
