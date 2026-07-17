@@ -62,6 +62,13 @@
       "timestamp": 1783983436,
       "digest": "96c040fb5518e620f137c8e96262553341360e559832990e9a31bdfb84fc9069",
       "note": "Fresh native verification passed with CHG-0008 present; the previously applied canonical delta was not replayed. Hosted CI remains required before promotion and is not claimed here."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784319272,
+      "digest": "2b839eecc62682f861b92a493c293d44fd52dd432ad93100dfc68fbe6bd584e7",
+      "note": "Closing acceptance given explicitly by 0xLeif after hosted CI passed on the refreshed verification evidence; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
