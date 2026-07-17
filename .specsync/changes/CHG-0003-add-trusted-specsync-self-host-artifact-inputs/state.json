@@ -8,7 +8,7 @@
   "state": "accepted",
   "base_commit": "2ede269961e37951a99bd3a5cd2f3424a6d430f8",
   "created_at": 1783959790,
-  "updated_at": 1784325969,
+  "updated_at": 1784331115,
   "affected_specs": [
     "trust-action"
   ],
