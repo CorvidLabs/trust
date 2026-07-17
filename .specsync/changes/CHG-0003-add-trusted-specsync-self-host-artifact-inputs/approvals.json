@@ -280,6 +280,40 @@
       },
       "stale_acceptance_input_digest": "180ce1f1e2eb7f80920e7db52ea12a5fd0a22b5ab98b816e2d7d1e534f2b9f35",
       "current_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "agent:kimi",
+      "reason": "Accepted verification commit d34acd9d206291dd9d337a427db6f1fd137eb544 is not in current history after the squash merge of PR #12, and on a non-integrated branch the accepted workspace cannot satisfy the remote-default integration check; fresh verification is required against the new main head before closing acceptance can be recorded honestly.",
+      "timestamp": 1784314032,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1783983436,
+        "digest": "96c040fb5518e620f137c8e96262553341360e559832990e9a31bdfb84fc9069",
+        "note": "Fresh native verification passed with CHG-0008 present; the previously applied canonical delta was not replayed. Hosted CI remains required before promotion and is not claimed here."
+      },
+      "prior_verification": {
+        "timestamp": 1783983436,
+        "commit": "d34acd9d206291dd9d337a427db6f1fd137eb544",
+        "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+        "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
+        "acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      }
     }
   ]
 }
