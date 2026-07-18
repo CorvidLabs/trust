@@ -1,5 +1,17 @@
 # Changelog
 
+## [v1.1.0] - 2026-07-18
+
+### Changes
+
+- adopt SpecSync 5.1.1 as the pinned contract toolchain (#17) (2f6a2ad)
+- accept CHG-0002 and CHG-0003 on the v1.0.1 release merge head (#16) (4574326)
+
+### Chores
+
+- archive accepted CHG-0009 and CHG-0010 lifecycle changes (7181b4a)
+- release v1.0.1 (#15) (5fb7840)
+
 ## [v1.0.1] - 2026-07-18
 
 ### Changes
