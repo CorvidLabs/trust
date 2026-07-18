@@ -38,6 +38,23 @@ jobs:
           python3 -m py_compile scripts/trust_cli.py scripts/validate.py scripts/normalize_specsync_cache.py
           python3 scripts/validate.py
           bash tests/test.sh
+      - name: Install pinned Fledge 1.7.0
+        env:
+          FLEDGE_SHA256: 9a2c5a0db698811052ad741dd8da5a3e8af5e46797f11b6cc59dffbd49917170
+        run: |
+          set -euo pipefail
+          install_dir="$RUNNER_TEMP/fledge/bin"
+          mkdir -p "$install_dir"
+          curl -fsSL \
+            https://github.com/CorvidLabs/fledge/releases/download/v1.7.0/fledge-linux-x86_64 \
+            -o "$install_dir/fledge"
+          actual="$(sha256sum "$install_dir/fledge" | cut -d' ' -f1)"
+          if [ "$actual" != "$FLEDGE_SHA256" ]; then
+            echo "::error::Fledge checksum mismatch (expected $FLEDGE_SHA256, got $actual)."
+            exit 1
+          fi
+          chmod +x "$install_dir/fledge"
+          echo "$install_dir" >> "$GITHUB_PATH"
       - name: Validate tagged source contract
         uses: CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65 # v5.1.1
         with:
