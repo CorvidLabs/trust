@@ -798,7 +798,9 @@
           "REQ-trust-provenance-004",
           "REQ-trust-provenance-005"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
+      "current_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252"
     },
     {
       "schema_version": 1,
@@ -862,7 +864,9 @@
           "REQ-trust-provenance-004",
           "REQ-trust-provenance-005"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
+      "current_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252"
     },
     {
       "schema_version": 1,
@@ -926,7 +930,9 @@
           "REQ-trust-provenance-004",
           "REQ-trust-provenance-005"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
+      "current_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252"
     },
     {
       "schema_version": 1,
@@ -990,7 +996,9 @@
           "REQ-trust-provenance-004",
           "REQ-trust-provenance-005"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
+      "current_acceptance_input_digest": "6cc6ae5f9da5e9d5a8a95ff426506d1c99d12d379d0e4150a1936a6e5e122d10"
     }
   ]
 }

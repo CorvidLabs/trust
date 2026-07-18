@@ -5,7 +5,7 @@
       "actor": "user:0xLeif",
       "timestamp": 1783959870,
       "digest": "f1f7a7dc332b52a9ed304ca6efe5d9b0aeaaef30342214574ae9f15a8918e06f",
-      "note": "Definition approval for the reviewed Trust self-host bootstrap: defaults remain released SpecSync 5.0.1, while a narrowly validated authority-free file mirror confined beneath RUNNER_TEMP supports SpecSync’s own CI."
+      "note": "Definition approval for the reviewed Trust self-host bootstrap: defaults remain released SpecSync 5.0.1, while a narrowly validated authority-free file mirror confined beneath RUNNER_TEMP supports SpecSync\u2019s own CI."
     },
     {
       "gate": "definition",
@@ -341,7 +341,9 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c"
     },
     {
       "schema_version": 1,
@@ -375,7 +377,9 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c"
     },
     {
       "schema_version": 1,
@@ -409,7 +413,9 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c"
     },
     {
       "schema_version": 1,
@@ -443,7 +449,9 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "10f983fc25c6dda792216ea648eb0d3e692b3873a8dc1ccdf63fb66c4a241b52"
     }
   ]
 }
