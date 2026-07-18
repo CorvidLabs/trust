@@ -920,6 +920,70 @@
           "REQ-trust-provenance-005"
         ]
       }
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "agent:kimi",
+      "reason": "Release 1.0.1 bumps plugin.toml from 1.0.0 to 1.0.1; that manifest is a governed delivery input of this change, so the accepted verification is stale for current delivery inputs. Fresh verification is required on the release tree.",
+      "timestamp": 1784341070,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784331115,
+        "digest": "3e016f05d692261a4aa91da3bba32f9d8b645eed5fe0a7981805cc4461af4e2a",
+        "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against pre-merge main head c18715c so the accepted evidence remains in main history after this PR's squash merge; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784327584,
+        "commit": "c18715c484d51533cd0c11202f1275f153154ef0",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
+        "acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      }
     }
   ]
 }

@@ -403,6 +403,40 @@
           "REQ-trust-action-010"
         ]
       }
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "agent:kimi",
+      "reason": "Release 1.0.1 adds the v1.0.1 section to CHANGELOG.md; that file is a governed delivery input of this change, so the accepted verification is stale for current delivery inputs. Fresh verification is required on the release tree.",
+      "timestamp": 1784341070,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784331115,
+        "digest": "1f8c15304d633a063dc1ec6b51a52ee937ed2381d729d7eceb384f47f430f05a",
+        "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against pre-merge main head c18715c so the accepted evidence remains in main history after this PR's squash merge; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784327591,
+        "commit": "c18715c484d51533cd0c11202f1275f153154ef0",
+        "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+        "workspace_digest": "4965caa40dfa1c50f028975c29940bd763e354d54d49b89d5ad2a13670f4b1ab",
+        "acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      }
     }
   ]
 }

@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.0.1] - 2026-07-18
+
+### Changes
+
+- refresh Trust acceptance evidence on main head (#14) (c8f969a)
+- harden Trust 1.0.1 self-hosting and contracts (#12) (ada0778)
+
+### Chores
+
+- archive verified Trust 1.0.1 lifecycle changes (#13) (c18715c)
+
+### Other
+
+- Adopt Trust 1 and SpecSync 5 (#11) (2ede269)
+
 ## Unreleased
 
 ### Added

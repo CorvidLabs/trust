@@ -51,7 +51,7 @@ grep -q 'uses: CorvidLabs/trust@v1' "$ROOT/templates/trust.yml" || fail "generat
 if grep -q 'CorvidLabs/trust@v0' "$ROOT/templates/trust.yml"; then
   fail "generated workflow retained the pre-stable v0 channel"
 fi
-grep -q 'CorvidLabs/trust@v1.0.0' "$ROOT/README.md" || fail "README must install the stable immutable tag"
+grep -q "CorvidLabs/trust@v$plugin_version" "$ROOT/README.md" || fail "README must install the stable immutable tag"
 grep -q 'latest `1.x` release line' "$ROOT/SECURITY.md" || fail "security policy must support 1.x"
 grep -q '^  specsync-version:' "$ROOT/action.yml" || fail "action is missing specsync-version input"
 grep -q '^  specsync-download-base-url:' "$ROOT/action.yml" || fail "action is missing SpecSync mirror input"

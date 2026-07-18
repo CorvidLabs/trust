@@ -36,7 +36,7 @@ automatically as `fledge trust`. To install the plugin without Homebrew, pin the
 immutable release tag:
 
 ```bash
-fledge plugins install CorvidLabs/trust@v1.0.0
+fledge plugins install CorvidLabs/trust@v1.0.1
 ```
 
 Trust verification also requires the independently distributed `specsync`,
