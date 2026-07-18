@@ -1,6 +1,6 @@
 [plugin]
 name = "trust"
-version = "1.0.1"
+version = "1.1.0"
 description = "One trust gate for contracts, verification, risk, and signed provenance"
 author = "CorvidLabs"
 license = "MIT"

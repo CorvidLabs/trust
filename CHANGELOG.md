@@ -1,5 +1,21 @@
 # Changelog
 
+## [v1.1.0] - 2026-07-18
+
+> **Note:** The immutable `v1.0.1` tag is void: it points at the pre-release
+> commit `c8f969a` and its Release workflow failed the tag↔version check. Like
+> `v0.2.0`, it is retained unmodified for audit history. Install `v1.1.0`.
+
+### Changes
+
+- adopt SpecSync 5.1.1 as the pinned contract toolchain (#17) (2f6a2ad)
+- accept CHG-0002 and CHG-0003 on the v1.0.1 release merge head (#16) (4574326)
+
+### Chores
+
+- archive accepted CHG-0009 and CHG-0010 lifecycle changes (7181b4a)
+- release v1.0.1 (#15) (5fb7840)
+
 ## [v1.0.1] - 2026-07-18
 
 ### Changes

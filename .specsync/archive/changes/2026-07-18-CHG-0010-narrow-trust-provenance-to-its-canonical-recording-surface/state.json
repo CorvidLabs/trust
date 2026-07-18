@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0010-narrow-trust-provenance-to-its-canonical-recording-surface",
+  "slug": "narrow-trust-provenance-to-its-canonical-recording-surface",
+  "title": "Narrow trust-provenance to its canonical recording surface",
+  "description": "Narrow trust-provenance to its canonical recording surface",
+  "kind": "feature",
+  "state": "archived",
+  "canonical_applied": true,
+  "base_commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+  "created_at": 1784402601,
+  "updated_at": 1784405567,
+  "affected_specs": [
+    "trust-provenance"
+  ],
+  "affected_paths": [
+    "specs/trust-provenance/",
+    "specs/trust-action/",
+    "specs/trust-plugin/",
+    ".specsync/change-sequence.json"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "trust-provenance documents only exports present in its owned files (scripts/record_provenance.sh); no source file is claimed by more than one canonical spec; specsync check 5.1.1 reports 5/5 specs passed with zero duplicate-ownership errors and 100% coverage."
+  ],
+  "selected_artifacts": [
+    "context",
+    "requirements",
+    "plan",
+    "tasks",
+    "testing",
+    "docs"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "no",
+    "public_contract": "yes"
+  }
+}

@@ -1,6 +1,6 @@
 ---
 id: CHG-0010-narrow-trust-provenance-to-its-canonical-recording-surface
-state: accepted
+state: archived
 type: feature
 base_commit: cccb7d224765e0c821957f4ddacd02ef0493c4c6
 ---
