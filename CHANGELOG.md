@@ -2,6 +2,11 @@
 
 ## [v1.1.1] - 2026-07-18
 
+> **Note:** The immutable `v1.1.0` tag is also void: its Release workflow
+> lacked the pinned Fledge install required by SpecSync 5.1.1's contract step,
+> and tag workflows run the definition from the immutable tag. It is retained
+> unmodified for audit history. Install `v1.1.1`.
+
 ### Fixes
 
 - install pinned Fledge in the release validate-tag job (#19) (a0d0938)
@@ -10,7 +15,7 @@
 
 > **Note:** The immutable `v1.0.1` tag is void: it points at the pre-release
 > commit `c8f969a` and its Release workflow failed the tag↔version check. Like
-> `v0.2.0`, it is retained unmodified for audit history. Install `v1.1.0`.
+> `v0.2.0`, it is retained unmodified for audit history. Install `v1.1.1`.
 
 ### Changes
 
