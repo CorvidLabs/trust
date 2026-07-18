@@ -1,12 +1,52 @@
 {
-  "timestamp": 1784403721,
+  "timestamp": 1784403760,
   "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
-  "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+  "contract_digest": "409535fdb56598595ff1f72a037c3e7f3495d51a19e2b73f1d30399101e296f3",
   "workspace_digest": "cf4c7f8eb53ce451e501b96629d6b1202de57c2a08bd493e81f3314bba780ce4",
-  "acceptance_input_digest": "082968fe9b17772f6c6fde8d6238983e3c2abf1361ea461b2f01dc5915fa16f8",
+  "acceptance_input_digest": "5041fb292d677caf7b65c0ebf4f00750a2cc7ae5b9cdeffe283c4ef8dd8c7778",
   "acceptance_manifest": {
     "schema_version": 1,
     "entries": [
+      {
+        "path": ".github/workflows/release.yml",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "3f4cf183a504c1080919a7ad1ccb100432227f9d367d1ae65ad5601162d79a26",
+        "entry_digest": "fc1f3500963e6f7628cd8f0f7e078ab8017fcc0f5634395199344329c1374405",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": ".specsync/change-sequence.json",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "58feac3c65335a662f3633591be89623b6f3ad7ea855afc51f477aaa919ebc83",
+        "entry_digest": "56c5c899dfc6690dfa2fd8ff54b1cb92dbca6ac822ccc5c8b26118179623f1ad",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "README.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "cf2debcccb64ec5dab33a9a3d936a6d81570c7e33df15333a4b18e41d2d1f2f5",
+        "entry_digest": "640109c69153030f4b5d19c6fd0c0e9de14986a17f1985bb3187afdb4d2a4267",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "RELEASING.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "88c0dec4ea58d5c88d0e1d09fe7489c454818481af9ff1035e7c0cb1030a6456",
+        "entry_digest": "176dc259fe01f2c95de853c53541091d3d45beb27c19e0e0a3a09fe885af5863",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
       {
         "path": "action.yml",
         "kind": "file",
@@ -18,33 +58,13 @@
         ]
       },
       {
-        "path": "bin/fledge-trust",
-        "kind": "file",
-        "mode": 33261,
-        "payload_digest": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
-        "entry_digest": "d082143ce3ed5c60fb7b574641026cb568ce0f68d1ad24f55b0e241b5783e5a8",
-        "owners": [
-          "trust-plugin"
-        ]
-      },
-      {
-        "path": "plugin.toml",
+        "path": "scripts/migrate_specsync_5_1_records.py",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "84dbaf29d60198609717be80be5a62e0ef3e3cb23184c602259cdf3e8f3556b9",
-        "entry_digest": "20c5e32fa81da8e14c575b42de3eda7dac5765d37ace2245851f9fa51dc77449",
+        "payload_digest": "541ff13ed6edc6837710faab7fda8b58485654f76cf8ecd4bd5b9814c66f4030",
+        "entry_digest": "adccf1b7fa524799b19305258fb975e2eb797904bc3015301346e0f73555600b",
         "owners": [
-          "trust-plugin"
-        ]
-      },
-      {
-        "path": "scripts/record_provenance.sh",
-        "kind": "file",
-        "mode": 33188,
-        "payload_digest": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
-        "entry_digest": "79025f9a8e76bfbc1d76889272b864e6b9645c256264f6b3a425fa3e5bb79ec2",
-        "owners": [
-          "trust-provenance"
+          "trust-policy"
         ]
       },
       {
@@ -55,6 +75,16 @@
         "entry_digest": "9a47d81bd23fae73da05242618d2b11ae05ad6e19f4b9d490273211d5a16d0f6",
         "owners": [
           "trust-action"
+        ]
+      },
+      {
+        "path": "scripts/validate.py",
+        "kind": "file",
+        "mode": 33261,
+        "payload_digest": "69a39730c311814dcf830d290bedc06fca357cccccb521a85e93b62f0fca5387",
+        "entry_digest": "b14211f0e8cdef8d690e7cefc198dd0b851e96826c5aeb1b37bc0b94c1b74d1a",
+        "owners": [
+          "trust-policy"
         ]
       },
       {
@@ -84,7 +114,7 @@
         "payload_digest": "8a1f113b43aad96f8f5f78e4774d3cfe090729b0fa5341b5f6a0b65e4eccb503",
         "entry_digest": "1a582b8743d78354a11b7380412ca5c3d1661925f07be946593d941adc4d0d8d",
         "owners": [
-          "trust-plugin"
+          "@exact:delivery"
         ]
       },
       {
@@ -94,7 +124,7 @@
         "payload_digest": "b4ee4e3efca651483f4fcca637648dbb765a1c88672a254e92764f54e1132d5a",
         "entry_digest": "fb808b8b97c6b3c9861c1a7a16a4f2ef5c6802b96520b05d25be06960e3e2790",
         "owners": [
-          "trust-plugin"
+          "@exact:delivery"
         ]
       },
       {
@@ -144,7 +174,7 @@
         "payload_digest": "baea4ba1fb23a914aea414902dc3ce2eb34cbdf1c6f215304e182349f2856a66",
         "entry_digest": "5200f4c3851c08b15efbd8160129a5bd8411731c0725fcc3ee5ffed54fdbcb0a",
         "owners": [
-          "trust"
+          "@exact:delivery"
         ]
       },
       {
@@ -154,7 +184,7 @@
         "payload_digest": "332c991e05a4f537d78812e62bb83867ff476ee8d76da07ff5ae0dd827e7f59f",
         "entry_digest": "90f8547e25fc305c5669269d41e8f9186e7a7671e9b61a5167b472849b0eae48",
         "owners": [
-          "trust"
+          "@exact:delivery"
         ]
       },
       {
@@ -164,7 +194,7 @@
         "payload_digest": "716287f1431891596879dc3bbeaa6e301874541c0743aba4ab764c88e49010d8",
         "entry_digest": "822e66732d87f005ab1b6607ceea218dfa92a8e478202a07b904c8016d86ebf8",
         "owners": [
-          "trust"
+          "@exact:delivery"
         ]
       },
       {
@@ -174,7 +204,7 @@
         "payload_digest": "0f8d088a13eb81683cd9d00734b8afb07c8b7e5f3cc3c9c6853b778ee88f8ab3",
         "entry_digest": "6193766d1826aa3277100512445e0b140a89b94bb782e9e283f961767b73bf94",
         "owners": [
-          "trust"
+          "@exact:delivery"
         ]
       },
       {
@@ -184,27 +214,7 @@
         "payload_digest": "ea081645857104aea4537c431564da98357bda0986e73556bdf6c4534f55d049",
         "entry_digest": "c2e0b57e4b893429a580b387afb412a81d537cc9a3715819a826cb2dd2c20ffc",
         "owners": [
-          "trust"
-        ]
-      },
-      {
-        "path": "tests/setup-action-fixture.sh",
-        "kind": "file",
-        "mode": 33261,
-        "payload_digest": "e55078f57b1b3f31a2337f60afbb3351b8f6e9b4aa2eb354a422b7c2f1e16868",
-        "entry_digest": "4e31eb7ec9fee7848e74508eba57a4290570885bfaa9cddf54fb62f0f6e2b794",
-        "owners": [
-          "@exact:test"
-        ]
-      },
-      {
-        "path": "tests/test.sh",
-        "kind": "file",
-        "mode": 33261,
-        "payload_digest": "4c2b42f849f415b927c6065f8d23827aff09ac05c660c7e1c4b4f0c9ae40a8fd",
-        "entry_digest": "eb5b6d86697ed95d93624dbd5f5c65a87b0827e80f8d278e4bbc3a300ce15bc4",
-        "owners": [
-          "@exact:test"
+          "@exact:delivery"
         ]
       }
     ]
@@ -218,36 +228,6 @@
     }
   ],
   "requirement_ids": [
-    "REQ-trust-001",
-    "REQ-trust-002",
-    "REQ-trust-003",
-    "REQ-trust-004",
-    "REQ-trust-action-001",
-    "REQ-trust-action-002",
-    "REQ-trust-action-003",
-    "REQ-trust-action-004",
-    "REQ-trust-action-006",
-    "REQ-trust-action-007",
-    "REQ-trust-action-008",
-    "REQ-trust-action-009",
-    "REQ-trust-plugin-001",
-    "REQ-trust-plugin-002",
-    "REQ-trust-plugin-003",
-    "REQ-trust-plugin-004",
-    "REQ-trust-plugin-005",
-    "REQ-trust-plugin-006",
-    "REQ-trust-plugin-007",
-    "REQ-trust-policy-001",
-    "REQ-trust-policy-002",
-    "REQ-trust-policy-003",
-    "REQ-trust-policy-004",
-    "REQ-trust-policy-005",
-    "REQ-trust-policy-006",
-    "REQ-trust-policy-007",
-    "REQ-trust-provenance-001",
-    "REQ-trust-provenance-002",
-    "REQ-trust-provenance-003",
-    "REQ-trust-provenance-004",
-    "REQ-trust-provenance-005"
+    "REQ-trust-action-010"
   ]
 }

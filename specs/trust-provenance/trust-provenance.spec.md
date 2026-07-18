@@ -1,11 +1,9 @@
 ---
 module: trust-provenance
-version: 7
+version: 9
 status: stable
 files:
   - scripts/record_provenance.sh
-  - scripts/trust_cli.py
-  - action.yml
 db_tables: []
 depends_on: [trust-policy]
 ---
@@ -20,33 +18,10 @@ consumer signing workflows remain separate and authoritative.
 ## Public API
 
 The provenance surface supports soft or enforced verification, range or baseline
-scope, remote note discovery, and release-action note recording.
-
-| Export | Description |
-| --- | --- |
-| `name` | Composite Trust action name. |
-| `description` | Composite Trust action summary. |
-| `author` | Action publisher. |
-| `branding` | Marketplace presentation. |
-| `inputs` | Public action input map. |
-| `outputs` | Public action output map. |
-| `runs` | Composite action implementation. |
-| `inputs.config` | Committed Trust policy path. |
-| `inputs.working-directory` | Governed repository directory. |
-| `inputs.range` | Explicit comparison range override. |
-| `inputs.profile` | Optional stricter profile override. |
-| `inputs.augur-threshold` | Optional stricter risk threshold override. |
-| `inputs.specsync-version` | Exact SpecSync version, defaulting to released 5.0.1. |
-| `inputs.specsync-download-base-url` | Optional authority-free runner-local mirror URL for governed self-hosting. |
-| `outputs.status` | Overall Trust result. |
-| `outputs.range` | Canonical resolved comparison range. |
-| `outputs.lifecycle-status` | Lifecycle component result. |
-| `outputs.contract-status` | SpecSync component result. |
-| `outputs.risk-status` | Augur component result. |
-| `outputs.provenance-status` | Attest provenance component result. |
-| `outputs.atlas-enabled` | Committed Atlas publication decision. |
-| `outputs.verdict` | Augur verdict. |
-| `outputs.risk` | Augur risk score. |
+scope, remote note discovery, and release-action note recording. The recording
+contract takes the pinned Attest and Augur binaries, a landed comparison range,
+and an Augur JSON report; it signs a policy-satisfying note for the landed
+commit and publishes the Attest ledger with merge-and-retry semantics.
 
 ## Invariants
 
@@ -87,3 +62,5 @@ And lifecycle, contract, and risk still determine pass or failure
 | 2026-07-13 | Map consumer verification and action provenance steps to the provenance contract. |
 | 2026-07-13 | Document trusted SpecSync self-host inputs in the provenance contract. |
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
+| 2026-07-18 | CHG-0009-adopt-specsync-5-1-1-as-the-pinned-contract-toolchain: Adopt SpecSync 5.1.1 as the pinned contract toolchain |
+| 2026-07-18 | CHG-0010-narrow-trust-provenance-to-its-canonical-recording-surface: Narrow trust-provenance to its canonical recording surface |

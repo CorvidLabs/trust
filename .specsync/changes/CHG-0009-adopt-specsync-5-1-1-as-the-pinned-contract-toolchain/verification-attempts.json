@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "attempts": [
+    {
+      "timestamp": 1784400481,
+      "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+      "contract_digest": "d65c0fca61078d9d533354c8ca05eed67686efbcfabec31baac248f6b2664b29",
+      "workspace_digest": "8e87bebfb5b2d6246e3e7626ac586b05b45dc5987b816612abb8208d86fe9671",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    },
+    {
+      "timestamp": 1784400665,
+      "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+      "contract_digest": "d65c0fca61078d9d533354c8ca05eed67686efbcfabec31baac248f6b2664b29",
+      "workspace_digest": "ab14230b0b555cde3cb581177872cb7fbb857a6473dc1366727f0a33692df3bf",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    },
+    {
+      "timestamp": 1784400778,
+      "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+      "contract_digest": "409535fdb56598595ff1f72a037c3e7f3495d51a19e2b73f1d30399101e296f3",
+      "workspace_digest": "ab14230b0b555cde3cb581177872cb7fbb857a6473dc1366727f0a33692df3bf",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    },
+    {
+      "timestamp": 1784403044,
+      "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+      "contract_digest": "409535fdb56598595ff1f72a037c3e7f3495d51a19e2b73f1d30399101e296f3",
+      "workspace_digest": "de57c914cc881949a6777bf935cfe67b21140a47dc8f38b78d4ae1f29c4c8b67",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    },
+    {
+      "timestamp": 1784403760,
+      "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+      "contract_digest": "409535fdb56598595ff1f72a037c3e7f3495d51a19e2b73f1d30399101e296f3",
+      "workspace_digest": "cf4c7f8eb53ce451e501b96629d6b1202de57c2a08bd493e81f3314bba780ce4",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    }
+  ]
+}

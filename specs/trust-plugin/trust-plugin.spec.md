@@ -5,7 +5,6 @@ status: stable
 files:
   - bin/fledge-trust
   - plugin.toml
-  - scripts/trust_cli.py
 db_tables: []
 depends_on: [trust-policy]
 ---

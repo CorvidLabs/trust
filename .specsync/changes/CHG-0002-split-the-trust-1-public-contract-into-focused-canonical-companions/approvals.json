@@ -139,6 +139,27 @@
       "timestamp": 1784394621,
       "digest": "ca2ed7ba47a0f4eb1be80bb593dff0afc0c2d75e9ef3b9644e38ca40f9d6b7e8",
       "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against release merge head 5fb7840 so the accepted evidence remains in main history after the PR's squash merge; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784401097,
+      "digest": "ee61247244a14d0d905534fde2d69126965b609e318d182d1eeca36969e84a1c",
+      "note": "Re-acceptance after SpecSync 5.1.1 adoption; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784402952,
+      "digest": "b6b0dea36d4f7adce6eea19f888afa00a6822d7e77d220032a20976a411c9959",
+      "note": "Re-acceptance after CHG-0010 ownership consolidation; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784403728,
+      "digest": "19eb30fb5e13015484c571d713f0c2dfb4b4badc988dc3e0e495afedaacb8631",
+      "note": "Re-acceptance after final canonical ownership assignment under SpecSync 5.1.1; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
@@ -999,6 +1020,617 @@
       },
       "stale_acceptance_input_digest": "85fb20fd7b0f38bff2c91cb04d848a7fb6cb56c73ba411ad0963c0076afa5252",
       "current_acceptance_input_digest": "6cc6ae5f9da5e9d5a8a95ff426506d1c99d12d379d0e4150a1936a6e5e122d10"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0009's SpecSync 5.1.1 adoption changed governed delivery inputs (action.yml, scripts, specs, tests); accepted verification is stale for current delivery inputs and requires fresh verification on the 5.1.1 tree.",
+      "timestamp": 1784401065,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784394621,
+        "digest": "ca2ed7ba47a0f4eb1be80bb593dff0afc0c2d75e9ef3b9644e38ca40f9d6b7e8",
+        "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against release merge head 5fb7840 so the accepted evidence remains in main history after the PR's squash merge; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784394570,
+        "commit": "5fb7840661fcc210abad8a8784f95a7ffb77dd9d",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "13441e8bbde788a28004578a47a934429a777663d22ded4630a60fd009a8a4a9",
+        "acceptance_input_digest": "6cc6ae5f9da5e9d5a8a95ff426506d1c99d12d379d0e4150a1936a6e5e122d10",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      },
+      "stale_acceptance_input_digest": "6cc6ae5f9da5e9d5a8a95ff426506d1c99d12d379d0e4150a1936a6e5e122d10",
+      "current_acceptance_input_digest": "50d3482c182893ad5fecbb79319c9e8298af41caacf5b86ee82ae2bdac03fc8c"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "user:0xLeif",
+      "reason": "Canonical source ownership consolidation for SpecSync 5.1.1 strict validation changed governed spec files; accepted verification is stale for current delivery inputs.",
+      "timestamp": 1784402423,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784401097,
+        "digest": "ee61247244a14d0d905534fde2d69126965b609e318d182d1eeca36969e84a1c",
+        "note": "Re-acceptance after SpecSync 5.1.1 adoption; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784401090,
+        "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "57e56b331a73add281836bda66d2541af5d32aeb4a23ed90717b38adc408183c",
+        "acceptance_input_digest": "38bc8a7bc9f535e426733259fdc35d47dffef242abeb9db9f829ce353b480908",
+        "acceptance_manifest": {
+          "schema_version": 1,
+          "entries": [
+            {
+              "path": "action.yml",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "452a6df87832c0b1d298ca4cc4e8e3af9effb9db859b4e0abac9ba09d85c6722",
+              "entry_digest": "70b9e9fbc58b9304b7bdf085ac254bf4bb4de04f04547851ba9e2d3be976645c",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "bin/fledge-trust",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
+              "entry_digest": "d082143ce3ed5c60fb7b574641026cb568ce0f68d1ad24f55b0e241b5783e5a8",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "plugin.toml",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "84dbaf29d60198609717be80be5a62e0ef3e3cb23184c602259cdf3e8f3556b9",
+              "entry_digest": "20c5e32fa81da8e14c575b42de3eda7dac5765d37ace2245851f9fa51dc77449",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "scripts/record_provenance.sh",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
+              "entry_digest": "79025f9a8e76bfbc1d76889272b864e6b9645c256264f6b3a425fa3e5bb79ec2",
+              "owners": [
+                "trust-provenance"
+              ]
+            },
+            {
+              "path": "scripts/trust_cli.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "9e325a4f26d9b82e7b8d1296c04c5ac4869a0922756d0ee8b289f7119983933c",
+              "entry_digest": "9a47d81bd23fae73da05242618d2b11ae05ad6e19f4b9d490273211d5a16d0f6",
+              "owners": [
+                "trust-action",
+                "trust-plugin",
+                "trust-policy",
+                "trust-provenance"
+              ]
+            },
+            {
+              "path": "specs/trust-action/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "1661580523b64ddc04240c392d83c57a5766781b85d8b122a2f39547c4777ef5",
+              "entry_digest": "f0be1a006779e2c5468e550109063dd253ba1c815245f089a9aee988dbf9f6cb",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "specs/trust-action/trust-action.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8b6c716681ea94323928e5f15aa2ee99957744fd2782582aeebf1b45495a0517",
+              "entry_digest": "218b6318eb2206ff7a5c964011c96e0216832b72aa09effb72311d1ee9af8ca9",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "specs/trust-plugin/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8a1f113b43aad96f8f5f78e4774d3cfe090729b0fa5341b5f6a0b65e4eccb503",
+              "entry_digest": "1a582b8743d78354a11b7380412ca5c3d1661925f07be946593d941adc4d0d8d",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "specs/trust-plugin/trust-plugin.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "215bcaf3c1a54de83bf88e6d72bcc56eec8a91f3907e087619909dcfaafbf1b7",
+              "entry_digest": "da10edea3c3537b95194e3a59063e5490434f630761b493eb4957d6018705419",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "specs/trust-policy/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "899c1839574c7476981cb8f4f11999c72d207aa4fb6e56a28bbf8d2d652694cc",
+              "entry_digest": "5f251f2d36a321bfbb6ea873d9a96c17eb125a937c0b36ade246d1768a8bddf6",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-policy/trust-policy.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "523629b9aed7d10b79eb6d73ba4ff1be48c3cf27a9839c700fa5e7c6bcf53a9a",
+              "entry_digest": "fa8fc77bdc724fa77566cf0304ec02416625aa3b21997d1941ce00dd3f94a5d6",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-provenance/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "84f3919df6a94514e53ee47f4d5e0985de49eb891d21f5f2a2626bbf9d8fd57f",
+              "entry_digest": "21ab753330f1884ee964e6f2b0ff6af15802396e338dfb0d00e580261c2f3588",
+              "owners": [
+                "trust-provenance"
+              ]
+            },
+            {
+              "path": "specs/trust-provenance/trust-provenance.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "3bebf178d9ce3aacbe3cffe51a8aa21d2bfed4a42f4a53f49e240ba93800dba5",
+              "entry_digest": "340212a004e2293f049c54982ea8dd896629c15032bc48918cacb52c3d1ae646",
+              "owners": [
+                "trust-provenance"
+              ]
+            },
+            {
+              "path": "specs/trust/context.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "baea4ba1fb23a914aea414902dc3ce2eb34cbdf1c6f215304e182349f2856a66",
+              "entry_digest": "5200f4c3851c08b15efbd8160129a5bd8411731c0725fcc3ee5ffed54fdbcb0a",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "332c991e05a4f537d78812e62bb83867ff476ee8d76da07ff5ae0dd827e7f59f",
+              "entry_digest": "90f8547e25fc305c5669269d41e8f9186e7a7671e9b61a5167b472849b0eae48",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/tasks.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "716287f1431891596879dc3bbeaa6e301874541c0743aba4ab764c88e49010d8",
+              "entry_digest": "822e66732d87f005ab1b6607ceea218dfa92a8e478202a07b904c8016d86ebf8",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/testing.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "0f8d088a13eb81683cd9d00734b8afb07c8b7e5f3cc3c9c6853b778ee88f8ab3",
+              "entry_digest": "6193766d1826aa3277100512445e0b140a89b94bb782e9e283f961767b73bf94",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/trust.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "ea081645857104aea4537c431564da98357bda0986e73556bdf6c4534f55d049",
+              "entry_digest": "c2e0b57e4b893429a580b387afb412a81d537cc9a3715819a826cb2dd2c20ffc",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "tests/setup-action-fixture.sh",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "e55078f57b1b3f31a2337f60afbb3351b8f6e9b4aa2eb354a422b7c2f1e16868",
+              "entry_digest": "4e31eb7ec9fee7848e74508eba57a4290570885bfaa9cddf54fb62f0f6e2b794",
+              "owners": [
+                "@exact:test"
+              ]
+            },
+            {
+              "path": "tests/test.sh",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "4c2b42f849f415b927c6065f8d23827aff09ac05c660c7e1c4b4f0c9ae40a8fd",
+              "entry_digest": "eb5b6d86697ed95d93624dbd5f5c65a87b0827e80f8d278e4bbc3a300ce15bc4",
+              "owners": [
+                "@exact:test"
+              ]
+            }
+          ]
+        },
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      },
+      "stale_acceptance_input_digest": "38bc8a7bc9f535e426733259fdc35d47dffef242abeb9db9f829ce353b480908",
+      "current_acceptance_input_digest": "2fb0ceee6767d032f83cd73caa7ae346d0c7037924d3632d2a5708ab399ee8ef"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0002-split-the-trust-1-public-contract-into-focused-canonical-companions",
+      "actor": "user:0xLeif",
+      "reason": "Final ownership assignment for trust_cli.py under the CHG-0010 consolidation changed governed spec files; accepted verification is stale for current delivery inputs.",
+      "timestamp": 1784403697,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784402952,
+        "digest": "b6b0dea36d4f7adce6eea19f888afa00a6822d7e77d220032a20976a411c9959",
+        "note": "Re-acceptance after CHG-0010 ownership consolidation; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784402945,
+        "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+        "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+        "workspace_digest": "de57c914cc881949a6777bf935cfe67b21140a47dc8f38b78d4ae1f29c4c8b67",
+        "acceptance_input_digest": "1e8eb8328ceda1c520172ab7de4265a2f15bff0eec64aba933c4bf5ec966e938",
+        "acceptance_manifest": {
+          "schema_version": 1,
+          "entries": [
+            {
+              "path": "action.yml",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "452a6df87832c0b1d298ca4cc4e8e3af9effb9db859b4e0abac9ba09d85c6722",
+              "entry_digest": "70b9e9fbc58b9304b7bdf085ac254bf4bb4de04f04547851ba9e2d3be976645c",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "bin/fledge-trust",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
+              "entry_digest": "d082143ce3ed5c60fb7b574641026cb568ce0f68d1ad24f55b0e241b5783e5a8",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "plugin.toml",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "84dbaf29d60198609717be80be5a62e0ef3e3cb23184c602259cdf3e8f3556b9",
+              "entry_digest": "20c5e32fa81da8e14c575b42de3eda7dac5765d37ace2245851f9fa51dc77449",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "scripts/record_provenance.sh",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8a57e38c4785946d039129d63280f5a146a307fad80051d31066b9a0f575cfe1",
+              "entry_digest": "79025f9a8e76bfbc1d76889272b864e6b9645c256264f6b3a425fa3e5bb79ec2",
+              "owners": [
+                "trust-provenance"
+              ]
+            },
+            {
+              "path": "scripts/trust_cli.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "9e325a4f26d9b82e7b8d1296c04c5ac4869a0922756d0ee8b289f7119983933c",
+              "entry_digest": "9a47d81bd23fae73da05242618d2b11ae05ad6e19f4b9d490273211d5a16d0f6",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-action/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "1661580523b64ddc04240c392d83c57a5766781b85d8b122a2f39547c4777ef5",
+              "entry_digest": "f0be1a006779e2c5468e550109063dd253ba1c815245f089a9aee988dbf9f6cb",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "specs/trust-action/trust-action.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "e3a8dec0c5ef380c1012e5d751df50c56d6d501f21ee5b6e3d243a9dc236679a",
+              "entry_digest": "64a1978ee5e9d532203e8edb962955c8be3c56b7c774fcc78d1532a1c6d7915a",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "specs/trust-plugin/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8a1f113b43aad96f8f5f78e4774d3cfe090729b0fa5341b5f6a0b65e4eccb503",
+              "entry_digest": "1a582b8743d78354a11b7380412ca5c3d1661925f07be946593d941adc4d0d8d",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "specs/trust-plugin/trust-plugin.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "b4ee4e3efca651483f4fcca637648dbb765a1c88672a254e92764f54e1132d5a",
+              "entry_digest": "fb808b8b97c6b3c9861c1a7a16a4f2ef5c6802b96520b05d25be06960e3e2790",
+              "owners": [
+                "trust-plugin"
+              ]
+            },
+            {
+              "path": "specs/trust-policy/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "899c1839574c7476981cb8f4f11999c72d207aa4fb6e56a28bbf8d2d652694cc",
+              "entry_digest": "5f251f2d36a321bfbb6ea873d9a96c17eb125a937c0b36ade246d1768a8bddf6",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-policy/trust-policy.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "523629b9aed7d10b79eb6d73ba4ff1be48c3cf27a9839c700fa5e7c6bcf53a9a",
+              "entry_digest": "fa8fc77bdc724fa77566cf0304ec02416625aa3b21997d1941ce00dd3f94a5d6",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-provenance/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "84f3919df6a94514e53ee47f4d5e0985de49eb891d21f5f2a2626bbf9d8fd57f",
+              "entry_digest": "21ab753330f1884ee964e6f2b0ff6af15802396e338dfb0d00e580261c2f3588",
+              "owners": [
+                "trust-provenance"
+              ]
+            },
+            {
+              "path": "specs/trust-provenance/trust-provenance.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "dd49ace2cb02e8a94f2029c49f87b7ffda71ed531d7d0e8d580bd1c1b89cf534",
+              "entry_digest": "b958517223ab4287a76974a43467a4cd213907d940ab7d9e67a0ada32d22bb90",
+              "owners": [
+                "trust-provenance"
+              ]
+            },
+            {
+              "path": "specs/trust/context.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "baea4ba1fb23a914aea414902dc3ce2eb34cbdf1c6f215304e182349f2856a66",
+              "entry_digest": "5200f4c3851c08b15efbd8160129a5bd8411731c0725fcc3ee5ffed54fdbcb0a",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "332c991e05a4f537d78812e62bb83867ff476ee8d76da07ff5ae0dd827e7f59f",
+              "entry_digest": "90f8547e25fc305c5669269d41e8f9186e7a7671e9b61a5167b472849b0eae48",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/tasks.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "716287f1431891596879dc3bbeaa6e301874541c0743aba4ab764c88e49010d8",
+              "entry_digest": "822e66732d87f005ab1b6607ceea218dfa92a8e478202a07b904c8016d86ebf8",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/testing.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "0f8d088a13eb81683cd9d00734b8afb07c8b7e5f3cc3c9c6853b778ee88f8ab3",
+              "entry_digest": "6193766d1826aa3277100512445e0b140a89b94bb782e9e283f961767b73bf94",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "specs/trust/trust.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "ea081645857104aea4537c431564da98357bda0986e73556bdf6c4534f55d049",
+              "entry_digest": "c2e0b57e4b893429a580b387afb412a81d537cc9a3715819a826cb2dd2c20ffc",
+              "owners": [
+                "trust"
+              ]
+            },
+            {
+              "path": "tests/setup-action-fixture.sh",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "e55078f57b1b3f31a2337f60afbb3351b8f6e9b4aa2eb354a422b7c2f1e16868",
+              "entry_digest": "4e31eb7ec9fee7848e74508eba57a4290570885bfaa9cddf54fb62f0f6e2b794",
+              "owners": [
+                "@exact:test"
+              ]
+            },
+            {
+              "path": "tests/test.sh",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "4c2b42f849f415b927c6065f8d23827aff09ac05c660c7e1c4b4f0c9ae40a8fd",
+              "entry_digest": "eb5b6d86697ed95d93624dbd5f5c65a87b0827e80f8d278e4bbc3a300ce15bc4",
+              "owners": [
+                "@exact:test"
+              ]
+            }
+          ]
+        },
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-001",
+          "REQ-trust-002",
+          "REQ-trust-003",
+          "REQ-trust-004",
+          "REQ-trust-action-001",
+          "REQ-trust-action-002",
+          "REQ-trust-action-003",
+          "REQ-trust-action-004",
+          "REQ-trust-action-006",
+          "REQ-trust-action-007",
+          "REQ-trust-action-008",
+          "REQ-trust-action-009",
+          "REQ-trust-plugin-001",
+          "REQ-trust-plugin-002",
+          "REQ-trust-plugin-003",
+          "REQ-trust-plugin-004",
+          "REQ-trust-plugin-005",
+          "REQ-trust-plugin-006",
+          "REQ-trust-plugin-007",
+          "REQ-trust-policy-001",
+          "REQ-trust-policy-002",
+          "REQ-trust-policy-003",
+          "REQ-trust-policy-004",
+          "REQ-trust-policy-005",
+          "REQ-trust-policy-006",
+          "REQ-trust-policy-007",
+          "REQ-trust-provenance-001",
+          "REQ-trust-provenance-002",
+          "REQ-trust-provenance-003",
+          "REQ-trust-provenance-004",
+          "REQ-trust-provenance-005"
+        ]
+      },
+      "stale_acceptance_input_digest": "1e8eb8328ceda1c520172ab7de4265a2f15bff0eec64aba933c4bf5ec966e938",
+      "current_acceptance_input_digest": "538c88f462f94adced6bfc7491e9c06f80d320d58bbd2a08a225db58b0708a90"
     }
   ]
 }
