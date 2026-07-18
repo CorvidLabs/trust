@@ -1,6 +1,6 @@
 ---
 id: CHG-0009-adopt-specsync-5-1-1-as-the-pinned-contract-toolchain
-state: accepted
+state: archived
 type: feature
 base_commit: cccb7d224765e0c821957f4ddacd02ef0493c4c6
 ---

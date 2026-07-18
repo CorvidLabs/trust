@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "CHG-0009-adopt-specsync-5-1-1-as-the-pinned-contract-toolchain",
+  "slug": "adopt-specsync-5-1-1-as-the-pinned-contract-toolchain",
+  "title": "Adopt SpecSync 5.1.1 as the pinned contract toolchain",
+  "description": "Adopt SpecSync 5.1.1 as the pinned contract toolchain",
+  "kind": "feature",
+  "state": "archived",
+  "canonical_applied": true,
+  "base_commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+  "created_at": 1784399537,
+  "updated_at": 1784405550,
+  "affected_specs": [
+    "trust-action",
+    "trust-policy",
+    "trust-provenance"
+  ],
+  "affected_paths": [
+    "action.yml",
+    "scripts/trust_cli.py",
+    "scripts/validate.py",
+    "scripts/migrate_specsync_5_1_records.py",
+    ".github/workflows/release.yml",
+    "README.md",
+    "RELEASING.md",
+    "specs/",
+    ".specsync/change-sequence.json"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "Trust pins SpecSync 5.1.1 as the composite action default and nested immutable action commit (a89d827e93fa0bc9e6168447e66a0ad30fa92e65); trust_cli.py, validate.py, release.yml, README, and RELEASING agree on the 5.1.1 pin; the 5.0.1-era change ledgers validate under both 5.0.1 and 5.1.1; fledge lanes run verify and strict contract validation pass with the 5.1.1 binary; stale accepted changes reopen and re-accept natively under 5.1.1 without replaying canonical deltas."
+  ],
+  "selected_artifacts": [
+    "context",
+    "requirements",
+    "plan",
+    "tasks",
+    "testing",
+    "docs",
+    "research",
+    "design"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "yes"
+  }
+}
