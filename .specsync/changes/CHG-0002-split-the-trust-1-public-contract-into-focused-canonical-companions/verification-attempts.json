@@ -141,6 +141,100 @@
         "REQ-trust-provenance-004",
         "REQ-trust-provenance-005"
       ]
+    },
+    {
+      "timestamp": 1784405940,
+      "commit": "e176a647c54b078b9e043d49c383648e30e7cbe8",
+      "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+      "workspace_digest": "a805986959e547baae8e452383aa8a15965052b295dd1f0031644878ba532651",
+      "passed": false,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": false,
+          "exit_code": 1
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-001",
+        "REQ-trust-002",
+        "REQ-trust-003",
+        "REQ-trust-004",
+        "REQ-trust-action-001",
+        "REQ-trust-action-002",
+        "REQ-trust-action-003",
+        "REQ-trust-action-004",
+        "REQ-trust-action-006",
+        "REQ-trust-action-007",
+        "REQ-trust-action-008",
+        "REQ-trust-action-009",
+        "REQ-trust-plugin-001",
+        "REQ-trust-plugin-002",
+        "REQ-trust-plugin-003",
+        "REQ-trust-plugin-004",
+        "REQ-trust-plugin-005",
+        "REQ-trust-plugin-006",
+        "REQ-trust-plugin-007",
+        "REQ-trust-policy-001",
+        "REQ-trust-policy-002",
+        "REQ-trust-policy-003",
+        "REQ-trust-policy-004",
+        "REQ-trust-policy-005",
+        "REQ-trust-policy-006",
+        "REQ-trust-policy-007",
+        "REQ-trust-provenance-001",
+        "REQ-trust-provenance-002",
+        "REQ-trust-provenance-003",
+        "REQ-trust-provenance-004",
+        "REQ-trust-provenance-005"
+      ]
+    },
+    {
+      "timestamp": 1784406013,
+      "commit": "7b4da6298df96052c764853e23e478e1b0263f98",
+      "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+      "workspace_digest": "15ef2439a1feaae1aa24c6783e58e4b348f86403f3ae3ef6e41eecfb1f9a3f92",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-001",
+        "REQ-trust-002",
+        "REQ-trust-003",
+        "REQ-trust-004",
+        "REQ-trust-action-001",
+        "REQ-trust-action-002",
+        "REQ-trust-action-003",
+        "REQ-trust-action-004",
+        "REQ-trust-action-006",
+        "REQ-trust-action-007",
+        "REQ-trust-action-008",
+        "REQ-trust-action-009",
+        "REQ-trust-plugin-001",
+        "REQ-trust-plugin-002",
+        "REQ-trust-plugin-003",
+        "REQ-trust-plugin-004",
+        "REQ-trust-plugin-005",
+        "REQ-trust-plugin-006",
+        "REQ-trust-plugin-007",
+        "REQ-trust-policy-001",
+        "REQ-trust-policy-002",
+        "REQ-trust-policy-003",
+        "REQ-trust-policy-004",
+        "REQ-trust-policy-005",
+        "REQ-trust-policy-006",
+        "REQ-trust-policy-007",
+        "REQ-trust-provenance-001",
+        "REQ-trust-provenance-002",
+        "REQ-trust-provenance-003",
+        "REQ-trust-provenance-004",
+        "REQ-trust-provenance-005"
+      ]
     }
   ]
 }
