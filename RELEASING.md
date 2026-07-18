@@ -96,8 +96,8 @@ formula-scoped trust to `corvid-trust`, `fledge`, `spec-sync`, `augur`, and
 ## Stable release
 
 Trust 1.0.0 additionally requires an enabled provenance ledger, the Homebrew
-bundle, the promoted active spec, and the `v1` Action channel. SpecSync 5.0.1 is
-pinned to its immutable Action commit and paired with binary version 5.0.1;
+bundle, the promoted active spec, and the `v1` Action channel. SpecSync 5.1.1 is
+pinned to its immutable Action commit and paired with binary version 5.1.1;
 preserve that pairing through the final release rehearsal.
 The same tag workflow publishes 1.0.0 as a stable GitHub release and selects
 `v1`; a 1.0.0 release candidate is ineligible for that stable channel. Create a

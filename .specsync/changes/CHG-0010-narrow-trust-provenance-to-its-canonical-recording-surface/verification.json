@@ -1,0 +1,91 @@
+{
+  "timestamp": 1784403892,
+  "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+  "contract_digest": "8e634652ee7b1a2de44147304dfc79c1889c47b5adbebc9a15c7bc02e42e63c3",
+  "workspace_digest": "cf4c7f8eb53ce451e501b96629d6b1202de57c2a08bd493e81f3314bba780ce4",
+  "acceptance_input_digest": "9c54e563cb196893e2bea110a5a1aceba9b06f563512a73360fcb0256272d085",
+  "acceptance_manifest": {
+    "schema_version": 1,
+    "entries": [
+      {
+        "path": ".specsync/change-sequence.json",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "5f5b463448586a7d1b52400bcfc5f13953110b7f6af6b7a5176ad1a0f584463a",
+        "entry_digest": "074e090fa701a78bb6a249cdd30b0b95604e3794aec3452c735795ceeb753a21",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "specs/trust-action/requirements.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "1661580523b64ddc04240c392d83c57a5766781b85d8b122a2f39547c4777ef5",
+        "entry_digest": "f0be1a006779e2c5468e550109063dd253ba1c815245f089a9aee988dbf9f6cb",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "specs/trust-action/trust-action.spec.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "8b6c716681ea94323928e5f15aa2ee99957744fd2782582aeebf1b45495a0517",
+        "entry_digest": "218b6318eb2206ff7a5c964011c96e0216832b72aa09effb72311d1ee9af8ca9",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "specs/trust-plugin/requirements.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "8a1f113b43aad96f8f5f78e4774d3cfe090729b0fa5341b5f6a0b65e4eccb503",
+        "entry_digest": "1a582b8743d78354a11b7380412ca5c3d1661925f07be946593d941adc4d0d8d",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "specs/trust-plugin/trust-plugin.spec.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "b4ee4e3efca651483f4fcca637648dbb765a1c88672a254e92764f54e1132d5a",
+        "entry_digest": "fb808b8b97c6b3c9861c1a7a16a4f2ef5c6802b96520b05d25be06960e3e2790",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "specs/trust-provenance/requirements.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "84f3919df6a94514e53ee47f4d5e0985de49eb891d21f5f2a2626bbf9d8fd57f",
+        "entry_digest": "21ab753330f1884ee964e6f2b0ff6af15802396e338dfb0d00e580261c2f3588",
+        "owners": [
+          "trust-provenance"
+        ]
+      },
+      {
+        "path": "specs/trust-provenance/trust-provenance.spec.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "dd49ace2cb02e8a94f2029c49f87b7ffda71ed531d7d0e8d580bd1c1b89cf534",
+        "entry_digest": "b958517223ab4287a76974a43467a4cd213907d940ab7d9e67a0ada32d22bb90",
+        "owners": [
+          "trust-provenance"
+        ]
+      }
+    ]
+  },
+  "passed": true,
+  "commands": [
+    {
+      "command": "fledge lanes run verify",
+      "success": true,
+      "exit_code": 0
+    }
+  ],
+  "requirement_ids": []
+}

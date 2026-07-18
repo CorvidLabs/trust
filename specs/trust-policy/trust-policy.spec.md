@@ -1,10 +1,10 @@
 ---
 module: trust-policy
-version: 6
+version: 7
 status: stable
 files:
-  - scripts/trust_cli.py
   - scripts/validate.py
+  - scripts/migrate_specsync_5_1_records.py
   - .trust.toml
   - .attest.json
   - .augur.toml
@@ -30,7 +30,9 @@ The policy surface provides adoption, status, doctor, local verification, and
 internal composite-action resolution. It accepts a committed policy path,
 optional explicit range, and only stricter profile or risk overrides. Machine
 status is schema-versioned configuration health; composite Action outputs expose
-gate component results.
+gate component results. Its ledger migration utility backfills pre-5.1
+reopening evidence so earlier change records validate under the pinned SpecSync
+5.1.1 toolchain.
 
 ## Invariants
 
@@ -71,3 +73,4 @@ But rejects any attempt to disable contract or provenance enforcement
 | 2026-07-12 | Stable Trust 1.0 policy contract. |
 | 2026-07-13 | Map committed policies, generated defaults, managed rules, and status JSON to policy resolution. |
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
+| 2026-07-18 | CHG-0009-adopt-specsync-5-1-1-as-the-pinned-contract-toolchain: Adopt SpecSync 5.1.1 as the pinned contract toolchain |

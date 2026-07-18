@@ -90,6 +90,48 @@
       "timestamp": 1784394621,
       "digest": "f78aeda9e19c5c95eee8de2313450df3ba537be6990e9523adcff92d7e790772",
       "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against release merge head 5fb7840 so the accepted evidence remains in main history after the PR's squash merge; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784401185,
+      "digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
+      "note": null
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784401214,
+      "digest": "6269f6536473cab229005e3624e10d8a39c67bce6a48e60f4ec1a358611b2780",
+      "note": "Re-acceptance after SpecSync 5.1.1 adoption with trust-policy ownership correction for scripts/validate.py; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784403078,
+      "digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
+      "note": null
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784403204,
+      "digest": "c6ca42e53af8694341c965a55157255b884f8b640337aab9eafbd603116ff9b5",
+      "note": null
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1784403573,
+      "digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
+      "note": null
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784403601,
+      "digest": "cfabd0e12dd86539d468a0b7b14030af0b794703f36a4add692b526ee206e8f5",
+      "note": "Re-acceptance after CHG-0010 ownership consolidation; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
@@ -341,7 +383,9 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c"
     },
     {
       "schema_version": 1,
@@ -375,7 +419,9 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c"
     },
     {
       "schema_version": 1,
@@ -409,7 +455,9 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c"
     },
     {
       "schema_version": 1,
@@ -443,7 +491,166 @@
         "requirement_ids": [
           "REQ-trust-action-010"
         ]
-      }
+      },
+      "stale_acceptance_input_digest": "76cb70d68eb59bfe44dbaf838b8fd37361bad1fbcc3fb4f182c56c878bc57d3c",
+      "current_acceptance_input_digest": "10f983fc25c6dda792216ea648eb0d3e692b3873a8dc1ccdf63fb66c4a241b52"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "user:0xLeif",
+      "reason": "CHG-0009's SpecSync 5.1.1 adoption changed governed delivery inputs (action.yml, scripts, README, tests); accepted verification is stale for current delivery inputs and requires fresh verification on the 5.1.1 tree.",
+      "timestamp": 1784401124,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784394621,
+        "digest": "f78aeda9e19c5c95eee8de2313450df3ba537be6990e9523adcff92d7e790772",
+        "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against release merge head 5fb7840 so the accepted evidence remains in main history after the PR's squash merge; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784394593,
+        "commit": "5fb7840661fcc210abad8a8784f95a7ffb77dd9d",
+        "contract_digest": "055f6765bfad09c177a83821aeb7794b88dddddb87c773dc0ea963eec905d038",
+        "workspace_digest": "13441e8bbde788a28004578a47a934429a777663d22ded4630a60fd009a8a4a9",
+        "acceptance_input_digest": "10f983fc25c6dda792216ea648eb0d3e692b3873a8dc1ccdf63fb66c4a241b52",
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "10f983fc25c6dda792216ea648eb0d3e692b3873a8dc1ccdf63fb66c4a241b52",
+      "current_acceptance_input_digest": "c1898df240278d9b6f10a18e0192ab8571d74f18bd4feafe543a53a7a9028c05"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "user:0xLeif",
+      "reason": "Spec edits from the 5.1.1 ownership consolidation (CHG-0010) changed governed delivery inputs; accepted verification is stale for current delivery inputs.",
+      "timestamp": 1784402987,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784401214,
+        "digest": "6269f6536473cab229005e3624e10d8a39c67bce6a48e60f4ec1a358611b2780",
+        "note": "Re-acceptance after SpecSync 5.1.1 adoption with trust-policy ownership correction for scripts/validate.py; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784401206,
+        "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+        "contract_digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
+        "workspace_digest": "57e56b331a73add281836bda66d2541af5d32aeb4a23ed90717b38adc408183c",
+        "acceptance_input_digest": "2f014040f6452ef4799e6f62705597c66d8c260122307d72bbe19de7e314f078",
+        "acceptance_manifest": {
+          "schema_version": 1,
+          "entries": [
+            {
+              "path": "CHANGELOG.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "4713b15ec0f57169dac765b4618e3497a59d74cae369e21d466c519efb0dd7a8",
+              "entry_digest": "89acdcc485270381b6325670fba55df322f59d89faa34cf432986193a31f8105",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "README.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "cf2debcccb64ec5dab33a9a3d936a6d81570c7e33df15333a4b18e41d2d1f2f5",
+              "entry_digest": "640109c69153030f4b5d19c6fd0c0e9de14986a17f1985bb3187afdb4d2a4267",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "action.yml",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "452a6df87832c0b1d298ca4cc4e8e3af9effb9db859b4e0abac9ba09d85c6722",
+              "entry_digest": "70b9e9fbc58b9304b7bdf085ac254bf4bb4de04f04547851ba9e2d3be976645c",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "scripts/trust_cli.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "9e325a4f26d9b82e7b8d1296c04c5ac4869a0922756d0ee8b289f7119983933c",
+              "entry_digest": "9a47d81bd23fae73da05242618d2b11ae05ad6e19f4b9d490273211d5a16d0f6",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "scripts/validate.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "69a39730c311814dcf830d290bedc06fca357cccccb521a85e93b62f0fca5387",
+              "entry_digest": "b14211f0e8cdef8d690e7cefc198dd0b851e96826c5aeb1b37bc0b94c1b74d1a",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-action/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "1661580523b64ddc04240c392d83c57a5766781b85d8b122a2f39547c4777ef5",
+              "entry_digest": "f0be1a006779e2c5468e550109063dd253ba1c815245f089a9aee988dbf9f6cb",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "specs/trust-action/trust-action.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8b6c716681ea94323928e5f15aa2ee99957744fd2782582aeebf1b45495a0517",
+              "entry_digest": "218b6318eb2206ff7a5c964011c96e0216832b72aa09effb72311d1ee9af8ca9",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "tests/test.sh",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "4c2b42f849f415b927c6065f8d23827aff09ac05c660c7e1c4b4f0c9ae40a8fd",
+              "entry_digest": "eb5b6d86697ed95d93624dbd5f5c65a87b0827e80f8d278e4bbc3a300ce15bc4",
+              "owners": [
+                "@exact:test"
+              ]
+            }
+          ]
+        },
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "2f014040f6452ef4799e6f62705597c66d8c260122307d72bbe19de7e314f078",
+      "current_acceptance_input_digest": "3f438912443a4bbcc2f179bd8e816c6268a5b44ae61953d513db2d37243ae85f"
     }
   ]
 }

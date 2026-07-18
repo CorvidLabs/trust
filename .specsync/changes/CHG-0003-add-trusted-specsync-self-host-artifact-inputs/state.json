@@ -6,9 +6,10 @@
   "description": "Add trusted SpecSync self-host artifact inputs",
   "kind": "feature",
   "state": "accepted",
+  "canonical_applied": true,
   "base_commit": "2ede269961e37951a99bd3a5cd2f3424a6d430f8",
   "created_at": 1783959790,
-  "updated_at": 1784394621,
+  "updated_at": 1784403601,
   "affected_specs": [
     "trust-action"
   ],
@@ -39,6 +40,17 @@
     "research"
   ],
   "dependencies": [],
+  "acceptance_owner_corrections": [
+    {
+      "schema_version": 1,
+      "sequence": 1,
+      "path": "scripts/validate.py",
+      "module": "trust-policy",
+      "actor": "user:0xLeif",
+      "reason": "The historical definition omitted the canonical trust-policy owner of the already-scoped validation script input.",
+      "timestamp": 1784401171
+    }
+  ],
   "answers": {
     "architecture_risk": "yes",
     "public_contract": "yes"
