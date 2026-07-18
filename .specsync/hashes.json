@@ -6,7 +6,7 @@
     "templates/attest.json": "2581fe52873327db0bbac357a5102a0dbb18a1eea5a690b7b75eaa571e50cf65",
     "specs/trust/tasks.md": "716287f1431891596879dc3bbeaa6e301874541c0743aba4ab764c88e49010d8",
     "packaging/homebrew/corvid-trust.rb.in": "b79adee61c5c45517fba61c0f1b28b61ccd0a43f97de4f11832440c020a8f935",
-    "plugin.toml": "bfca6827324d2faea208dfc33c0e179fad5baef90b574ce155533dc9054c13a9",
+    "plugin.toml": "84dbaf29d60198609717be80be5a62e0ef3e3cb23184c602259cdf3e8f3556b9",
     ".trust.toml": "27daa85d95994c1770c222b3716f925fe4d12b120b342a87e4934617d7e96f3f",
     "specs/trust/context.md": "baea4ba1fb23a914aea414902dc3ce2eb34cbdf1c6f215304e182349f2856a66",
     "bin/fledge-trust": "8835d9961acc0d399457ed06919cc70dd9d7d1afd5a81ed8323c592776a94447",
