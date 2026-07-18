@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.1.1] - 2026-07-18
+
+### Fixes
+
+- install pinned Fledge in the release validate-tag job (#19) (a0d0938)
+
 ## [v1.1.0] - 2026-07-18
 
 > **Note:** The immutable `v1.0.1` tag is void: it points at the pre-release
