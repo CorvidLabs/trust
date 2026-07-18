@@ -235,6 +235,53 @@
         "REQ-trust-provenance-004",
         "REQ-trust-provenance-005"
       ]
+    },
+    {
+      "timestamp": 1784407515,
+      "commit": "15b4bf91c92df6fbd921da17afe78e2db9787143",
+      "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
+      "workspace_digest": "cf333b6a75becc6fd7cc3db6d8b0eeb22350709881b2dbacab2179510329e6f6",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-001",
+        "REQ-trust-002",
+        "REQ-trust-003",
+        "REQ-trust-004",
+        "REQ-trust-action-001",
+        "REQ-trust-action-002",
+        "REQ-trust-action-003",
+        "REQ-trust-action-004",
+        "REQ-trust-action-006",
+        "REQ-trust-action-007",
+        "REQ-trust-action-008",
+        "REQ-trust-action-009",
+        "REQ-trust-plugin-001",
+        "REQ-trust-plugin-002",
+        "REQ-trust-plugin-003",
+        "REQ-trust-plugin-004",
+        "REQ-trust-plugin-005",
+        "REQ-trust-plugin-006",
+        "REQ-trust-plugin-007",
+        "REQ-trust-policy-001",
+        "REQ-trust-policy-002",
+        "REQ-trust-policy-003",
+        "REQ-trust-policy-004",
+        "REQ-trust-policy-005",
+        "REQ-trust-policy-006",
+        "REQ-trust-policy-007",
+        "REQ-trust-provenance-001",
+        "REQ-trust-provenance-002",
+        "REQ-trust-provenance-003",
+        "REQ-trust-provenance-004",
+        "REQ-trust-provenance-005"
+      ]
     }
   ]
 }

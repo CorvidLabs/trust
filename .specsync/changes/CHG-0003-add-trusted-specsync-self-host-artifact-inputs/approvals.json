@@ -139,6 +139,13 @@
       "timestamp": 1784406057,
       "digest": "6823b2c93ffc254361d0edc7470b26719eaf59b4b1f6f6501efede75fe83ca15",
       "note": "Re-acceptance on the 1.1.0 release tree; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784407557,
+      "digest": "bd91ad7ae633e7ef070043b13346071267cc4c0a80a004afed9e139646c1b91b",
+      "note": "Re-acceptance on the 1.1.1 release tree; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
@@ -779,6 +786,127 @@
       },
       "stale_acceptance_input_digest": "2f014040f6452ef4799e6f62705597c66d8c260122307d72bbe19de7e314f078",
       "current_acceptance_input_digest": "5ac2eed9d2a0004bea0db702f46dd9f12f6b5138b08b49284dcf7d0d6dcfae17"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "user:0xLeif",
+      "reason": "Release 1.1.1 bumps governed delivery inputs of this change (version manifest, changelog, install docs); accepted verification is stale for current delivery inputs.",
+      "timestamp": 1784407528,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784406057,
+        "digest": "6823b2c93ffc254361d0edc7470b26719eaf59b4b1f6f6501efede75fe83ca15",
+        "note": "Re-acceptance on the 1.1.0 release tree; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784406049,
+        "commit": "7b4da6298df96052c764853e23e478e1b0263f98",
+        "contract_digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
+        "workspace_digest": "15ef2439a1feaae1aa24c6783e58e4b348f86403f3ae3ef6e41eecfb1f9a3f92",
+        "acceptance_input_digest": "f1abfcd14181ad36f90226be46899b22c10c33aa8e306ed59d32fb2092a1714e",
+        "acceptance_manifest": {
+          "schema_version": 1,
+          "entries": [
+            {
+              "path": "CHANGELOG.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "a3ab6284428c26c0998f1b7a9766515a1eceb0176d6818340404c4175c2db994",
+              "entry_digest": "4b0feb8e420b4d274a18c2a99e2fd8545ba34ce5a391f5fad8e97274207906e7",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "README.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "025454e5399198b40b1f06273c0cbed467780ec8857bdd492657a4096eb612be",
+              "entry_digest": "e7cd1b1d5eaa1e3183cb8223ace722dff43303edc05e923bd6b6324579cacdab",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "action.yml",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "452a6df87832c0b1d298ca4cc4e8e3af9effb9db859b4e0abac9ba09d85c6722",
+              "entry_digest": "70b9e9fbc58b9304b7bdf085ac254bf4bb4de04f04547851ba9e2d3be976645c",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "scripts/trust_cli.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "9e325a4f26d9b82e7b8d1296c04c5ac4869a0922756d0ee8b289f7119983933c",
+              "entry_digest": "9a47d81bd23fae73da05242618d2b11ae05ad6e19f4b9d490273211d5a16d0f6",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "scripts/validate.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "69a39730c311814dcf830d290bedc06fca357cccccb521a85e93b62f0fca5387",
+              "entry_digest": "b14211f0e8cdef8d690e7cefc198dd0b851e96826c5aeb1b37bc0b94c1b74d1a",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-action/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "1661580523b64ddc04240c392d83c57a5766781b85d8b122a2f39547c4777ef5",
+              "entry_digest": "f0be1a006779e2c5468e550109063dd253ba1c815245f089a9aee988dbf9f6cb",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "specs/trust-action/trust-action.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8b6c716681ea94323928e5f15aa2ee99957744fd2782582aeebf1b45495a0517",
+              "entry_digest": "218b6318eb2206ff7a5c964011c96e0216832b72aa09effb72311d1ee9af8ca9",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "tests/test.sh",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "4c2b42f849f415b927c6065f8d23827aff09ac05c660c7e1c4b4f0c9ae40a8fd",
+              "entry_digest": "eb5b6d86697ed95d93624dbd5f5c65a87b0827e80f8d278e4bbc3a300ce15bc4",
+              "owners": [
+                "@exact:test"
+              ]
+            }
+          ]
+        },
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "f1abfcd14181ad36f90226be46899b22c10c33aa8e306ed59d32fb2092a1714e",
+      "current_acceptance_input_digest": "ee63379afd012bf70e5fd9fd2264997bf7ef8681190395b8a3f8cbb012e49ec1"
     }
   ]
 }
