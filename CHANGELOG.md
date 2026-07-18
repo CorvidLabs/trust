@@ -2,6 +2,10 @@
 
 ## [v1.1.0] - 2026-07-18
 
+> **Note:** The immutable `v1.0.1` tag is void: it points at the pre-release
+> commit `c8f969a` and its Release workflow failed the tag↔version check. Like
+> `v0.2.0`, it is retained unmodified for audit history. Install `v1.1.0`.
+
 ### Changes
 
 - adopt SpecSync 5.1.1 as the pinned contract toolchain (#17) (2f6a2ad)
