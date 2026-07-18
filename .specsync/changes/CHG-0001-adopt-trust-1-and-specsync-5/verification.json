@@ -1,9 +1,9 @@
 {
-  "timestamp": 1784403652,
-  "commit": "cccb7d224765e0c821957f4ddacd02ef0493c4c6",
+  "timestamp": 1784406874,
+  "commit": "220e95b454184e7c19148f29f4e84d41e3db88bb",
   "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
-  "workspace_digest": "cf4c7f8eb53ce451e501b96629d6b1202de57c2a08bd493e81f3314bba780ce4",
-  "acceptance_input_digest": "461452e2c24f2b5d7e0c6e1e106315a1370d59b1b91825a5ee944e7bb4caa10a",
+  "workspace_digest": "6337acc5989085ccb7413c61e983684d439f9c5d4c4870fc6e25a74386030798",
+  "acceptance_input_digest": "de8427f653dda73675b29c0a03a068c205147fe60739944af5ba97b3d0de783a",
   "acceptance_manifest": {
     "schema_version": 1,
     "entries": [
@@ -141,8 +141,8 @@
         "path": ".github/workflows/release.yml",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "3f4cf183a504c1080919a7ad1ccb100432227f9d367d1ae65ad5601162d79a26",
-        "entry_digest": "fc1f3500963e6f7628cd8f0f7e078ab8017fcc0f5634395199344329c1374405",
+        "payload_digest": "523ecd67629c36295163af75a97f4078931b9be9c78df9ad1715f8a3f3b2fd0c",
+        "entry_digest": "ee0871a7976ec272f1fd7701223938a698d413e775cb21f9553ec4a967f32770",
         "owners": [
           "@exact:delivery"
         ]
