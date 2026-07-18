@@ -83,6 +83,13 @@
       "timestamp": 1784331115,
       "digest": "1f8c15304d633a063dc1ec6b51a52ee937ed2381d729d7eceb384f47f430f05a",
       "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against pre-merge main head c18715c so the accepted evidence remains in main history after this PR's squash merge; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "user:0xLeif",
+      "timestamp": 1784394621,
+      "digest": "f78aeda9e19c5c95eee8de2313450df3ba537be6990e9523adcff92d7e790772",
+      "note": "Closing acceptance given explicitly by 0xLeif; verification re-recorded against release merge head 5fb7840 so the accepted evidence remains in main history after the PR's squash merge; canonical deltas were already integrated and were not replayed."
     }
   ],
   "reopenings": [
