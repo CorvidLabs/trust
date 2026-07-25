@@ -160,7 +160,7 @@ runs:
     - name: Contract gate
       if: steps.config.outputs.contract_enabled == 'true'
       id: contract
-      uses: CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65
+      uses: CorvidLabs/spec-sync@342bd053d410211c16fcd041a9eb94ed53012fe2
       with:
         version: ${{ steps.config.outputs.specsync_version }}
         download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}
