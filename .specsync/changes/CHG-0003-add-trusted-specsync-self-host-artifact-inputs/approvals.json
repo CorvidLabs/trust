@@ -146,6 +146,13 @@
       "timestamp": 1784407557,
       "digest": "bd91ad7ae633e7ef070043b13346071267cc4c0a80a004afed9e139646c1b91b",
       "note": "Re-acceptance on the 1.1.1 release tree; canonical deltas were already integrated and were not replayed."
+    },
+    {
+      "gate": "acceptance",
+      "actor": "0xLeif",
+      "timestamp": 1785174349,
+      "digest": "172204907b50cdac6b7b0fd93437ac19186ba9d9a4f51f1ecfbdc5530697f817",
+      "note": null
     }
   ],
   "reopenings": [
@@ -907,6 +914,127 @@
       },
       "stale_acceptance_input_digest": "f1abfcd14181ad36f90226be46899b22c10c33aa8e306ed59d32fb2092a1714e",
       "current_acceptance_input_digest": "ee63379afd012bf70e5fd9fd2264997bf7ef8681190395b8a3f8cbb012e49ec1"
+    },
+    {
+      "schema_version": 1,
+      "change_id": "CHG-0003-add-trusted-specsync-self-host-artifact-inputs",
+      "actor": "0xLeif",
+      "reason": "Bump pinned SpecSync to 5.2.0; delivery inputs changed",
+      "timestamp": 1785173981,
+      "from_state": "accepted",
+      "to_state": "verifying",
+      "superseded_approval": {
+        "gate": "acceptance",
+        "actor": "user:0xLeif",
+        "timestamp": 1784407557,
+        "digest": "bd91ad7ae633e7ef070043b13346071267cc4c0a80a004afed9e139646c1b91b",
+        "note": "Re-acceptance on the 1.1.1 release tree; canonical deltas were already integrated and were not replayed."
+      },
+      "prior_verification": {
+        "timestamp": 1784407550,
+        "commit": "15b4bf91c92df6fbd921da17afe78e2db9787143",
+        "contract_digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
+        "workspace_digest": "cf333b6a75becc6fd7cc3db6d8b0eeb22350709881b2dbacab2179510329e6f6",
+        "acceptance_input_digest": "ee63379afd012bf70e5fd9fd2264997bf7ef8681190395b8a3f8cbb012e49ec1",
+        "acceptance_manifest": {
+          "schema_version": 1,
+          "entries": [
+            {
+              "path": "CHANGELOG.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "7d1940ee5720bfe6ebfef4d2910ad3d35d80073cd2d39899c80f315bd5a89b2a",
+              "entry_digest": "49169cb76e3389dfecdc0673699af02d20d2f6bb8b5da7d6ed81c083029e6b37",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "README.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "c216c7c323cb5ee2fd9c3b62a3a6b5ea19c7128c6519b040dcbaf757e00df039",
+              "entry_digest": "c4e98e696b2a8e1ab5690208c69378bfecd779842f10e7e6177e104b9b8a7252",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "action.yml",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "452a6df87832c0b1d298ca4cc4e8e3af9effb9db859b4e0abac9ba09d85c6722",
+              "entry_digest": "70b9e9fbc58b9304b7bdf085ac254bf4bb4de04f04547851ba9e2d3be976645c",
+              "owners": [
+                "@exact:delivery"
+              ]
+            },
+            {
+              "path": "scripts/trust_cli.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "9e325a4f26d9b82e7b8d1296c04c5ac4869a0922756d0ee8b289f7119983933c",
+              "entry_digest": "9a47d81bd23fae73da05242618d2b11ae05ad6e19f4b9d490273211d5a16d0f6",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "scripts/validate.py",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "69a39730c311814dcf830d290bedc06fca357cccccb521a85e93b62f0fca5387",
+              "entry_digest": "b14211f0e8cdef8d690e7cefc198dd0b851e96826c5aeb1b37bc0b94c1b74d1a",
+              "owners": [
+                "trust-policy"
+              ]
+            },
+            {
+              "path": "specs/trust-action/requirements.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "1661580523b64ddc04240c392d83c57a5766781b85d8b122a2f39547c4777ef5",
+              "entry_digest": "f0be1a006779e2c5468e550109063dd253ba1c815245f089a9aee988dbf9f6cb",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "specs/trust-action/trust-action.spec.md",
+              "kind": "file",
+              "mode": 33188,
+              "payload_digest": "8b6c716681ea94323928e5f15aa2ee99957744fd2782582aeebf1b45495a0517",
+              "entry_digest": "218b6318eb2206ff7a5c964011c96e0216832b72aa09effb72311d1ee9af8ca9",
+              "owners": [
+                "trust-action"
+              ]
+            },
+            {
+              "path": "tests/test.sh",
+              "kind": "file",
+              "mode": 33261,
+              "payload_digest": "4c2b42f849f415b927c6065f8d23827aff09ac05c660c7e1c4b4f0c9ae40a8fd",
+              "entry_digest": "eb5b6d86697ed95d93624dbd5f5c65a87b0827e80f8d278e4bbc3a300ce15bc4",
+              "owners": [
+                "@exact:test"
+              ]
+            }
+          ]
+        },
+        "passed": true,
+        "commands": [
+          {
+            "command": "fledge lanes run verify",
+            "success": true,
+            "exit_code": 0
+          }
+        ],
+        "requirement_ids": [
+          "REQ-trust-action-010"
+        ]
+      },
+      "stale_acceptance_input_digest": "ee63379afd012bf70e5fd9fd2264997bf7ef8681190395b8a3f8cbb012e49ec1",
+      "current_acceptance_input_digest": "21d8bfd483ff62dacde52c6c02bf4e6c960d80d1f0caabbf6921f1d2143e3191"
     }
   ]
 }

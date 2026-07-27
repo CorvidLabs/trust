@@ -63,4 +63,5 @@ And lifecycle, contract, and risk still determine pass or failure
 | 2026-07-13 | Document trusted SpecSync self-host inputs in the provenance contract. |
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
 | 2026-07-18 | CHG-0009-adopt-specsync-5-1-1-as-the-pinned-contract-toolchain: Adopt SpecSync 5.1.1 as the pinned contract toolchain |
+| 2026-07-27 | Bump pinned SpecSync to 5.2.0 |
 | 2026-07-18 | CHG-0010-narrow-trust-provenance-to-its-canonical-recording-surface: Narrow trust-provenance to its canonical recording surface |

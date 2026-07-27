@@ -1,9 +1,9 @@
 {
-  "timestamp": 1784406874,
-  "commit": "220e95b454184e7c19148f29f4e84d41e3db88bb",
+  "timestamp": 1785174074,
+  "commit": "a861b4c1656fd20ced53d847ea69bc657d464e1d",
   "contract_digest": "2987544665f35b0df1e12151feac5bd98b3b9fa6d0937c1ec52bc88edc1164f6",
-  "workspace_digest": "6337acc5989085ccb7413c61e983684d439f9c5d4c4870fc6e25a74386030798",
-  "acceptance_input_digest": "de8427f653dda73675b29c0a03a068c205147fe60739944af5ba97b3d0de783a",
+  "workspace_digest": "b7c738b05052c5452ada6cd89bd6c66b7f597507ee9221eb3113bf80353766fa",
+  "acceptance_input_digest": "752c8a758c47ac7201c7599576d47bf10ff717063a4e034980db228442e2d14d",
   "acceptance_manifest": {
     "schema_version": 1,
     "entries": [
@@ -141,8 +141,8 @@
         "path": ".github/workflows/release.yml",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "523ecd67629c36295163af75a97f4078931b9be9c78df9ad1715f8a3f3b2fd0c",
-        "entry_digest": "ee0871a7976ec272f1fd7701223938a698d413e775cb21f9553ec4a967f32770",
+        "payload_digest": "5783e29d259f5551deae5027f87ec0957ea3772d385a47b7a12474342c3885e1",
+        "entry_digest": "2eb82b6f4d0adfcb9bba69b237ea3262411bffdc78563bfb0665c9a89010da04",
         "owners": [
           "@exact:delivery"
         ]
@@ -241,8 +241,8 @@
         "path": "specs/trust-action/requirements.md",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "1661580523b64ddc04240c392d83c57a5766781b85d8b122a2f39547c4777ef5",
-        "entry_digest": "f0be1a006779e2c5468e550109063dd253ba1c815245f089a9aee988dbf9f6cb",
+        "payload_digest": "7c1b5092f8adb47aba54944811e66d7ae2cda58850825cd683617d26397f6202",
+        "entry_digest": "bc9a1b02eb43dfb0831c6b82e4704de3e4566c002ab055f2aa1b6da77b505675",
         "owners": [
           "@exact:delivery"
         ]
@@ -251,8 +251,8 @@
         "path": "specs/trust-action/trust-action.spec.md",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "8b6c716681ea94323928e5f15aa2ee99957744fd2782582aeebf1b45495a0517",
-        "entry_digest": "218b6318eb2206ff7a5c964011c96e0216832b72aa09effb72311d1ee9af8ca9",
+        "payload_digest": "b6541a7c052003926bce33e8d1ca9939b49ce64df401e373e1f5853c8eb6e1ea",
+        "entry_digest": "7970aa4c351cae4ee28455e13935b88e0070acb68cd61c2cfda7b0d7e9278ec0",
         "owners": [
           "@exact:delivery"
         ]
@@ -291,8 +291,8 @@
         "path": "specs/trust-policy/trust-policy.spec.md",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "8945dc5c718906e15de7112eea5ecb7a5eedc0fb5304b9df3a32edca031913e6",
-        "entry_digest": "49f290b091101eac46698a0891337905a8754ecc468a2846ecb8bed01b8037b3",
+        "payload_digest": "872d6fbc9ede6e4186487eaab86549639775e4c76905d4c698f73006c42d0853",
+        "entry_digest": "265a20945567cf05407bd72c90446d6b3f0f3720481641f86036c67943a85079",
         "owners": [
           "@exact:delivery"
         ]
@@ -311,8 +311,8 @@
         "path": "specs/trust-provenance/trust-provenance.spec.md",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "dd49ace2cb02e8a94f2029c49f87b7ffda71ed531d7d0e8d580bd1c1b89cf534",
-        "entry_digest": "b958517223ab4287a76974a43467a4cd213907d940ab7d9e67a0ada32d22bb90",
+        "payload_digest": "06836fe571d49b35b7f861ed02c6220e321c75deacea21fd59d04b715763109c",
+        "entry_digest": "a9141801897d1cc76c5336467ca280fc9043b5174ebb304ebd73035b248f520e",
         "owners": [
           "@exact:delivery"
         ]

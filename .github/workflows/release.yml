@@ -56,9 +56,9 @@ jobs:
           chmod +x "$install_dir/fledge"
           echo "$install_dir" >> "$GITHUB_PATH"
       - name: Validate tagged source contract
-        uses: CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65 # v5.1.1
+        uses: CorvidLabs/spec-sync@ef3678c2587f446e8f154f722765791ba0a8eaea # v5.2.0
         with:
-          version: "5.1.1"
+          version: "5.2.0"
           root: .
           strict: "true"
           require-coverage: "100"
@@ -110,10 +110,10 @@ jobs:
           git -C "$FIXTURE" push -q -u origin HEAD:main
           fledge trust adopt --dry-run --root "$FIXTURE"
           fledge trust adopt --root "$FIXTURE"
-      - name: Install pinned SpecSync 5.1.1
-        uses: CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65 # v5.1.1
+      - name: Install pinned SpecSync 5.2.0
+        uses: CorvidLabs/spec-sync@ef3678c2587f446e8f154f722765791ba0a8eaea # v5.2.0
         with:
-          version: "5.1.1"
+          version: "5.2.0"
           root: ${{ runner.temp }}/trust-tag-dogfood
           strict: "true"
           require-coverage: "100"
