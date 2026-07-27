@@ -1,9 +1,9 @@
 {
-  "timestamp": 1785174119,
-  "commit": "a861b4c1656fd20ced53d847ea69bc657d464e1d",
+  "timestamp": 1785176165,
+  "commit": "ac82e836d02769dad9fc3eab8e28f668dc88ccc5",
   "contract_digest": "ce17dd055bac071cd431dd83faaf70f20d85811b1af476f79743aaec61114aa7",
-  "workspace_digest": "b7c738b05052c5452ada6cd89bd6c66b7f597507ee9221eb3113bf80353766fa",
-  "acceptance_input_digest": "2d7d717d722c41330b6e25bd05598b171517c0d769723edf634aebb08b238684",
+  "workspace_digest": "b25e5ac6217e04203edf8d8906824885c7cc42aa627fdc940c81c1c57a5bdbb8",
+  "acceptance_input_digest": "46ea3c1fd4efdc4f019c6245fd0012684328bfcc0ecfb37e715657e34448996b",
   "acceptance_manifest": {
     "schema_version": 1,
     "entries": [
@@ -31,8 +31,8 @@
         "path": "plugin.toml",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "3a0cc3814ab0c4c95ed73dd95cea2ea68d754aeb57d035f0e5452432725c5f8a",
-        "entry_digest": "8b8d1a6dd7b2cc75da4b17fa047692b270e11935c02bc088804092f8edda2353",
+        "payload_digest": "d1c9b7db4a57d9520ab3e3c869c035238c7e3e5971d91c1c9d91492700d250ad",
+        "entry_digest": "1c80b47c78074c485cb594f8a2c414d03b2bc0a739f894b18b7e7293553ddf76",
         "owners": [
           "trust-plugin"
         ]
