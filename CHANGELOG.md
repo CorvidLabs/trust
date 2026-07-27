@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.1.2] - 2026-07-27
+
+### Changes
+
+- bump pinned SpecSync to v5.2.0 (#25) (cc4244d)
+
 ## [v1.1.1] - 2026-07-18
 
 > **Note:** The immutable `v1.1.0` tag is also void: its Release workflow
