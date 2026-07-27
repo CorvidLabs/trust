@@ -164,8 +164,8 @@ for required in (
     'push -q origin refs/notes/attest',
     "COMPONENT_BIN:",
     "Validate tagged source contract",
-    "CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65 # v5.1.1",
-    'version: "5.1.1"',
+    "CorvidLabs/spec-sync@342bd053d410211c16fcd041a9eb94ed53012fe2 # v5.2.0",
+    'version: "5.2.0"',
     "needs: exact-tag-dogfood",
     "args=(release create",
     'python3 scripts/release_channel.py "$REF_NAME"',
@@ -179,7 +179,7 @@ action = (ROOT / "action.yml").read_text(encoding="utf-8")
 if "atlas-enabled:" not in action:
     fail("action.yml must expose the committed Atlas publication decision")
 dependencies = {
-    "CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65": "5.1.1",
+    "CorvidLabs/spec-sync@342bd053d410211c16fcd041a9eb94ed53012fe2": "5.2.0",
     "CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0": "1.0.0",
     "CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2": "1.0.0",
 }

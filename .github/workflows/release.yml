@@ -12,10 +12,10 @@ jobs:
     name: Validate tagged source
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.11"
       - name: Install validation dependency
@@ -56,9 +56,9 @@ jobs:
           chmod +x "$install_dir/fledge"
           echo "$install_dir" >> "$GITHUB_PATH"
       - name: Validate tagged source contract
-        uses: CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65 # v5.1.1
+        uses: CorvidLabs/spec-sync@342bd053d410211c16fcd041a9eb94ed53012fe2 # v5.2.0
         with:
-          version: "5.1.1"
+          version: "5.2.0"
           root: .
           strict: "true"
           require-coverage: "100"
@@ -68,7 +68,7 @@ jobs:
     needs: validate-tag
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Install pinned Fledge 1.7.0
@@ -111,9 +111,9 @@ jobs:
           fledge trust adopt --dry-run --root "$FIXTURE"
           fledge trust adopt --root "$FIXTURE"
       - name: Install pinned SpecSync 5.1.1
-        uses: CorvidLabs/spec-sync@a89d827e93fa0bc9e6168447e66a0ad30fa92e65 # v5.1.1
+        uses: CorvidLabs/spec-sync@342bd053d410211c16fcd041a9eb94ed53012fe2 # v5.2.0
         with:
-          version: "5.1.1"
+          version: "5.2.0"
           root: ${{ runner.temp }}/trust-tag-dogfood
           strict: "true"
           require-coverage: "100"
@@ -170,7 +170,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Create GitHub release
