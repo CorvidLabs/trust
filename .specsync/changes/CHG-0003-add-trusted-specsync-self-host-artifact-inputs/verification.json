@@ -1,9 +1,9 @@
 {
-  "timestamp": 1785174152,
-  "commit": "a861b4c1656fd20ced53d847ea69bc657d464e1d",
+  "timestamp": 1785176196,
+  "commit": "ac82e836d02769dad9fc3eab8e28f668dc88ccc5",
   "contract_digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
-  "workspace_digest": "b7c738b05052c5452ada6cd89bd6c66b7f597507ee9221eb3113bf80353766fa",
-  "acceptance_input_digest": "21d8bfd483ff62dacde52c6c02bf4e6c960d80d1f0caabbf6921f1d2143e3191",
+  "workspace_digest": "b25e5ac6217e04203edf8d8906824885c7cc42aa627fdc940c81c1c57a5bdbb8",
+  "acceptance_input_digest": "d814dce1ff47257be95a276f12b11f640aa08d647019e81d38e8b9edce6d458d",
   "acceptance_manifest": {
     "schema_version": 1,
     "entries": [
@@ -11,8 +11,8 @@
         "path": "CHANGELOG.md",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "7d1940ee5720bfe6ebfef4d2910ad3d35d80073cd2d39899c80f315bd5a89b2a",
-        "entry_digest": "49169cb76e3389dfecdc0673699af02d20d2f6bb8b5da7d6ed81c083029e6b37",
+        "payload_digest": "30ebefd4eecb1efd6eff15ed88b24f7a4dd45f25c9a28a66ea26d3616c6e54f4",
+        "entry_digest": "f7e98ecc9f838be28b84af65af8bd84b467adfc73d28307c7579f00b4f7540b6",
         "owners": [
           "@exact:delivery"
         ]
@@ -21,8 +21,8 @@
         "path": "README.md",
         "kind": "file",
         "mode": 33188,
-        "payload_digest": "784130ed87df112dba9532c39b4ea68fad34603712760e3dbabe0b8adc00cb58",
-        "entry_digest": "228585c2d27bc34e3b39d38cf6249de6924d51a5bba98d7a8eeafc47c131d69c",
+        "payload_digest": "aed10c0c3f1562d29b2fe31c0446462e4ea23ecba516fbe93512320c6e049769",
+        "entry_digest": "5c318bdc446eb9ac9652318627d7266b1e692acafc972985da85a8ffed8d95c1",
         "owners": [
           "@exact:delivery"
         ]
