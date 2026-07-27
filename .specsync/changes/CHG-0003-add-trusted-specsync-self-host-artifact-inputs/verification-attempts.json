@@ -153,6 +153,23 @@
       "requirement_ids": [
         "REQ-trust-action-010"
       ]
+    },
+    {
+      "timestamp": 1785174152,
+      "commit": "a861b4c1656fd20ced53d847ea69bc657d464e1d",
+      "contract_digest": "592282f4147aa8760a0f14ba5c7424a87c63d3ee563993666d94b49a334941ec",
+      "workspace_digest": "b7c738b05052c5452ada6cd89bd6c66b7f597507ee9221eb3113bf80353766fa",
+      "passed": true,
+      "commands": [
+        {
+          "command": "fledge lanes run verify",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
     }
   ]
 }
