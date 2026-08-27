@@ -84,3 +84,4 @@ Then the formula installs both components under the corvid-trust bundle
 | 2026-07-12 | Split focused public contracts into dedicated companions. |
 | 2026-07-13 | Map release workflow, component exposure, and Homebrew formula artifacts to the distribution contract. |
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
+| 2026-08-27 | pin-specsync-6-0-0-rc-9-as-the-trust-1-2-0-rc-1-contract-toolchain: Pin SpecSync 6.0.0-rc.9 as the Trust 1.2.0-rc.1 contract toolchain |

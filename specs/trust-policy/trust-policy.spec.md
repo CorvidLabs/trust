@@ -32,7 +32,7 @@ optional explicit range, and only stricter profile or risk overrides. Machine
 status is schema-versioned configuration health; composite Action outputs expose
 gate component results. Its ledger migration utility backfills pre-5.1
 reopening evidence so earlier change records validate under the pinned SpecSync
-5.2.0 toolchain.
+6.0.0-rc.9 toolchain.
 
 ## Invariants
 
@@ -75,3 +75,4 @@ But rejects any attempt to disable contract or provenance enforcement
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
 | 2026-07-18 | CHG-0009-adopt-specsync-5-1-1-as-the-pinned-contract-toolchain: Adopt SpecSync 5.1.1 as the pinned contract toolchain |
 | 2026-07-27 | Bump pinned SpecSync to 5.2.0 |
+| 2026-08-27 | pin-specsync-6-0-0-rc-9-as-the-trust-1-2-0-rc-1-contract-toolchain: Pin SpecSync 6.0.0-rc.9 as the Trust 1.2.0-rc.1 contract toolchain |

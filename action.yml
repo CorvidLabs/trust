@@ -28,9 +28,9 @@ inputs:
     required: false
     default: ""
   specsync-version:
-    description: "Exact SpecSync version; normal consumers keep the released 5.2.0 default."
+    description: "Exact SpecSync version; normal consumers keep the 6.0.0-rc.9 default."
     required: false
-    default: "5.2.0"
+    default: "6.0.0-rc.9"
   specsync-download-base-url:
     description: "Advanced self-hosting mirror: an authority-free file URL confined beneath runner.temp."
     required: false
@@ -155,12 +155,12 @@ runs:
           --specsync-download-base-url "$SPECSYNC_DOWNLOAD_BASE_URL" \
           --runner-temp "$RUNNER_TEMP"
 
-    # SpecSync action code is pinned at v5.2.0. The binary defaults to 5.2.0;
+    # SpecSync action code is pinned at v6.0.0-rc.9. The binary defaults to 6.0.0-rc.9;
     # a governed self-host workflow may select a validated runner-local mirror.
     - name: Contract gate
       if: steps.config.outputs.contract_enabled == 'true'
       id: contract
-      uses: CorvidLabs/spec-sync@ef3678c2587f446e8f154f722765791ba0a8eaea
+      uses: CorvidLabs/spec-sync@783a6d0ce2089c0f5c109dc795ac156518325727
       with:
         version: ${{ steps.config.outputs.specsync_version }}
         download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}
