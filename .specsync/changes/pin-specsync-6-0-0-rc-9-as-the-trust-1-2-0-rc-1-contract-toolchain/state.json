@@ -9,7 +9,7 @@
   "state": "verifying",
   "base_commit": "887c7d74828cc0c7e2f620bdd0325ac8ca9250d1",
   "created_at": 1787873431,
-  "updated_at": 1787874029,
+  "updated_at": 1787874198,
   "affected_specs": [
     "trust-action",
     "trust-policy",
