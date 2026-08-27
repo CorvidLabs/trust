@@ -92,8 +92,8 @@ outside = temporary / "outside"
 mirror.mkdir(parents=True)
 spaced_mirror.mkdir()
 outside.mkdir()
-version, base = trust_cli.resolve_specsync_inputs("5.2.0", "", "")
-if (version, base) != ("5.2.0", ""):
+version, base = trust_cli.resolve_specsync_inputs("6.0.0-rc.9", "", "")
+if (version, base) != ("6.0.0-rc.9", ""):
     raise AssertionError("released defaults changed")
 version, base = trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
 if (version, base) != ("5.0.1", mirror.resolve().as_uri()):
@@ -103,6 +103,7 @@ if (version, base) != ("5.0.1-alpha.0+build.01", spaced_mirror.resolve().as_uri(
     raise AssertionError("valid percent-encoded mirror path or semantic version was rejected")
 
 invalid = [
+    ("5.2.0", "", ""),
     ("5.0.2", "", ""),
     ("5.0.1", "", ""),
     ("5.0.1-alpha.0+build.01", "", ""),
