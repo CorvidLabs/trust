@@ -33,7 +33,7 @@ not supported as public CLI interfaces.
 ## Behavioral Examples
 
 ```text
-Given Trust 1.2.0-rc.1 is installed as a tagged Fledge plugin
+Given Trust 1.2.0-rc.2 is installed as a tagged Fledge plugin
 When fledge trust doctor runs
 Then the launcher executes the bundled implementation
 And returns its exact exit status
@@ -58,4 +58,4 @@ And returns its exact exit status
 | 2026-07-12 | Stable Trust 1.0 plugin contract. |
 | 2026-07-13 | Map CLI adoption, status, and version behavior to its implementation. |
 | 2026-07-13 | CHG-0005-close-trust-1-0-1-contract-validation-and-canonical-quality-gaps: Close Trust 1.0.1 contract validation and canonical quality gaps |
-| 2026-08-27 | pin-specsync-6-0-0-rc-9-as-the-trust-1-2-0-rc-1-contract-toolchain: Pin SpecSync 6.0.0-rc.9 as the Trust 1.2.0-rc.1 contract toolchain |
+| 2026-08-27 | pin-specsync-6-0-0-rc-9-as-the-trust-1-2-0-rc-1-contract-toolchain: Pin SpecSync 6.0.0-rc.9 as the Trust 1.2.0-rc.2 contract toolchain |
