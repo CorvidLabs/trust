@@ -6,10 +6,11 @@
   "title": "Pin SpecSync 6.0.0-rc.9 as the Trust 1.2.0-rc.1 contract toolchain",
   "description": "Pin SpecSync 6.0.0-rc.9 as the Trust 1.2.0-rc.1 contract toolchain",
   "kind": "migration",
-  "state": "verifying",
+  "state": "accepted",
+  "canonical_applied": true,
   "base_commit": "887c7d74828cc0c7e2f620bdd0325ac8ca9250d1",
   "created_at": 1787873431,
-  "updated_at": 1787874198,
+  "updated_at": 1787875156,
   "affected_specs": [
     "trust-action",
     "trust-policy",

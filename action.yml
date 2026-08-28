@@ -129,12 +129,29 @@ runs:
         fi
         echo "$INSTALL_ROOT/bin" >> "$GITHUB_PATH"
 
+    - name: Install pinned SpecSync
+      id: specsync_install
+      shell: bash
+      env:
+        SPECSYNC_VERSION: ${{ steps.config.outputs.specsync_version }}
+        SPECSYNC_DOWNLOAD_BASE_URL: ${{ steps.config.outputs.specsync_download_base_url }}
+        RUNNER_TEMP: ${{ runner.temp }}
+      run: |
+        set -euo pipefail
+        binary="$(python3 "$GITHUB_ACTION_PATH/scripts/trust_cli.py" action-install-specsync \
+          --specsync-version "$SPECSYNC_VERSION" \
+          --specsync-download-base-url "$SPECSYNC_DOWNLOAD_BASE_URL" \
+          --runner-temp "$RUNNER_TEMP")"
+        echo "binary=$binary" >> "$GITHUB_OUTPUT"
+        echo "$(dirname "$binary")" >> "$GITHUB_PATH"
+
     - name: Lifecycle verification
       id: lifecycle
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       env:
         TRUST_CONFIG: ${{ inputs.config }}
+        SPECSYNC_PINNED_BIN: ${{ steps.specsync_install.outputs.binary }}
       run: |
         set -euo pipefail
         python3 "$GITHUB_ACTION_PATH/scripts/trust_cli.py" action-lifecycle \

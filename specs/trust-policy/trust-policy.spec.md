@@ -1,6 +1,6 @@
 ---
 module: trust-policy
-version: 7
+version: 8
 status: stable
 files:
   - scripts/validate.py

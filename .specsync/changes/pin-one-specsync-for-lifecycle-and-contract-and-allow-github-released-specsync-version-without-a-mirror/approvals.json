@@ -1,0 +1,25 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1787874965,
+      "digest": "61fc03a58f59ce0e7e80f6d240c36113c00de88efca3fde3c2d5b78d71d5286f",
+      "note": "Issue #29: pin SpecSync for lifecycle and allow GitHub-released specsync-version without a mirror.",
+      "approved_delta_digests": {
+        "trust-action": "0dba1a9d553ed5be52a8bc1372ca37b08d373baef56ff4c14edd5bad8fed8b90"
+      }
+    },
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1787875046,
+      "digest": "26ec496b0785087eabfed35a4bfec01310231ee1795f3dca4c9754b40352afae",
+      "note": "Re-approve after depending on the SpecSync 6.0.0-rc.9 pin change.",
+      "approved_delta_digests": {
+        "trust-action": "0dba1a9d553ed5be52a8bc1372ca37b08d373baef56ff4c14edd5bad8fed8b90"
+      }
+    }
+  ],
+  "reopenings": []
+}

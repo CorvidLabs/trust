@@ -1,6 +1,6 @@
 ---
 module: trust
-version: 6
+version: 7
 status: active
 files:
   - scripts/render_homebrew_formula.py
