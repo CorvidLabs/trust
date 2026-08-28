@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 11
+version: 12
 status: stable
 files:
   - action.yml
@@ -63,6 +63,7 @@ Augur risk, progressive Attest provenance, and optional Atlas publication.
 4. Atlas is disabled unless committed policy explicitly enables it.
 5. Generated workflows keep Pages write permissions outside the Trust job.
 6. SpecSync artifact overrides are local, checksummed, confined beneath `RUNNER_TEMP`, and resolved before lifecycle execution.
+7. Lifecycle uses the same resolved SpecSync binary the contract step will use; runner PATH cannot select another SpecSync.
 
 ## Behavioral Examples
 
@@ -102,3 +103,4 @@ And missing provenance may report degraded rather than failed
 | 2026-07-18 | CHG-0009-adopt-specsync-5-1-1-as-the-pinned-contract-toolchain: Adopt SpecSync 5.1.1 as the pinned contract toolchain |
 | 2026-07-27 | Bump pinned SpecSync to 5.2.0 |
 | 2026-08-27 | pin-specsync-6-0-0-rc-9-as-the-trust-1-2-0-rc-1-contract-toolchain: Pin SpecSync 6.0.0-rc.9 as the Trust 1.2.0-rc.1 contract toolchain |
+| 2026-08-27 | pin-one-specsync-for-lifecycle-and-contract-and-allow-github-released-specsync-version-without-a-mirror: Pin one SpecSync for lifecycle and contract |

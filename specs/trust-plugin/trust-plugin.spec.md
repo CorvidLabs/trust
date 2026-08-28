@@ -1,6 +1,6 @@
 ---
 module: trust-plugin
-version: 6
+version: 7
 status: stable
 files:
   - bin/fledge-trust

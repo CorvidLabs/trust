@@ -1,6 +1,6 @@
 ---
 id: pin-specsync-6-0-0-rc-9-as-the-trust-1-2-0-rc-1-contract-toolchain
-state: implementing
+state: accepted
 type: migration
 base_commit: 887c7d74828cc0c7e2f620bdd0325ac8ca9250d1
 ---

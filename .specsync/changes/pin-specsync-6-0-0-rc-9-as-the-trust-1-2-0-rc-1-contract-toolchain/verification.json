@@ -1,8 +1,194 @@
 {
-  "timestamp": 1787874196,
-  "commit": "b3866b1411827620069643981349866feb18126c",
+  "timestamp": 1787875132,
+  "commit": "e964e042f7f2756333d4c46e685a4a6dc09077de",
   "contract_digest": "2f92767d8014d21d11b93846d418849bccd37876b608dbddeaf97280e3f40275",
   "workspace_digest": "b70c8fa694dae598dc58c14e82afedbb541eaf53f2e35b0f3defc094c1348c59",
+  "acceptance_input_digest": "239be0b1ee5fcba41799d2260caf30f7730a22a5ae69733073f005e149c51520",
+  "acceptance_manifest": {
+    "schema_version": 1,
+    "entries": [
+      {
+        "path": ".github/workflows/release.yml",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "442928b9bf3aa1c861f0e9a21e88628a4b4417cb04c8a1f1d602b5290874c35a",
+        "entry_digest": "0f653cd3b070690206534d0ec78786de643463c581a76a0d39a7f90d9864e7b2",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "README.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "991a0d8f978a92d9e1e2b9660a39b9cfff2aa90e1dc0cd1cf96dae6d9efee6b5",
+        "entry_digest": "88dc37c337d87bd6698ef049fbd50fc6edeba55be193b43fb4182f8a1adcf074",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "RELEASING.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "818323e70a777249b5319a122f1a1850bf236302fc079af7c9243834b4da23bb",
+        "entry_digest": "bb0867733f05814190b7b399a34051022615c884ee6d3db545b30dc1b5c4c026",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "action.yml",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "1acb5310405cdeec84411760d017a130ddeed35b5d4f735f26c0023790e327c0",
+        "entry_digest": "ddbd0f86bde8e6129879f172be4ba5099d90b007a888c251933bbfafafdae433",
+        "owners": [
+          "@exact:delivery"
+        ]
+      },
+      {
+        "path": "plugin.toml",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "3723ad66b1d1c2352f37d7be0a40fdf95c9a446e46bfbb82dd1e4dc7787af114",
+        "entry_digest": "fc47cf3fbd022469cd937d15564bd89dee46ec5b334320fc562b83c67e302202",
+        "owners": [
+          "trust-plugin"
+        ]
+      },
+      {
+        "path": "scripts/trust_cli.py",
+        "kind": "file",
+        "mode": 33261,
+        "payload_digest": "7b559e1e32b201c10701fdee47d5959e02bd4c6d94383f3590d69f333f1a55e2",
+        "entry_digest": "904e05941d286b163df02ce5810e2311300a9772dffb3e2a0c50a88d44253e29",
+        "owners": [
+          "trust-action"
+        ]
+      },
+      {
+        "path": "scripts/validate.py",
+        "kind": "file",
+        "mode": 33261,
+        "payload_digest": "e459baf78738695ce096735dbbb7b7dbf6091c24355ab56befa6140c4c0895f2",
+        "entry_digest": "7cc10f2f51a0c5fd06d00ba356c0b3642b03c0b3233186a5f2ccc295ad40c3c1",
+        "owners": [
+          "trust-policy"
+        ]
+      },
+      {
+        "path": "specs/trust-action/requirements.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "b5b4c3bcecf886d995f76d0d1ab31d1f58ee45a30d64a270a254bf8047531102",
+        "entry_digest": "758c96a187fe7d075b1236bb101e4b2c6545bddc43cdbbc9330fe8c7e3fa84d5",
+        "owners": [
+          "trust-action"
+        ]
+      },
+      {
+        "path": "specs/trust-action/trust-action.spec.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "c74cc300f77bc4c216a6c813653f86743ca3ca622c210a488227f4057c09b231",
+        "entry_digest": "c0bfcc01dde634389bebb449bcf7bdbcefddc5bdbd16c7209de33177d9e496c7",
+        "owners": [
+          "trust-action"
+        ]
+      },
+      {
+        "path": "specs/trust-plugin/requirements.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "8a1f113b43aad96f8f5f78e4774d3cfe090729b0fa5341b5f6a0b65e4eccb503",
+        "entry_digest": "1a582b8743d78354a11b7380412ca5c3d1661925f07be946593d941adc4d0d8d",
+        "owners": [
+          "trust-plugin"
+        ]
+      },
+      {
+        "path": "specs/trust-plugin/trust-plugin.spec.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "d49b81dc49a1a9a8d8d079e7ee998d3f9408d88f469f775355d7dfa6c9794460",
+        "entry_digest": "a67e4858aa0104a0fcb802f0896f3be006b57dd19b0345ac5be5b9b0c35fe6ce",
+        "owners": [
+          "trust-plugin"
+        ]
+      },
+      {
+        "path": "specs/trust-policy/requirements.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "899c1839574c7476981cb8f4f11999c72d207aa4fb6e56a28bbf8d2d652694cc",
+        "entry_digest": "5f251f2d36a321bfbb6ea873d9a96c17eb125a937c0b36ade246d1768a8bddf6",
+        "owners": [
+          "trust-policy"
+        ]
+      },
+      {
+        "path": "specs/trust-policy/trust-policy.spec.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "76db07747814ed2c80dc6ff41fb5a066fb75953a8de763d7193c63cb9e2b7abe",
+        "entry_digest": "1f045d3efd2f4acfc5109cf4c89174a5840a2aaaecdf1b4ce9d25fea683afbcc",
+        "owners": [
+          "trust-policy"
+        ]
+      },
+      {
+        "path": "specs/trust/context.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "baea4ba1fb23a914aea414902dc3ce2eb34cbdf1c6f215304e182349f2856a66",
+        "entry_digest": "5200f4c3851c08b15efbd8160129a5bd8411731c0725fcc3ee5ffed54fdbcb0a",
+        "owners": [
+          "trust"
+        ]
+      },
+      {
+        "path": "specs/trust/requirements.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "332c991e05a4f537d78812e62bb83867ff476ee8d76da07ff5ae0dd827e7f59f",
+        "entry_digest": "90f8547e25fc305c5669269d41e8f9186e7a7671e9b61a5167b472849b0eae48",
+        "owners": [
+          "trust"
+        ]
+      },
+      {
+        "path": "specs/trust/tasks.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "716287f1431891596879dc3bbeaa6e301874541c0743aba4ab764c88e49010d8",
+        "entry_digest": "822e66732d87f005ab1b6607ceea218dfa92a8e478202a07b904c8016d86ebf8",
+        "owners": [
+          "trust"
+        ]
+      },
+      {
+        "path": "specs/trust/testing.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "0f8d088a13eb81683cd9d00734b8afb07c8b7e5f3cc3c9c6853b778ee88f8ab3",
+        "entry_digest": "6193766d1826aa3277100512445e0b140a89b94bb782e9e283f961767b73bf94",
+        "owners": [
+          "trust"
+        ]
+      },
+      {
+        "path": "specs/trust/trust.spec.md",
+        "kind": "file",
+        "mode": 33188,
+        "payload_digest": "e6abeba265fe107aa471fdb5416aa2c7a99f64b4cb772893d629397046b9ae4b",
+        "entry_digest": "8cf56ca123d90069adaa469aaf20d6a69dfa88cbe9d7921d50f6a5051448f1f0",
+        "owners": [
+          "trust"
+        ]
+      }
+    ]
+  },
   "passed": true,
   "commands": [
     {

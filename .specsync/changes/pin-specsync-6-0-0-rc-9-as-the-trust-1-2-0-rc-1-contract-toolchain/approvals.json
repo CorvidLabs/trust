@@ -12,6 +12,13 @@
         "trust-plugin": "b91591dcfe9560f0a87bb3590972d23efe3e8148b638dfcdc963945b928c0723",
         "trust-policy": "8942bc360552879c1113c2cecc6d6f905e698430a1b75b967e63028aef4a7d56"
       }
+    },
+    {
+      "gate": "acceptance",
+      "actor": "0xLeif",
+      "timestamp": 1787875156,
+      "digest": "4201cd2eb9855b3d6b4c65d28b918e6a9174b3510267ada95832b6458ec9519f",
+      "note": "Closing approval already given; re-verified after squash merge to main."
     }
   ],
   "reopenings": []

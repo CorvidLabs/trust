@@ -3,18 +3,22 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import asdict, dataclass
+import hashlib
+import io
 import json
 import os
 from pathlib import Path
+import platform
 import re
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 from typing import Any
 import uuid
 from urllib.parse import urlsplit
-from urllib.request import url2pathname
+from urllib.request import url2pathname, urlopen
 
 
 __all__ = []
@@ -37,6 +41,7 @@ RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
 PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
 DEFAULT_ATLAS_SKIP_REASON = "Atlas publication was not enabled during adoption"
 DEFAULT_SPECSYNC_VERSION = "6.0.0-rc.9"
+SPECSYNC_GITHUB_DOWNLOAD = "https://github.com/CorvidLabs/spec-sync/releases/download"
 SPECSYNC_VERSION_PATTERN = re.compile(
     r"^(?:0|[1-9][0-9]*)\."
     r"(?:0|[1-9][0-9]*)\."
@@ -768,8 +773,6 @@ def resolve_specsync_inputs(version: str, download_base_url: str, runner_temp: s
     if SPECSYNC_VERSION_PATTERN.fullmatch(version) is None:
         raise TrustError("specsync-version must be an exact semantic version")
     if not download_base_url:
-        if version != DEFAULT_SPECSYNC_VERSION:
-            raise TrustError("non-default specsync-version requires a validated local mirror")
         return version, ""
     if any(ord(character) < 32 or ord(character) == 127 for character in download_base_url):
         raise TrustError("specsync-download-base-url must not contain control characters")
@@ -811,6 +814,128 @@ def resolve_specsync_inputs(version: str, download_base_url: str, runner_temp: s
         raise TrustError("SpecSync local mirror must be a child of RUNNER_TEMP")
     validate_specsync_mirror_entries(mirror, boundary)
     return version, mirror.as_uri()
+
+
+def detect_specsync_platform() -> tuple[str, str]:
+    runner = os.environ.get("RUNNER_OS", "")
+    if runner == "Windows" or sys.platform.startswith("win"):
+        raise TrustError("SpecSync 6.0 has no Windows binary; run Trust on Linux or macOS")
+    if runner == "Linux" or sys.platform.startswith("linux"):
+        os_name = "linux"
+    elif runner == "macOS" or sys.platform == "darwin":
+        os_name = "macos"
+    else:
+        raise TrustError(f"SpecSync has no Trust-supported asset for {runner or sys.platform}")
+    machine = platform.machine().lower()
+    if machine in {"x86_64", "amd64"}:
+        arch = "x86_64"
+    elif machine in {"aarch64", "arm64"}:
+        arch = "aarch64"
+    else:
+        raise TrustError(f"SpecSync has no Trust-supported asset for {machine}")
+    return os_name, arch
+
+
+def specsync_asset_urls(version: str, download_base_url: str, os_name: str, arch: str) -> tuple[str, str, str]:
+    archive = f"specsync-{os_name}-{arch}.tar.gz"
+    if download_base_url:
+        base = download_base_url.rstrip("/")
+    else:
+        base = f"{SPECSYNC_GITHUB_DOWNLOAD}/v{version}"
+    return f"{base}/{archive}", f"{base}/{archive}.sha256", archive
+
+
+def download_bytes(url: str) -> bytes:
+    if url.startswith("file:"):
+        path = Path(url2pathname(urlsplit(url).path))
+        try:
+            return path.read_bytes()
+        except OSError as error:
+            raise TrustError(f"cannot read SpecSync local mirror asset: {error}") from error
+    try:
+        with urlopen(url, timeout=60) as response:
+            return response.read()
+    except OSError as error:
+        raise TrustError(f"cannot download SpecSync asset: {error}") from error
+
+
+def verify_sha256(archive_bytes: bytes, checksum_text: str, archive_name: str) -> None:
+    expected = None
+    for line in checksum_text.splitlines():
+        parts = line.split()
+        if len(parts) >= 2 and parts[-1].lstrip("*") == archive_name:
+            expected = parts[0]
+            break
+        if len(parts) >= 1 and expected is None:
+            expected = parts[0]
+    if expected is None:
+        raise TrustError("SpecSync checksum file is empty")
+    actual = hashlib.sha256(archive_bytes).hexdigest()
+    if actual != expected:
+        raise TrustError(f"SpecSync checksum mismatch (expected {expected}, got {actual})")
+
+
+def install_specsync(
+    version: str,
+    download_base_url: str,
+    runner_temp: str,
+    os_name: str | None = None,
+    arch: str | None = None,
+) -> Path:
+    if not runner_temp:
+        raise TrustError("RUNNER_TEMP is required to install SpecSync")
+    detected_os, detected_arch = (os_name, arch) if os_name and arch else detect_specsync_platform()
+    os_name = os_name or detected_os
+    arch = arch or detected_arch
+    archive_url, checksum_url, archive_name = specsync_asset_urls(version, download_base_url, os_name, arch)
+    install_root = Path(runner_temp) / "corvid-trust-specsync"
+    bin_dir = install_root / "bin"
+    binary = bin_dir / "specsync"
+    if binary.is_file():
+        return binary
+    archive_bytes = download_bytes(archive_url)
+    checksum_text = download_bytes(checksum_url).decode("utf-8")
+    verify_sha256(archive_bytes, checksum_text, archive_name)
+    bin_dir.mkdir(parents=True, exist_ok=True)
+    try:
+        with tarfile.open(fileobj=io.BytesIO(archive_bytes), mode="r:gz") as archive:
+            archive.extractall(install_root)
+    except tarfile.TarError as error:
+        raise TrustError(f"SpecSync archive is not a valid tar.gz: {error}") from error
+    extracted = install_root / f"specsync-{os_name}-{arch}"
+    if not extracted.is_file():
+        raise TrustError(f"SpecSync archive did not contain {extracted.name}")
+    extracted.replace(binary)
+    binary.chmod(0o755)
+    return binary
+
+
+def warn_if_path_specsync_differs(pinned: Path) -> None:
+    found = shutil.which("specsync")
+    if found is None:
+        return
+    if Path(found).resolve() != pinned.resolve():
+        print(
+            f"::warning::Ignoring PATH SpecSync {found}; using Trust-pinned {pinned}",
+            file=sys.stderr,
+        )
+
+
+def action_install_specsync(arguments: argparse.Namespace) -> int:
+    version, download_base_url = resolve_specsync_inputs(
+        arguments.specsync_version,
+        arguments.specsync_download_base_url,
+        arguments.runner_temp,
+    )
+    binary = install_specsync(version, download_base_url, arguments.runner_temp)
+    warn_if_path_specsync_differs(binary)
+    output = os.environ.get("GITHUB_OUTPUT")
+    if output:
+        with open(output, "a", encoding="utf-8") as stream:
+            stream.write(f"binary={binary}\n")
+            stream.write(f"bin_dir={binary.parent}\n")
+    print(binary)
+    return 0
 
 
 def action_resolve(arguments: argparse.Namespace) -> int:
@@ -944,6 +1069,13 @@ def status(arguments: argparse.Namespace) -> int:
 
 
 def action_lifecycle(arguments: argparse.Namespace) -> int:
+    pinned = os.environ.get("SPECSYNC_PINNED_BIN", "")
+    if pinned:
+        pinned_path = Path(pinned)
+        if not pinned_path.is_file():
+            raise TrustError(f"Trust-pinned SpecSync is missing: {pinned_path}")
+        warn_if_path_specsync_differs(pinned_path)
+        os.environ["PATH"] = f"{pinned_path.parent}{os.pathsep}{os.environ.get('PATH', '')}"
     root = Path(arguments.working_directory).resolve()
     config = load_config(root / arguments.config)
     run(config.lifecycle_command, cwd=root)
@@ -1087,6 +1219,11 @@ def parser() -> argparse.ArgumentParser:
     revalidate_parser.add_argument("--specsync-download-base-url", default="")
     revalidate_parser.add_argument("--runner-temp", default="")
     revalidate_parser.set_defaults(handler=action_revalidate_specsync)
+    install_parser = commands.add_parser("action-install-specsync", help=argparse.SUPPRESS)
+    install_parser.add_argument("--specsync-version", default=DEFAULT_SPECSYNC_VERSION)
+    install_parser.add_argument("--specsync-download-base-url", default="")
+    install_parser.add_argument("--runner-temp", default="")
+    install_parser.set_defaults(handler=action_install_specsync)
     lifecycle_parser = commands.add_parser("action-lifecycle", help=argparse.SUPPRESS)
     lifecycle_parser.add_argument("--working-directory", default=".")
     lifecycle_parser.add_argument("--config", default=".trust.toml")

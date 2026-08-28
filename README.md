@@ -112,7 +112,7 @@ ordering or versions.
 
 ### SpecSync self-hosting input
 
-Normal consumers omit `specsync-version` and `specsync-download-base-url`; Trust uses SpecSync 6.0.0-rc.9. A governed SpecSync release-validation workflow may set an exact version and an authority-free `file://` mirror that resolves beneath `runner.temp`. The mirror must contain the platform archive and adjacent SHA-256 file expected by the pinned SpecSync action. Trust rejects remote schemes, file authorities, traversal, encoded paths, missing directories, and symlink escapes before lifecycle execution.
+Normal consumers omit `specsync-version` and `specsync-download-base-url`; Trust uses SpecSync 6.0.0-rc.9. Any other exact GitHub-released SpecSync version may be set on `specsync-version` without a mirror. Trust installs that binary before lifecycle verification so runner PATH cannot pick a different SpecSync. A governed SpecSync release-validation workflow may instead set an authority-free `file://` mirror that resolves beneath `runner.temp`. The mirror must contain the platform archive and adjacent SHA-256 file expected by the pinned SpecSync action. Trust rejects remote schemes, file authorities, traversal, encoded paths, missing directories, and symlink escapes before lifecycle execution.
 
 ## Commands
 

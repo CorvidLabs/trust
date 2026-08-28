@@ -4,7 +4,7 @@
 # REQ-trust-action-001, REQ-trust-action-002, REQ-trust-action-003,
 # REQ-trust-action-004, REQ-trust-action-006,
 # REQ-trust-action-007, REQ-trust-action-008, REQ-trust-action-009,
-# REQ-trust-action-010;
+# REQ-trust-action-010, REQ-trust-action-011;
 # REQ-trust-plugin-001, REQ-trust-plugin-002, REQ-trust-plugin-003,
 # REQ-trust-plugin-004, REQ-trust-plugin-005, REQ-trust-plugin-006,
 # REQ-trust-plugin-007;
@@ -62,11 +62,17 @@ from pathlib import Path
 import sys
 
 action = Path(sys.argv[1]).read_text(encoding="utf-8")
+fledge = action.index("    - name: Install pinned Fledge")
+specsync_install = action.index("    - name: Install pinned SpecSync")
 lifecycle = action.index("    - name: Lifecycle verification")
 revalidation = action.index("    - name: Revalidate SpecSync contract inputs")
 contract = action.index("    - name: Contract gate")
-if not lifecycle < revalidation < contract:
-    raise AssertionError("SpecSync mirror revalidation must run after lifecycle and immediately before contract")
+if not fledge < specsync_install < lifecycle < revalidation < contract:
+    raise AssertionError("pinned SpecSync must be installed after Fledge and before lifecycle")
+if "action-install-specsync" not in action[specsync_install:lifecycle]:
+    raise AssertionError("SpecSync install step does not invoke action-install-specsync")
+if "SPECSYNC_PINNED_BIN" not in action[lifecycle:revalidation]:
+    raise AssertionError("lifecycle does not receive the Trust-pinned SpecSync binary")
 if "action-revalidate-specsync" not in action[revalidation:contract]:
     raise AssertionError("pre-contract step does not invoke the focused SpecSync revalidation command")
 PY
@@ -95,6 +101,12 @@ outside.mkdir()
 version, base = trust_cli.resolve_specsync_inputs("6.0.0-rc.9", "", "")
 if (version, base) != ("6.0.0-rc.9", ""):
     raise AssertionError("released defaults changed")
+version, base = trust_cli.resolve_specsync_inputs("5.2.0", "", "")
+if (version, base) != ("5.2.0", ""):
+    raise AssertionError("GitHub-released specsync-version still requires a local mirror")
+version, base = trust_cli.resolve_specsync_inputs("5.0.1", "", "")
+if (version, base) != ("5.0.1", ""):
+    raise AssertionError("exact SemVer without a mirror was rejected")
 version, base = trust_cli.resolve_specsync_inputs("5.0.1", mirror.as_uri(), str(runner_temp))
 if (version, base) != ("5.0.1", mirror.resolve().as_uri()):
     raise AssertionError("valid confined mirror was not canonicalized")
@@ -103,10 +115,6 @@ if (version, base) != ("5.0.1-alpha.0+build.01", spaced_mirror.resolve().as_uri(
     raise AssertionError("valid percent-encoded mirror path or semantic version was rejected")
 
 invalid = [
-    ("5.2.0", "", ""),
-    ("5.0.2", "", ""),
-    ("5.0.1", "", ""),
-    ("5.0.1-alpha.0+build.01", "", ""),
     ("latest", mirror.as_uri(), str(runner_temp)),
     ("v5.0.1", mirror.as_uri(), str(runner_temp)),
     ("5.0", mirror.as_uri(), str(runner_temp)),
@@ -175,6 +183,54 @@ except trust_cli.TrustError:
     pass
 else:
     raise AssertionError("lifecycle-time SpecSync mirror replacement survived pre-contract revalidation")
+
+import hashlib
+import os
+import tarfile
+
+payload = temporary / "specsync-payload"
+payload.mkdir()
+script = payload / "specsync-linux-x86_64"
+script.write_text("#!/bin/sh\necho specsync test\n", encoding="utf-8")
+script.chmod(0o755)
+archive_path = mirror / "specsync-linux-x86_64.tar.gz"
+with tarfile.open(archive_path, "w:gz") as archive:
+    archive.add(script, arcname=script.name)
+digest = hashlib.sha256(archive_path.read_bytes()).hexdigest()
+(mirror / "specsync-linux-x86_64.tar.gz.sha256").write_text(
+    f"{digest}  specsync-linux-x86_64.tar.gz\n",
+    encoding="utf-8",
+)
+install_temp = temporary / "install-temp"
+install_temp.mkdir()
+binary = trust_cli.install_specsync("5.0.1", mirror.as_uri(), str(install_temp), "linux", "x86_64")
+if binary.name != "specsync" or not binary.is_file():
+    raise AssertionError("pinned SpecSync install did not produce a binary")
+mismatch_temp = temporary / "mismatch-temp"
+mismatch_temp.mkdir()
+(mirror / "specsync-linux-x86_64.tar.gz.sha256").write_text(
+    "0" * 64 + "  specsync-linux-x86_64.tar.gz\n",
+    encoding="utf-8",
+)
+try:
+    trust_cli.install_specsync("5.0.1", mirror.as_uri(), str(mismatch_temp), "linux", "x86_64")
+except trust_cli.TrustError as error:
+    if "checksum mismatch" not in str(error):
+        raise AssertionError(f"wrong SpecSync install error: {error}") from error
+else:
+    raise AssertionError("SpecSync checksum mismatch was accepted")
+previous_runner = os.environ.get("RUNNER_OS")
+os.environ["RUNNER_OS"] = "Windows"
+try:
+    trust_cli.detect_specsync_platform()
+except trust_cli.TrustError:
+    pass
+else:
+    raise AssertionError("Windows SpecSync install was accepted")
+if previous_runner is None:
+    del os.environ["RUNNER_OS"]
+else:
+    os.environ["RUNNER_OS"] = previous_runner
 PY
 
 component_source="$TMP/component-source"
