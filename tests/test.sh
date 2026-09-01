@@ -98,8 +98,8 @@ outside = temporary / "outside"
 mirror.mkdir(parents=True)
 spaced_mirror.mkdir()
 outside.mkdir()
-version, base = trust_cli.resolve_specsync_inputs("6.0.0-rc.9", "", "")
-if (version, base) != ("6.0.0-rc.9", ""):
+version, base = trust_cli.resolve_specsync_inputs("6.0.0-rc.11", "", "")
+if (version, base) != ("6.0.0-rc.11", ""):
     raise AssertionError("released defaults changed")
 version, base = trust_cli.resolve_specsync_inputs("5.2.0", "", "")
 if (version, base) != ("5.2.0", ""):

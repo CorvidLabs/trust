@@ -40,7 +40,7 @@ END = "<!-- CorvidLabs trust toolchain: END -->"
 RISK_ORDER = {"proceed": 0, "review": 1, "block": 2}
 PROVENANCE_ORDER = {"off": 0, "soft": 1, "enforce": 2}
 DEFAULT_ATLAS_SKIP_REASON = "Atlas publication was not enabled during adoption"
-DEFAULT_SPECSYNC_VERSION = "6.0.0-rc.9"
+DEFAULT_SPECSYNC_VERSION = "6.0.0-rc.11"
 SPECSYNC_GITHUB_DOWNLOAD = "https://github.com/CorvidLabs/spec-sync/releases/download"
 SPECSYNC_VERSION_PATTERN = re.compile(
     r"^(?:0|[1-9][0-9]*)\."

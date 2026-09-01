@@ -1,0 +1,31 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1788306066,
+      "digest": "222f2adfe8760bd1ea62c23fcf71765252d836538ced9d4084dc254cdf14a1cb",
+      "note": "Session instruction: pin SpecSync 6.0.0-rc.11 now and cut Trust 1.2.0-rc.3.",
+      "approved_delta_digests": {
+        "trust": "047d650ded120286bd079a513ed54f08f465842099c773bcff7f0c274afd5a1b",
+        "trust-action": "b905cf0fca75a0b9d6eb4cec5f31c34bc01fb55c6eceffc4a6d8fc05b19e66f1",
+        "trust-plugin": "40302d843852ec343dfb79b4b6dcd7fdb5bbf38f17521b29cc7b1ad2ec82b081",
+        "trust-policy": "cffaccb3bdf12014f967793f8c7193176afa127ff1d7dccc157fbc168d5a7c07"
+      }
+    },
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1788306148,
+      "digest": "ed22c6862c5d787583e820d7e44c8f6c74eabd8903425cc8d59ac166793f5880",
+      "note": "Session instruction: pin SpecSync 6.0.0-rc.11 now and cut Trust 1.2.0-rc.3. Re-approved after ordering behind the merged pin-one-specsync change.",
+      "approved_delta_digests": {
+        "trust": "047d650ded120286bd079a513ed54f08f465842099c773bcff7f0c274afd5a1b",
+        "trust-action": "b905cf0fca75a0b9d6eb4cec5f31c34bc01fb55c6eceffc4a6d8fc05b19e66f1",
+        "trust-plugin": "40302d843852ec343dfb79b4b6dcd7fdb5bbf38f17521b29cc7b1ad2ec82b081",
+        "trust-policy": "cffaccb3bdf12014f967793f8c7193176afa127ff1d7dccc157fbc168d5a7c07"
+      }
+    }
+  ],
+  "reopenings": []
+}

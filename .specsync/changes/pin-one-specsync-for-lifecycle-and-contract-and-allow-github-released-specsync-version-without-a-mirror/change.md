@@ -1,6 +1,6 @@
 ---
 id: pin-one-specsync-for-lifecycle-and-contract-and-allow-github-released-specsync-version-without-a-mirror
-state: implementing
+state: accepted
 type: bug_fix
 base_commit: e964e042f7f2756333d4c46e685a4a6dc09077de
 ---
