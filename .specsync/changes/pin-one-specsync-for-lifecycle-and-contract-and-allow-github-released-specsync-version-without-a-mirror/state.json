@@ -6,10 +6,11 @@
   "title": "Pin one SpecSync for lifecycle and contract and allow GitHub-released specsync-version without a mirror",
   "description": "Pin one SpecSync for lifecycle and contract and allow GitHub-released specsync-version without a mirror",
   "kind": "bug_fix",
-  "state": "verifying",
+  "state": "accepted",
+  "canonical_applied": true,
   "base_commit": "e964e042f7f2756333d4c46e685a4a6dc09077de",
   "created_at": 1787874792,
-  "updated_at": 1787875427,
+  "updated_at": 1788306429,
   "affected_specs": [
     "trust-action"
   ],

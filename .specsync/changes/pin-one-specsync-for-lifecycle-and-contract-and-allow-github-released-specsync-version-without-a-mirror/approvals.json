@@ -19,6 +19,13 @@
       "approved_delta_digests": {
         "trust-action": "0dba1a9d553ed5be52a8bc1372ca37b08d373baef56ff4c14edd5bad8fed8b90"
       }
+    },
+    {
+      "gate": "acceptance",
+      "actor": "0xLeif",
+      "timestamp": 1788306429,
+      "digest": "4727b505394b974372a6178a743aa3c43b45f9a895de1199bf1b7b74b57b499a",
+      "note": null
     }
   ],
   "reopenings": []
