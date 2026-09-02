@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "attempts": [
+    {
+      "timestamp": 1788371432,
+      "commit": "1ebcee1e8ae89a39b00b7039e3383311409407e6",
+      "contract_digest": "b411e295e373a6a97151e6cd48febceeba386a67f44e2dc7f368a1b6be019834",
+      "workspace_digest": "8080deadc8f0348cf2d5d966d700774736e299f6f1d7cee00e6575acb37f88bb",
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check --spec trust --spec trust-action --spec trust-plugin --spec trust-policy",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    }
+  ]
+}
