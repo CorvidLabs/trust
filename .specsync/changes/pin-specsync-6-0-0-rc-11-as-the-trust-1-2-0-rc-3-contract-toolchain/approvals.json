@@ -25,6 +25,13 @@
         "trust-plugin": "40302d843852ec343dfb79b4b6dcd7fdb5bbf38f17521b29cc7b1ad2ec82b081",
         "trust-policy": "cffaccb3bdf12014f967793f8c7193176afa127ff1d7dccc157fbc168d5a7c07"
       }
+    },
+    {
+      "gate": "acceptance",
+      "actor": "0xLeif",
+      "timestamp": 1788371426,
+      "digest": "0d665766b2acbba933f74c9692ef52c54f45991cb70bad8f9de7549c09c7f0e2",
+      "note": "Re-verified on main (1ebcee1) and accepted so the rc.12 pin can order behind it."
     }
   ],
   "reopenings": []

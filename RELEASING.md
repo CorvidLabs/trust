@@ -97,11 +97,11 @@ formula-scoped trust to `corvid-trust`, `fledge`, `spec-sync`, `augur`, and
 
 Trust 1.0.0 additionally requires an enabled provenance ledger, the Homebrew
 bundle, the promoted active spec, and the `v1` Action channel. SpecSync
-6.0.0-rc.11 is pinned to its immutable Action tag object
-`2371bf3122919a6548eb790d258e036c0220776b` and paired with binary version
-6.0.0-rc.11; preserve that pairing through the release rehearsal.
+6.0.0-rc.12 is pinned to its immutable Action tag object
+`29392630a590c13fcca65bec2a3c0a8f8c9e4081` and paired with binary version
+6.0.0-rc.12; preserve that pairing through the release rehearsal.
 The same tag workflow publishes 1.0.0 as a stable GitHub release and selects
-`v1`; a 1.2.0-rc.3 release candidate is ineligible for that stable channel. Create a
+`v1`; a 1.2.0-rc.4 release candidate is ineligible for that stable channel. Create a
 maintainer-managed `v1` tag ruleset before the stable promotion.
 Major channels move monotonically: publishing or replaying an older release
 cannot roll `v0` or `v1` backward.
