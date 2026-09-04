@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "workflow_origin_version": 1,
+  "id": "pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain",
+  "slug": "pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain",
+  "title": "Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain",
+  "description": "Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain",
+  "kind": "migration",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "1ebcee1e8ae89a39b00b7039e3383311409407e6",
+  "created_at": 1788371053,
+  "updated_at": 1788528709,
+  "affected_specs": [
+    "trust-action",
+    "trust-policy",
+    "trust-plugin",
+    "trust"
+  ],
+  "affected_paths": [
+    "action.yml",
+    "scripts/trust_cli.py",
+    "scripts/validate.py",
+    ".github/workflows/release.yml",
+    "plugin.toml",
+    "README.md",
+    "RELEASING.md",
+    "tests/test.sh"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "Trust 1.2.0-rc.4 pins SpecSync 6.0.0-rc.12 as the composite-action default and nested immutable action tag object 29392630a590c13fcca65bec2a3c0a8f8c9e4081 (peeled commit ac796b8eadd3092283093bbea331ec2d3494b527). action.yml, trust_cli.py, validate.py, release.yml, tests/test.sh, plugin.toml, README, and RELEASING agree on that pin. plugin.toml version is 1.2.0-rc.4 and README installs CorvidLabs/trust@v1.2.0-rc.4. fledge lanes run verify and specsync check --force --strict pass under SpecSync 6.0.0-rc.12. The contract gate still does not enable SpecSync lifecycle-enforce. A 1.2.0-rc.4 tag is a prerelease and cannot move the protected v1 channel."
+  ],
+  "selected_artifacts": [
+    "context",
+    "research",
+    "design",
+    "plan",
+    "tasks",
+    "testing",
+    "docs",
+    "requirements"
+  ],
+  "dependencies": [
+    "pin-specsync-6-0-0-rc-11-as-the-trust-1-2-0-rc-3-contract-toolchain"
+  ],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "yes"
+  }
+}
