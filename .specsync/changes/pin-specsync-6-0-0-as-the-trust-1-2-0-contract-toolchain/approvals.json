@@ -1,0 +1,18 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1789000272,
+      "digest": "5d7bb26c36a494c289795272dd8858ed9211654a209400b2bc1fd375c002f3d5",
+      "note": null,
+      "approved_delta_digests": {
+        "trust": "35b08055bdb1bb7650bddd0898820eb0676e9722ab910232fbf9c46a1d4ef327",
+        "trust-action": "68dfeb8b4c5cb3d0504f944ff952446f55864e24279d201bbd6fa7bf14779c18",
+        "trust-plugin": "6033d7e524fe8ba9b179bcbe007194eb4fdefba4db348fa9d054dfe2cfd6fc8c",
+        "trust-policy": "dce06ee9c9775a91694844647cc8325377b0d3c4290ee09c31c495eca1d1f857"
+      }
+    }
+  ],
+  "reopenings": []
+}

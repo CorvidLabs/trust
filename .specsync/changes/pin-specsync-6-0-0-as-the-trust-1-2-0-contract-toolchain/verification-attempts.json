@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "attempts": [
+    {
+      "timestamp": 1789000532,
+      "commit": "e39c7e4862af35eb10e40058eb46e894efef249e",
+      "contract_digest": "5d7bb26c36a494c289795272dd8858ed9211654a209400b2bc1fd375c002f3d5",
+      "workspace_digest": "e662b56e0cc15b2051de5e94bd3feaebcb6ba856433b133a027132bc35c2d304",
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check --spec trust --spec trust-action --spec trust-plugin --spec trust-policy",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    },
+    {
+      "timestamp": 1789000577,
+      "commit": "e39c7e4862af35eb10e40058eb46e894efef249e",
+      "contract_digest": "5d7bb26c36a494c289795272dd8858ed9211654a209400b2bc1fd375c002f3d5",
+      "workspace_digest": "e662b56e0cc15b2051de5e94bd3feaebcb6ba856433b133a027132bc35c2d304",
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check --spec trust --spec trust-action --spec trust-plugin --spec trust-policy",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-010"
+      ]
+    }
+  ]
+}

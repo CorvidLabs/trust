@@ -8,8 +8,8 @@ updates:
       # These three are not ordinary dependencies: they are the governed
       # toolchain pins, and scripts/validate.py asserts the exact refs that
       # action.yml composes. spec-sync is deliberately pinned to the annotated
-      # TAG OBJECT (29392630…), not the commit it peels to — see RELEASING.md
-      # and .specsync/changes/pin-specsync-6-0-0-rc-12-…/. Dependabot cannot
+      # TAG OBJECT (3c2ed497…), not the commit it peels to — see RELEASING.md
+      # and .specsync/changes/pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain/. Dependabot cannot
       # see that decision, so it re-raises the peeled commit as an "upgrade"
       # and reds four checks each time. Bumps here go through the release
       # process, which updates action.yml, validate.py and RELEASING.md together.

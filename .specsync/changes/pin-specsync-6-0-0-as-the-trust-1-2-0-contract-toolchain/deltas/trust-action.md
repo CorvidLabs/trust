@@ -1,24 +1,18 @@
----
-module: trust-action
-version: 15
-status: stable
-files:
-  - action.yml
-  - templates/trust.yml
-  - scripts/trust_cli.py
-  - scripts/normalize_specsync_cache.py
-db_tables: []
-depends_on: [trust-policy, trust-provenance]
----
+## MODIFIED
 
-# Trust GitHub Action
+### REQUIREMENT REQ-trust-action-010
 
-## Purpose
+The Trust action SHALL allow a governed self-hosting workflow to select a checksummed SpecSync artifact without weakening the contract layer.
 
-The released Trust action composes lifecycle verification, SpecSync contracts,
-Augur risk, progressive Attest provenance, and optional Atlas publication.
+Acceptance Criteria
 
-## Public API
+- Defaults select SpecSync 6.0.0. Any other exact SemVer version downloads from GitHub releases unless a validated local mirror is supplied, and all exact versions follow SemVer 2.0 numeric-identifier rules.
+- A mirror override accepts only an authority-free local `file://` URL resolving to a directory strictly beneath `RUNNER_TEMP` on Windows, Linux, and macOS.
+- Canonical percent-encoding for safe path characters is accepted, while malformed URLs, traversal, encoded separators, query, fragment, remote authority, and non-local schemes fail before lifecycle execution.
+- Every entry under the resolved mirror is non-symlinked and resolves beneath `RUNNER_TEMP` before lifecycle execution, then the same checks run again after lifecycle verification and immediately before contract consumption.
+- The immutable nested SpecSync action receives only resolver-validated values.
+
+### SPEC SECTION Public API
 
 | Export | Description |
 | --- | --- |
@@ -55,41 +49,14 @@ Augur risk, progressive Attest provenance, and optional Atlas publication.
 | `jobs.deploy-atlas` | Conditional Atlas deployment job. |
 | `outputs.atlas_enabled` | Cross-job Atlas decision. |
 
-## Invariants
-
-1. Lifecycle runs before contract, risk, and provenance evaluation.
-2. Contract and component actions use immutable released commits and binaries.
-3. Soft provenance may degrade but never hides lifecycle, contract, or risk failure.
-4. Atlas is disabled unless committed policy explicitly enables it.
-5. Generated workflows keep Pages write permissions outside the Trust job.
-6. SpecSync artifact overrides are local, checksummed, confined beneath `RUNNER_TEMP`, and resolved before lifecycle execution.
-7. Lifecycle uses the same resolved SpecSync binary the contract step will use; runner PATH cannot select another SpecSync.
-
-## Behavioral Examples
-
-```text
-Given a standard policy and a pull request range
-When the Trust action runs
-Then lifecycle, contract, and risk must pass
-And missing provenance may report degraded rather than failed
-```
-
-## Error Cases
-
-| Error | Behavior |
-| --- | --- |
-| Invalid policy | Fail before installing or running component gates. |
-| Contract drift | Fail the overall action. |
-| Component installation failure | Fail rather than classify the policy as unsatisfied. |
-
-## Dependencies
+### SPEC SECTION Dependencies
 
 - Fledge 1.7.0
 - SpecSync 6.0.0
 - Augur 1.0.0
 - Attest 1.0.0
 
-## Change Log
+### SPEC SECTION Change Log
 
 | Date | Change |
 | --- | --- |
@@ -108,4 +75,3 @@ And missing provenance may report degraded rather than failed
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
-
