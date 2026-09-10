@@ -1,5 +1,24 @@
 # Changelog
 
+## [v1.2.0] - 2026-09-09
+
+### Changes
+
+- pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain (#38) (d2f6634)
+- pin SpecSync 6.0.0-rc.12 and version Trust 1.2.0-rc.4 (#35) (e027254)
+- pin SpecSync 6.0.0-rc.11 and version Trust 1.2.0-rc.3 (#34) (1ebcee1)
+- pin SpecSync 6.0.0-rc.9 and version Trust 1.2.0-rc.1 (#30) (e964e04)
+
+### Fixes
+
+- stop Dependabot re-raising the governed toolchain pins (#36) (0c0abb2)
+- pin one SpecSync for lifecycle and contract (#31) (e72a5a1)
+
+### Chores
+
+- archive accepted change records (#37) (e39c7e4)
+- bump plugin version to 1.2.0-rc.2 (#32) (fcebc62)
+
 ## [v1.1.2] - 2026-07-27
 
 ### Changes

@@ -1,6 +1,6 @@
 ---
 module: trust-plugin
-version: 10
+version: 11
 status: stable
 files:
   - bin/fledge-trust
@@ -33,7 +33,7 @@ not supported as public CLI interfaces.
 ## Behavioral Examples
 
 ```text
-Given Trust 1.2.0-rc.4 is installed as a tagged Fledge plugin
+Given Trust 1.2.0 is installed as a tagged Fledge plugin
 When fledge trust doctor runs
 Then the launcher executes the bundled implementation
 And returns its exact exit status
@@ -63,4 +63,5 @@ And returns its exact exit status
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
+| 2026-09-09 | Release Trust 1.2.0 |
 
