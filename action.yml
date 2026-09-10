@@ -188,7 +188,7 @@ runs:
     # Augur action code and binary at release 1.0.0.
     - name: Risk gate
       id: augur
-      uses: CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0
+      uses: CorvidLabs/augur@108a2ff4e2842b8236f2e79f9c0292dd92de975f
       with:
         version: "1.0.0"
         range: ${{ steps.config.outputs.range }}
