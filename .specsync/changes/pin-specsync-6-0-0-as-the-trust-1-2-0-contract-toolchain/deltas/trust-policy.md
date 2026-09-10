@@ -1,30 +1,6 @@
----
-module: trust-policy
-version: 11
-status: stable
-files:
-  - scripts/validate.py
-  - scripts/migrate_specsync_5_1_records.py
-  - .trust.toml
-  - .attest.json
-  - .augur.toml
-  - AGENTS.md
-  - templates/trust.toml
-  - templates/attest.json
-  - templates/augur.toml
-  - templates/agents-rules.md
-db_tables: []
-depends_on: []
----
+## MODIFIED
 
-# Trust Policy Resolution
-
-## Purpose
-
-Trust policy resolution parses committed configuration, validates repository
-context, prevents enforcement downgrades, and derives canonical comparison ranges.
-
-## Public API
+### SPEC SECTION Public API
 
 The policy surface provides adoption, status, doctor, local verification, and
 internal composite-action resolution. It accepts a committed policy path,
@@ -34,39 +10,7 @@ gate component results. Its ledger migration utility backfills pre-5.1
 reopening evidence so earlier change records validate under the pinned SpecSync
 6.0.0 toolchain.
 
-## Invariants
-
-1. Unknown policy keys fail closed.
-2. Strict policy cannot be downgraded by inputs or pull-request changes.
-3. Native PR ranges exactly match the event base-to-head comparison.
-4. External worktrees require explicit ranges.
-5. Adoption preserves unmanaged content unless force is explicit.
-
-## Behavioral Examples
-
-```text
-Given a committed standard policy
-When a pull request supplies a stricter risk threshold
-Then policy resolution accepts the override
-But rejects any attempt to disable contract or provenance enforcement
-```
-
-## Error Cases
-
-| Error | Behavior |
-| --- | --- |
-| Unknown key or type | Reject the policy. |
-| Missing base object | Fail pull-request comparison. |
-| Mismatched event repository | Require an explicit range. |
-| Existing unmanaged file | Preserve it unless force is passed. |
-
-## Dependencies
-
-- Python standard library
-- Git
-- Fledge, SpecSync, Augur, and Attest executables when enabled
-
-## Change Log
+### SPEC SECTION Change Log
 
 | Date | Change |
 | --- | --- |
@@ -80,4 +24,3 @@ But rejects any attempt to disable contract or provenance enforcement
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
-

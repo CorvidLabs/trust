@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "workflow_origin_version": 1,
+  "id": "pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain",
+  "slug": "pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain",
+  "title": "Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain",
+  "description": "Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain",
+  "kind": "migration",
+  "state": "verifying",
+  "canonical_applied": true,
+  "base_commit": "e39c7e4862af35eb10e40058eb46e894efef249e",
+  "created_at": 1789000104,
+  "updated_at": 1789000585,
+  "affected_specs": [
+    "trust-action",
+    "trust-policy",
+    "trust-plugin",
+    "trust"
+  ],
+  "affected_paths": [
+    "action.yml",
+    "scripts/trust_cli.py",
+    "scripts/validate.py",
+    ".github/workflows/release.yml",
+    "README.md",
+    "RELEASING.md",
+    "tests/test.sh",
+    ".github/dependabot.yml"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "Trust pins SpecSync 6.0.0 as the composite-action default and nested immutable action tag object 3c2ed4972c8c53ae02ab5dd5775beccd6da3eeb8 (peeled commit b9ff32310181b796cc617406ff9298c533ebeb15). action.yml, trust_cli.py, validate.py, release.yml, tests/test.sh, README, RELEASING, and dependabot.yml agree on that pin. plugin.toml remains 1.2.0-rc.4 so fledge release 1.2.0 can bump and tag from clean main after merge. fledge lanes run verify and specsync check --force --strict pass under SpecSync 6.0.0. The contract gate still does not enable SpecSync lifecycle-enforce. A later 1.2.0 tag is eligible to promote the protected v1 channel."
+  ],
+  "selected_artifacts": [
+    "context",
+    "research",
+    "design",
+    "plan",
+    "tasks",
+    "testing",
+    "docs",
+    "requirements"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "yes"
+  }
+}

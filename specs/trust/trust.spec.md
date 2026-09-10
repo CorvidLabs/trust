@@ -1,6 +1,6 @@
 ---
 module: trust
-version: 9
+version: 10
 status: active
 files:
   - scripts/render_homebrew_formula.py
@@ -88,3 +88,5 @@ Then the formula installs both components under the corvid-trust bundle
 | 2026-09-01 | pin-specsync-6-0-0-rc-11-as-the-trust-1-2-0-rc-3-contract-toolchain: Pin SpecSync 6.0.0-rc.11 as the Trust 1.2.0-rc.3 contract toolchain |
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
+| 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
+
