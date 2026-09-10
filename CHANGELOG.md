@@ -69,6 +69,10 @@
 
 ## Unreleased
 
+### Fixed
+- Nested Augur install under Trust no longer inherits Trust as `ACTION_REPO` for release downloads (pins Augur tip that hardcodes `CorvidLabs/augur` + time-bounds assess).
+
+
 ### Added
 
 - Add narrowly validated SpecSync version and runner-local mirror inputs for checksummed self-host contract validation while preserving released 5.0.1 defaults for consumers.

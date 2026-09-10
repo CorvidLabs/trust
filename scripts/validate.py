@@ -180,7 +180,7 @@ if "atlas-enabled:" not in action:
     fail("action.yml must expose the committed Atlas publication decision")
 dependencies = {
     "CorvidLabs/spec-sync@3c2ed4972c8c53ae02ab5dd5775beccd6da3eeb8": "6.0.0",
-    "CorvidLabs/augur@25ef933988d41c7051c7dadd4b303eb9c8d6c2e0": "1.0.0",
+    "CorvidLabs/augur@108a2ff4e2842b8236f2e79f9c0292dd92de975f": "1.0.0",
     "CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2": "1.0.0",
 }
 for dependency in dependencies:
