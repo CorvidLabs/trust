@@ -58,7 +58,7 @@ grep -q '^  specsync-download-base-url:' "$ROOT/action.yml" || fail "action is m
 grep -Fq 'version: ${{ steps.config.outputs.specsync_version }}' "$ROOT/action.yml" || fail "nested SpecSync version bypasses validated output"
 grep -Fq 'download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}' "$ROOT/action.yml" || fail "nested SpecSync mirror bypasses validated output"
 grep -Fq 'uses: CorvidLabs/augur@108a2ff4e2842b8236f2e79f9c0292dd92de975f' "$ROOT/action.yml" || fail "Augur nested-prebuilt pin missing"
-grep -Fq 'uses: CorvidLabs/attest@b833366c65f6b102c509bb5bdba85639c57a38f5' "$ROOT/action.yml" || fail "Attest nested-prebuilt pin missing"
+grep -Fq 'uses: CorvidLabs/attest@2182cae4fb9f2be8f16062f753c14d6c42a2b044' "$ROOT/action.yml" || fail "Attest nested-prebuilt pin missing"
 python3 - "$ROOT/action.yml" <<'PY'
 from pathlib import Path
 import sys

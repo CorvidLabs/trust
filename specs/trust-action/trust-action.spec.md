@@ -110,4 +110,5 @@ And missing provenance may report degraded rather than failed
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
 | 2026-09-20 | Pin Attest nested-prebuilt tip so Trust 1.2.1 uses attest-linux-x86_64 |
+| 2026-09-20 | Pin merged Attest #51 SHA 2182cae (squash) for the nested Linux prebuilt download |
 
