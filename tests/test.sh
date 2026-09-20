@@ -4,7 +4,7 @@
 # REQ-trust-action-001, REQ-trust-action-002, REQ-trust-action-003,
 # REQ-trust-action-004, REQ-trust-action-006,
 # REQ-trust-action-007, REQ-trust-action-008, REQ-trust-action-009,
-# REQ-trust-action-010, REQ-trust-action-011;
+# REQ-trust-action-010, REQ-trust-action-011, REQ-trust-action-012;
 # REQ-trust-plugin-001, REQ-trust-plugin-002, REQ-trust-plugin-003,
 # REQ-trust-plugin-004, REQ-trust-plugin-005, REQ-trust-plugin-006,
 # REQ-trust-plugin-007;
@@ -57,6 +57,8 @@ grep -q '^  specsync-version:' "$ROOT/action.yml" || fail "action is missing spe
 grep -q '^  specsync-download-base-url:' "$ROOT/action.yml" || fail "action is missing SpecSync mirror input"
 grep -Fq 'version: ${{ steps.config.outputs.specsync_version }}' "$ROOT/action.yml" || fail "nested SpecSync version bypasses validated output"
 grep -Fq 'download-base-url: ${{ steps.config.outputs.specsync_download_base_url }}' "$ROOT/action.yml" || fail "nested SpecSync mirror bypasses validated output"
+grep -Fq 'uses: CorvidLabs/augur@108a2ff4e2842b8236f2e79f9c0292dd92de975f' "$ROOT/action.yml" || fail "Augur nested-prebuilt pin missing"
+grep -Fq 'uses: CorvidLabs/attest@2182cae4fb9f2be8f16062f753c14d6c42a2b044' "$ROOT/action.yml" || fail "Attest nested-prebuilt pin missing"
 python3 - "$ROOT/action.yml" <<'PY'
 from pathlib import Path
 import sys

@@ -235,7 +235,7 @@ runs:
     - name: Install pinned Attest 1.0.0
       if: steps.config.outputs.provenance_mode != 'off' && steps.ledger.outputs.available == 'true'
       id: attest_install
-      uses: CorvidLabs/attest@e8a2d928eb4b9a33185c32ba7b8e9b3a985987f2
+      uses: CorvidLabs/attest@2182cae4fb9f2be8f16062f753c14d6c42a2b044
       with:
         version: "1.0.0"
         range: ${{ steps.config.outputs.range }}

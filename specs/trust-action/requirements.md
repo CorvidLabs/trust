@@ -91,3 +91,13 @@ Acceptance Criteria
 - Lifecycle PATH prefers the Trust-pinned binary over any SpecSync already on the runner.
 - A different SpecSync on PATH is reported and is not used for lifecycle.
 
+### REQ-trust-action-012
+
+Nested Augur and Attest actions SHALL download Linux and macOS prebuilts from their own GitHub releases, not from CorvidLabs/trust.
+
+Acceptance Criteria
+
+- Augur is pinned at a SHA that hardcodes `RELEASE_REPO: CorvidLabs/augur`.
+- Attest is pinned at a SHA that hardcodes `RELEASE_REPO: CorvidLabs/attest`.
+- Both still run binary version 1.0.0.
+
