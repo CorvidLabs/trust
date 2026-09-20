@@ -1,5 +1,20 @@
 # Changelog
 
+## [v1.2.1] - 2026-09-20
+
+### Features
+
+- the hi habit, so intent gets written before the work (#42) (a4948da)
+
+### Fixes
+
+- pin Attest nested-prebuilt tip (Trust 1.2.1) (#43) (4f69715)
+- pin Augur tip that downloads from CorvidLabs/augur when nested (#40) (19976d9)
+
+### Other
+
+- Adopt hi: record what trust should be, as 143 criteria (#41) (4d5053b)
+
 ## [v1.2.0] - 2026-09-09
 
 ### Changes
