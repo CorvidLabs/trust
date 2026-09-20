@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 16
+version: 17
 status: stable
 files:
   - action.yml
@@ -111,4 +111,5 @@ And missing provenance may report degraded rather than failed
 | 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
 | 2026-09-20 | Pin Attest nested-prebuilt tip so Trust 1.2.1 uses attest-linux-x86_64 |
 | 2026-09-20 | Pin merged Attest #51 SHA 2182cae (squash) for the nested Linux prebuilt download |
+| 2026-09-20 | Pin Augur b04e839 so a failed macOS/Linux prebuilt download reports the gh error instead of "no prebuilt for Darwin/arm64" |
 
