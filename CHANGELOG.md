@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.2.2] - 2026-09-20
+
+### Fixes
+
+- Pin Augur to the SHA that reports a failed prebuilt download instead of claiming Darwin/arm64 has no binary. Nested Trust still fetches `augur-macos-universal` / `augur-linux-x86_64` from CorvidLabs/augur (binary 1.0.0).
+
 ## [v1.2.1] - 2026-09-20
 
 ### Features
