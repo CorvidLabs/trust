@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 15
+version: 16
 status: stable
 files:
   - action.yml
@@ -64,6 +64,7 @@ Augur risk, progressive Attest provenance, and optional Atlas publication.
 5. Generated workflows keep Pages write permissions outside the Trust job.
 6. SpecSync artifact overrides are local, checksummed, confined beneath `RUNNER_TEMP`, and resolved before lifecycle execution.
 7. Lifecycle uses the same resolved SpecSync binary the contract step will use; runner PATH cannot select another SpecSync.
+8. Nested Augur and Attest actions download `*-linux-x86_64` and macOS prebuilts from their own repos, never from CorvidLabs/trust.
 
 ## Behavioral Examples
 
@@ -108,4 +109,5 @@ And missing provenance may report degraded rather than failed
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
+| 2026-09-20 | Pin Attest nested-prebuilt tip so Trust 1.2.1 uses attest-linux-x86_64 |
 
