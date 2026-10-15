@@ -1,6 +1,6 @@
 ---
 module: trust-policy
-version: 11
+version: 12
 status: stable
 files:
   - scripts/validate.py
@@ -41,6 +41,7 @@ reopening evidence so earlier change records validate under the pinned SpecSync
 3. Native PR ranges exactly match the event base-to-head comparison.
 4. External worktrees require explicit ranges.
 5. Adoption preserves unmanaged content unless force is explicit.
+6. Changed provenance policy bytes are rejected except for the exact one-way equivalent legacy Attest schema repair; every legacy requirement remains represented.
 
 ## Behavioral Examples
 
@@ -80,4 +81,4 @@ But rejects any attempt to disable contract or provenance enforcement
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-02 | pin-specsync-6-0-0-rc-12-as-the-trust-1-2-0-rc-4-contract-toolchain: Pin SpecSync 6.0.0-rc.12 as the Trust 1.2.0-rc.4 contract toolchain |
 | 2026-09-09 | pin-specsync-6-0-0-as-the-trust-1-2-0-contract-toolchain: Pin SpecSync 6.0.0 as the Trust 1.2.0 contract toolchain |
-
+| 2026-10-15 | allow-only-the-exact-legacy-attest-policy-to-migrate-to-its-equivalent-supported-schema-without-weakening-provenance: Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection |

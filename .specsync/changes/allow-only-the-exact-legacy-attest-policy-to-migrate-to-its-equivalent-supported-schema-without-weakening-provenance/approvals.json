@@ -1,0 +1,44 @@
+{
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "0xGaspar",
+      "timestamp": 1792083648,
+      "digest": "9d869f7b2bab138c2c016d72566c5d1d341c32d61170be6e9d78b9e841cf6f61",
+      "note": "User explicitly approved the Trust compatibility repair criteria in this conversation on 2026-10-15; no merge, deployment or admin bypass authorized.",
+      "approved_scope": {
+        "schema_version": 1,
+        "change_id": "allow-only-the-exact-legacy-attest-policy-to-migrate-to-its-equivalent-supported-schema-without-weakening-provenance",
+        "title": "Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection",
+        "description": "Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection",
+        "kind": "bug_fix",
+        "affected_specs": [
+          "trust-action",
+          "trust-policy"
+        ],
+        "affected_paths": [
+          "README.md",
+          "hi/",
+          "scripts/trust_cli.py",
+          "tests/test.sh"
+        ],
+        "no_spec_change": false,
+        "no_spec_change_rationale": null,
+        "acceptance_criteria": [
+          "Accept only the exact legacy require object with attestation, reviewer and testsPassed all true migrating to requireAttestation true, requireTestsPassed true and allowedReviewers agent:/human:; reject every weakening, unknown field, duplicate key, malformed JSON, invalid type, reverse migration and unrelated policy change; run all Trust checks and full Account verification without bypasses."
+        ],
+        "dependencies": [],
+        "supersedes": [],
+        "answers": {
+          "architecture_risk": "yes",
+          "public_contract": "yes"
+        }
+      },
+      "approved_delta_digests": {
+        "trust-action": "c8d17baed8484909fe9b97635a3e344c26781caa2906a8a380d83ba5b473ba34",
+        "trust-policy": "ae3206ff26b1f38d55f52819b425c39afd2bf0f6bd0dcddb41909d89d3bb4365"
+      }
+    }
+  ],
+  "reopenings": []
+}

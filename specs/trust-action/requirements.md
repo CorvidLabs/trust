@@ -101,3 +101,12 @@ Acceptance Criteria
 - Attest is pinned at a SHA that hardcodes `RELEASE_REPO: CorvidLabs/attest`.
 - Both still run binary version 1.0.0.
 
+### REQ-trust-action-013
+
+Action policy resolution SHALL allow the exact equivalent legacy Attest schema repair before executing all existing gate layers.
+
+Acceptance Criteria
+
+- The exact approved conversion reaches lifecycle, contract, risk and provenance checks without changing their configuration.
+- Every other changed provenance policy remains blocked before layer execution.
+

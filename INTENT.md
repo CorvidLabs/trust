@@ -9,7 +9,7 @@ Trust is for a maintainer who wants their repository properly gated without spen
 - [checkup](hi/checkup.md): CHECKUP (15 criteria)
 - [ci](hi/ci.md): CI (17 criteria)
 - [gate](hi/gate.md): GATE (17 criteria)
-- [policy](hi/policy.md): POLICY (19 criteria)
+- [policy](hi/policy.md): POLICY (22 criteria)
 - [provenance](hi/provenance.md): PROVENANCE (17 criteria)
 - [release](hi/release.md): RELEASE (18 criteria)
 - [tools](hi/tools.md): TOOLS (19 criteria)

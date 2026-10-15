@@ -1,0 +1,19 @@
+{
+  "timestamp": 1792083719,
+  "commit": "bccd89c111d47778c97c5064fb62ab51695e04ea",
+  "contract_digest": "9d869f7b2bab138c2c016d72566c5d1d341c32d61170be6e9d78b9e841cf6f61",
+  "execution_digest": "49af0ba71585beb87489508220bd2ac70a32adb12d25ccfd7c983d5bfb7abe9c",
+  "workspace_digest": "05f016f6790df9c3d0c9c7d77fb15dbdceca4ca3e25064d591d8cc6594a360a7",
+  "passed": true,
+  "commands": [
+    {
+      "command": "specsync check --spec trust-action --spec trust-policy --strict",
+      "success": true,
+      "exit_code": 0
+    }
+  ],
+  "requirement_ids": [
+    "REQ-trust-action-013",
+    "REQ-trust-policy-008"
+  ]
+}
