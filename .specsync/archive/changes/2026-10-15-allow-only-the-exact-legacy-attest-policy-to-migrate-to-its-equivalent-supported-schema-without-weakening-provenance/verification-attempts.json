@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "attempts": [
+    {
+      "timestamp": 1792083719,
+      "commit": "bccd89c111d47778c97c5064fb62ab51695e04ea",
+      "contract_digest": "9d869f7b2bab138c2c016d72566c5d1d341c32d61170be6e9d78b9e841cf6f61",
+      "execution_digest": "49af0ba71585beb87489508220bd2ac70a32adb12d25ccfd7c983d5bfb7abe9c",
+      "workspace_digest": "05f016f6790df9c3d0c9c7d77fb15dbdceca4ca3e25064d591d8cc6594a360a7",
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check --spec trust-action --spec trust-policy --strict",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-013",
+        "REQ-trust-policy-008"
+      ]
+    },
+    {
+      "timestamp": 1792083794,
+      "commit": "8f00977f69b23dc26d5624dc68715f09152ac2b2",
+      "contract_digest": "9d869f7b2bab138c2c016d72566c5d1d341c32d61170be6e9d78b9e841cf6f61",
+      "execution_digest": "49af0ba71585beb87489508220bd2ac70a32adb12d25ccfd7c983d5bfb7abe9c",
+      "workspace_digest": "05f016f6790df9c3d0c9c7d77fb15dbdceca4ca3e25064d591d8cc6594a360a7",
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check --spec trust-action --spec trust-policy --strict",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-013",
+        "REQ-trust-policy-008"
+      ]
+    },
+    {
+      "timestamp": 1792083794,
+      "commit": "6eb34caadfb04587506edb42992f81e60d88c5f7",
+      "contract_digest": "9d869f7b2bab138c2c016d72566c5d1d341c32d61170be6e9d78b9e841cf6f61",
+      "execution_digest": "49af0ba71585beb87489508220bd2ac70a32adb12d25ccfd7c983d5bfb7abe9c",
+      "workspace_digest": "05f016f6790df9c3d0c9c7d77fb15dbdceca4ca3e25064d591d8cc6594a360a7",
+      "acceptance_input_digest": "44eb684ef356c40aa0fa3f59b97d1f68de64e0897b16b3963dfa1fab437c7d1d",
+      "acceptance_manifest": {
+        "schema_version": 1,
+        "entries": [
+          {
+            "path": "README.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "b25f0a0ccd7d3bf530b6e8e0be45b2a359a4e7bf55b0a1363c46fd78067612a8",
+            "entry_digest": "d8ef518bcf18cfc158e8490571cbb6027ca8408bc6492abc95383f2fe963f8a3",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/AGENTS.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "47d814098350959a88d360eabc9881b92c5f3197b5cd79e04657a3f8f53fe4cb",
+            "entry_digest": "b8606f805356713aeb09fe682b184c7b38962d505603f5c184f85e91227b176c",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/CLAUDE.md",
+            "kind": "symlink",
+            "mode": 40960,
+            "payload_digest": "a54ff182c7e8acf56acfd6e4b9c3ff41e2c41a31c9b211b2deb9df75d9a478f9",
+            "entry_digest": "6bac39e51004c5be485ded7a7ff03e4b93c05e727c7f86944c27b3ea4dd9672f",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/adopt.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "85dcd55348ffc2a9544a56cf3698a89e6eccf8a6c26476ecc67889395046c115",
+            "entry_digest": "d6a60abaf615f7e37e9d2dde60c449a3ee643076934d5c7dd95a3778c15f42a8",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/checkup.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "8a76d7d78a89f224898aa1837d05094aceb25b56ad26b08aaf7e0db54dafff2c",
+            "entry_digest": "8f9f21926a8f0f6a7390130959b8701fe14e40f88c3bdcf81f27fcd00cfffa7e",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/ci.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "a5c49b83bb5603cdb0b1999d174761df29a6feafccd907bd841fa530acc665dd",
+            "entry_digest": "21cb679ffe88a1c71238bd5a10ea3967eb501f93924523ec03d4e6f36a93aa5e",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/gate.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "3dbee792744045f53d9f4cbea15dd338e8c0be5939c924de85035e2bdd9c74e2",
+            "entry_digest": "f02a28128802289adf6fa125e1a42d9b65ed30d66ea0c09271f7ca8f87d9f7ee",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/policy.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "bbad13cb6c66327674147092d88e1ebb7bd70162beaf502a45e2225372ea4da8",
+            "entry_digest": "688ca0d9b920e7d0c71036aced30b71d216f55feecbf327f025e644083429af5",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/provenance.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "612caa6e4806bbb5c133f90a99055d64750f18d17569fcf730272d8c0e169661",
+            "entry_digest": "03b8b5f9137ff56211ab7dbced360d861fb83ce185322e5cbe9bb019347646db",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/release.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "45c67a1ab3e7d505c9e4269a0ac8e2a6f056912d9bc8227fd6ae41138759bd26",
+            "entry_digest": "806f1ae7c72c995f33d26d554490e51c2228e2e9aa1d5c0c40f535bb8f468e61",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "hi/tools.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "69a4734496c3da8c6435f6e2c1e5383b0b36bad48b7818127cad193e777b1b10",
+            "entry_digest": "398fb74f8283e0e9f49367d48f1ac1375d53f00cdd7ef3c6ad63e17b1b99ab8b",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": "scripts/trust_cli.py",
+            "kind": "file",
+            "mode": 33261,
+            "payload_digest": "8f57f4ed3be928b8c02982c1ad44e3e6febb5218959d94255cd631588bc73695",
+            "entry_digest": "6172cf9feebe4334b9e1e1b94509f9fbd395355ced9b82454b3079c6a0165f65",
+            "owners": [
+              "trust-action"
+            ]
+          },
+          {
+            "path": "specs/trust-action/requirements.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "ec58131eff51fc5aa48837777133286ea2d4b9143b0366cf0fb7d833decfd9d6",
+            "entry_digest": "5f110643c172066765936051dbffc123f42f1eb2e77a14ae266a513bdf7c40d3",
+            "owners": [
+              "trust-action"
+            ]
+          },
+          {
+            "path": "specs/trust-action/trust-action.spec.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "f20c621dd9b8a01ed7e5a15714573fb97523aedeb6715f17f7b3ccc5fa8695be",
+            "entry_digest": "a83947b883bdc77f7c55b4ab7491f492775f37683a7f630d8dabe0baf9c0f6ea",
+            "owners": [
+              "trust-action"
+            ]
+          },
+          {
+            "path": "specs/trust-policy/requirements.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "92bf02a99eff5d334e12284000dc8f92f72635b51ea8169563d586783b53e014",
+            "entry_digest": "18f4c892b6c94c176bdee656070b293e549d872967cdd72b61d4020bd8aefd29",
+            "owners": [
+              "trust-policy"
+            ]
+          },
+          {
+            "path": "specs/trust-policy/trust-policy.spec.md",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "11aa62a8eaef5259d0aec6208b46275e578721c2d4f8cf0940a21cc08644fa94",
+            "entry_digest": "011b1539a8e774a7e1f44eec216801b97582211048fda4ed3822fa3febe43de8",
+            "owners": [
+              "trust-policy"
+            ]
+          },
+          {
+            "path": "tests/test.sh",
+            "kind": "file",
+            "mode": 33261,
+            "payload_digest": "6846fc86d50fd937f8b425a6007325b6a167959ff21082cf4c2c2d05dcd86138",
+            "entry_digest": "08d6551342813b25226d85bc207e7c9b5b4de401e670d993d1563b3836a044a2",
+            "owners": [
+              "@exact:test"
+            ]
+          }
+        ]
+      },
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check --spec trust-action --spec trust-policy --strict",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": [
+        "REQ-trust-action-013",
+        "REQ-trust-policy-008"
+      ]
+    }
+  ]
+}

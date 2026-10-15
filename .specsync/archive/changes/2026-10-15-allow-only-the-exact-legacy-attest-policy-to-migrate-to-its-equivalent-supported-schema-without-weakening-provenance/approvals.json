@@ -38,6 +38,13 @@
         "trust-action": "c8d17baed8484909fe9b97635a3e344c26781caa2906a8a380d83ba5b473ba34",
         "trust-policy": "ae3206ff26b1f38d55f52819b425c39afd2bf0f6bd0dcddb41909d89d3bb4365"
       }
+    },
+    {
+      "gate": "finalization",
+      "actor": "specsync:finalization",
+      "timestamp": 1792084686,
+      "digest": "a9167073d0870e1cb72562c098bbe1302671766f337fe8d14266c0e327eae6a4",
+      "note": "Same-PR finalization closing digest"
     }
   ],
   "reopenings": []

@@ -1,6 +1,6 @@
 ---
 id: allow-only-the-exact-legacy-attest-policy-to-migrate-to-its-equivalent-supported-schema-without-weakening-provenance
-state: implementing
+state: archived
 type: bug_fix
 base_commit: bccd89c111d47778c97c5064fb62ab51695e04ea
 ---

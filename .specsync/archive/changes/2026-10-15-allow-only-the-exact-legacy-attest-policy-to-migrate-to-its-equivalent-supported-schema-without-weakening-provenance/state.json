@@ -7,11 +7,11 @@
   "title": "Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection",
   "description": "Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection",
   "kind": "bug_fix",
-  "state": "verifying",
+  "state": "archived",
   "canonical_applied": true,
   "base_commit": "bccd89c111d47778c97c5064fb62ab51695e04ea",
   "created_at": 1792083586,
-  "updated_at": 1792083795,
+  "updated_at": 1792084691,
   "affected_specs": [
     "trust-action",
     "trust-policy"

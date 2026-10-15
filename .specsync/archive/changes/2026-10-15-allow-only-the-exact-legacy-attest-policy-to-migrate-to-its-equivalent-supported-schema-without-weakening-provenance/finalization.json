@@ -1,0 +1,12 @@
+{
+  "schema_version": 2,
+  "change_id": "allow-only-the-exact-legacy-attest-policy-to-migrate-to-its-equivalent-supported-schema-without-weakening-provenance",
+  "implementation_commit": "6eb34caadfb04587506edb42992f81e60d88c5f7",
+  "implementation_tree": "bd0a0aed61dfb3e224413916f2673af414a34b71",
+  "contract_digest": "9d869f7b2bab138c2c016d72566c5d1d341c32d61170be6e9d78b9e841cf6f61",
+  "workspace_digest": "05f016f6790df9c3d0c9c7d77fb15dbdceca4ca3e25064d591d8cc6594a360a7",
+  "closing_digest": "a9167073d0870e1cb72562c098bbe1302671766f337fe8d14266c0e327eae6a4",
+  "review_digest": "9eeb109b34406287aae6c1576c22b6e80c9c9a36120582887ea08a1bc5d7bb76",
+  "finalization_digest": "342d458eb0d01e05a8b1fd97a4228c69efc2be4fa139eb14b6f12683149c4af9",
+  "timestamp": 1792084686
+}
