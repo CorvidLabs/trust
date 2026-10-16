@@ -828,6 +828,70 @@ if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
 fi
 cp "$TMP/event-attest.json" "$event_repo/.attest.json"
 
+# REQ-trust-policy-008 and REQ-trust-action-013: the only policy-byte exception.
+python3 - "$ROOT/scripts/trust_cli.py" <<'PYTEST'
+import json
+import runpy
+import sys
+
+migration = runpy.run_path(sys.argv[1])["equivalent_legacy_attest_migration"]
+legacy = {"require": {"attestation": True, "reviewer": True, "testsPassed": True}}
+supported = {"requireAttestation": True, "requireTestsPassed": True,
+             "allowedReviewers": ["agent:", "human:"]}
+before = json.dumps(legacy)
+after = json.dumps(supported)
+assert migration(before, after)
+assert migration(json.dumps(legacy, indent=2), json.dumps(supported, sort_keys=True))
+assert not migration(after, before)
+assert not migration(after, json.dumps({**supported, "requireAttestation": False}))
+for field in legacy["require"]:
+    for value in (False, 1, "true", None):
+        changed = {"require": {**legacy["require"], field: value}}
+        assert not migration(json.dumps(changed), after), changed
+    missing = {"require": {k: v for k, v in legacy["require"].items() if k != field}}
+    assert not migration(json.dumps(missing), after)
+for field in supported:
+    missing = {k: v for k, v in supported.items() if k != field}
+    assert not migration(before, json.dumps(missing))
+for field in ("requireAttestation", "requireTestsPassed"):
+    for value in (False, 1, "true", None):
+        assert not migration(before, json.dumps({**supported, field: value}))
+for roles in ([], ["agent:"], ["human:"], ["agent:", "human:", "bot:"],
+              ["agent:", "agent:"], "agent:", None):
+    assert not migration(before, json.dumps({**supported, "allowedReviewers": roles}))
+for bad in ('{', 'null', '[]', 'true', '1', '{"unknown":true}',
+            '{"requireAttestation":false,"requireAttestation":true,'
+            '"requireTestsPassed":true,"allowedReviewers":["agent:","human:"]}'):
+    assert not migration(before, bad)
+    assert not migration(bad, after)
+assert not migration('{"require":{"attestation":false,"attestation":true,'
+                     '"reviewer":true,"testsPassed":true}}', after)
+assert not migration(json.dumps({**legacy, "extra": True}), after)
+assert not migration(before, json.dumps({**supported, "requireSignature": False}))
+assert not migration(json.dumps({"require": {**legacy["require"], "extra": True}}), after)
+print("exact legacy policy migration and adversarial cases passed")
+PYTEST
+
+migration_repo="$TMP/policy-migration"
+"$ROOT/tests/setup-action-fixture.sh" "$migration_repo"
+printf '%s\n' '{"require":{"attestation":true,"reviewer":true,"testsPassed":true}}' > "$migration_repo/.attest.json"
+git -C "$migration_repo" add .attest.json
+git -C "$migration_repo" commit -qm "legacy policy baseline"
+migration_base="$(git -C "$migration_repo" rev-parse HEAD)"
+printf '%s\n' '{"requireAttestation":true,"requireTestsPassed":true,"allowedReviewers":["agent:","human:"]}' > "$migration_repo/.attest.json"
+git -C "$migration_repo" add .attest.json
+git -C "$migration_repo" commit -qm "equivalent policy schema repair"
+migration_head="$(git -C "$migration_repo" rev-parse HEAD)"
+printf '{"pull_request":{"base":{"sha":"%s"},"head":{"sha":"%s"}}}\n' \
+  "$migration_base" "$migration_head" > "$event"
+GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$migration_repo" >/dev/null
+printf '%s\n' '{"requireAttestation":false,"requireTestsPassed":true,"allowedReviewers":["agent:","human:"]}' > "$migration_repo/.attest.json"
+if GITHUB_EVENT_NAME=pull_request GITHUB_EVENT_PATH="$event" \
+  "$TRUST" action-resolve --working-directory "$migration_repo" >/dev/null 2>&1; then
+  fail "legacy schema repair allowed a weakened policy"
+fi
+
 : > "$outputs"
 printf '{"before":"%s","after":"%s"}\n' "$base" "$head" > "$event"
 GITHUB_EVENT_NAME=push GITHUB_EVENT_PATH="$event" GITHUB_OUTPUT="$outputs" \

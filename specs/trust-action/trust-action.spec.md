@@ -1,6 +1,6 @@
 ---
 module: trust-action
-version: 17
+version: 18
 status: stable
 files:
   - action.yml
@@ -73,6 +73,11 @@ Given a standard policy and a pull request range
 When the Trust action runs
 Then lifecycle, contract, and risk must pass
 And missing provenance may report degraded rather than failed
+
+Given the exact legacy Attest policy requiring attestation, reviewer and passing tests
+When a pull request translates it to required attestations, passing tests and agent:/human: reviewers
+Then policy resolution permits that equivalent translation
+And still rejects weakened, ambiguous or unrelated policy changes
 ```
 
 ## Error Cases
@@ -112,4 +117,4 @@ And missing provenance may report degraded rather than failed
 | 2026-09-20 | Pin Attest nested-prebuilt tip so Trust 1.2.1 uses attest-linux-x86_64 |
 | 2026-09-20 | Pin merged Attest #51 SHA 2182cae (squash) for the nested Linux prebuilt download |
 | 2026-09-20 | Pin Augur b04e839 so a failed macOS/Linux prebuilt download reports the gh error instead of "no prebuilt for Darwin/arm64" |
-
+| 2026-10-15 | allow-only-the-exact-legacy-attest-policy-to-migrate-to-its-equivalent-supported-schema-without-weakening-provenance: Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection |

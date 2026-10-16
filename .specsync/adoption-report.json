@@ -4,12 +4,6 @@
     "digest": "45e788263287669e86327c196044cf7b20693928c567798248a3f19cb9768b44",
     "path": ".specsync/sdd.json"
   },
-  "generated_at": 1783830418,
-  "requirements_needing_ids": [
-    {
-      "action": "review and assign one stable ID per durable requirement",
-      "path": "specs/trust/requirements.md",
-      "suggested_first_id": "REQ-trust-001"
-    }
-  ]
+  "generated_at": 1792083586,
+  "requirements_needing_ids": []
 }

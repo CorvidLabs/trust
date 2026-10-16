@@ -90,6 +90,17 @@ with the protected base branch; the Action confirms the event base against the
 live remote branch tip. Post-merge CI can then attest each landed commit before
 the next change merges.
 
+One exact legacy Attest schema repair is allowed through normal pull-request
+review. The protected base must contain only
+`{"require":{"attestation":true,"reviewer":true,"testsPassed":true}}`, and the
+proposal must contain only `requireAttestation: true`, `requireTestsPassed: true`
+and `allowedReviewers: ["agent:", "human:"]`. JSON key order and whitespace may
+vary. Duplicate or unknown keys, missing rules, other types, weakened values,
+role changes and reverse translations remain rejected. This exception preserves
+the legacy requirements; it does not skip any verification layer or allow other
+policy edits. Consumers must pin the reviewed Trust action commit before using
+the repair.
+
 ## GitHub Actions
 
 The composite Action reads the same `.trust.toml` and resolves pull request,

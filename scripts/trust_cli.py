@@ -578,6 +578,34 @@ def governs_github_event_repository(root: Path) -> bool:
     }
 
 
+def equivalent_legacy_attest_migration(base_content: str, proposed_content: str) -> bool:
+    """Recognize only the complete, one-way repair of the legacy Attest schema."""
+    def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError("duplicate policy key")
+            result[key] = value
+        return result
+
+    legacy = {"require": {"attestation": True, "reviewer": True, "testsPassed": True}}
+    supported = {
+        "requireAttestation": True,
+        "requireTestsPassed": True,
+        "allowedReviewers": ["agent:", "human:"],
+    }
+    try:
+        before = json.loads(base_content, object_pairs_hook=unique_object)
+        after = json.loads(proposed_content, object_pairs_hook=unique_object)
+    except (ValueError, RecursionError):
+        return False
+    # JSON serialization distinguishes true from 1, unlike Python equality.
+    return (
+        json.dumps(before, sort_keys=True) == json.dumps(legacy, sort_keys=True)
+        and json.dumps(after, sort_keys=True) == json.dumps(supported, sort_keys=True)
+    )
+
+
 def validate_pull_request_policy_content(
     root: Path,
     base_commit: str,
@@ -604,7 +632,9 @@ def validate_pull_request_policy_content(
         proposed_content = policy_path.read_text(encoding="utf-8")
     except OSError as error:
         raise TrustError(f"cannot read proposed provenance policy: {error}") from error
-    if proposed_content != result.stdout:
+    if proposed_content != result.stdout and not equivalent_legacy_attest_migration(
+        result.stdout, proposed_content
+    ):
         raise TrustError("pull request cannot change the committed provenance policy contents")
 
 

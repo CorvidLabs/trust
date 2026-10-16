@@ -26,7 +26,10 @@ How strongly a repository is gated is a decision the repository makes once, in a
 - **POLICY-7**  A proposed change cannot weaken the policy that the branch it targets already committed.
   - **POLICY-7.a**  Switching off contracts, provenance, or the coverage map in a proposed change is refused.
   - **POLICY-7.b**  Lowering required contract coverage in a proposed change is refused.
-  - **POLICY-7.c**  Editing the contents of the committed provenance policy in a proposed change is refused.
+  - **POLICY-7.c**  Editing the contents of the committed provenance policy in a proposed change is refused except for the exact equivalent legacy schema repair described in POLICY-10.
   - **POLICY-7.d**  Moving provenance from the proposed commits to the merge base is allowed only as part of turning enforcement on.
 - **POLICY-8**  When the committed policy on the base cannot be read, the run fails rather than falling back to something more permissive.
 - **POLICY-9**  A repository adopting the gate for the first time is not blocked by there being no policy on the base branch yet.
+- **POLICY-10**  The legacy Attest policy can migrate to its equivalent supported schema through normal PR review.
+  - **POLICY-10.a**  Weakened rules, unknown fields and unrelated policy changes remain blocked.
+  - **POLICY-10.b**  Account’s full verification must pass.

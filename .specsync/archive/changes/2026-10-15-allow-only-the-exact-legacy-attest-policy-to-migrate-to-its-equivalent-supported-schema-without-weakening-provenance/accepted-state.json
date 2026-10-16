@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "workflow_version": 2,
+  "workflow_origin_version": 2,
+  "id": "allow-only-the-exact-legacy-attest-policy-to-migrate-to-its-equivalent-supported-schema-without-weakening-provenance",
+  "slug": "allow-only-the-exact-legacy-attest-policy-to-migrate-to-its-equivalent-supported-schema-without-weakening-provenance",
+  "title": "Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection",
+  "description": "Allow only the exact legacy Attest policy to migrate to its equivalent supported schema without weakening provenance protection",
+  "kind": "bug_fix",
+  "state": "accepted",
+  "canonical_applied": true,
+  "base_commit": "bccd89c111d47778c97c5064fb62ab51695e04ea",
+  "created_at": 1792083586,
+  "updated_at": 1792084686,
+  "affected_specs": [
+    "trust-action",
+    "trust-policy"
+  ],
+  "affected_paths": [
+    "scripts/trust_cli.py",
+    "tests/test.sh",
+    "README.md",
+    "hi/"
+  ],
+  "no_spec_change": false,
+  "no_spec_change_rationale": null,
+  "acceptance_criteria": [
+    "Accept only the exact legacy require object with attestation, reviewer and testsPassed all true migrating to requireAttestation true, requireTestsPassed true and allowedReviewers agent:/human:; reject every weakening, unknown field, duplicate key, malformed JSON, invalid type, reverse migration and unrelated policy change; run all Trust checks and full Account verification without bypasses."
+  ],
+  "selected_artifacts": [
+    "context",
+    "testing",
+    "tasks",
+    "design",
+    "requirements",
+    "docs",
+    "research",
+    "plan"
+  ],
+  "dependencies": [],
+  "answers": {
+    "architecture_risk": "yes",
+    "public_contract": "yes"
+  }
+}
