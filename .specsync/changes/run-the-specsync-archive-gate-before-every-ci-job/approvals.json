@@ -1,4 +1,36 @@
 {
-  "approvals": [],
+  "approvals": [
+    {
+      "gate": "definition",
+      "actor": "0xLeif",
+      "timestamp": 1793542081,
+      "digest": "43a9389c66fdac3a035159737a7091ed55d6a0ade7b52cdea1987d31fd1e9185",
+      "note": null,
+      "approved_scope": {
+        "schema_version": 1,
+        "change_id": "run-the-specsync-archive-gate-before-every-ci-job",
+        "title": "Run the SpecSync archive gate before every CI job",
+        "description": "Run the SpecSync archive gate before every CI job",
+        "kind": "operations",
+        "affected_specs": [],
+        "affected_paths": [
+          ".github/workflows/ci.yml",
+          ".github/workflows/trust.yml"
+        ],
+        "no_spec_change": true,
+        "no_spec_change_rationale": "CI workflow ordering only; no canonical spec owns .github/workflows",
+        "acceptance_criteria": [
+          "ci.yml and trust.yml each start with an archive-gate job named Archive that runs CorvidLabs/spec-sync pinned at 106aaa43d0bcf049f19b173ddb63815a25c3f931 with archive-gate-only 'true' and fails while any change under .specsync/changes/ is open; every other job in those workflows needs archive-gate directly or transitively, so nothing else runs until the change is archived."
+        ],
+        "dependencies": [],
+        "supersedes": [],
+        "answers": {
+          "architecture_risk": "no",
+          "public_contract": "no"
+        }
+      },
+      "approved_delta_digests": {}
+    }
+  ],
   "reopenings": []
 }
