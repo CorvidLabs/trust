@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "attempts": [
+    {
+      "timestamp": 1793542082,
+      "commit": "54867987763b10581e33d01d21e10c162ccbf82d",
+      "contract_digest": "43a9389c66fdac3a035159737a7091ed55d6a0ade7b52cdea1987d31fd1e9185",
+      "execution_digest": "32bc61f78fbf4716b1aaa7e9e3ceb68f319f7fd8b8eccdad14cce25fb132ceef",
+      "workspace_digest": "14f356384da362f3d67c16b04a67c96c643ec1d04a989240ae4bab7d30718665",
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check (no spec in scope)",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": []
+    },
+    {
+      "timestamp": 1793542083,
+      "commit": "b053109b6364fa345110eb02348e4a0a0857fcca",
+      "contract_digest": "43a9389c66fdac3a035159737a7091ed55d6a0ade7b52cdea1987d31fd1e9185",
+      "execution_digest": "32bc61f78fbf4716b1aaa7e9e3ceb68f319f7fd8b8eccdad14cce25fb132ceef",
+      "workspace_digest": "14f356384da362f3d67c16b04a67c96c643ec1d04a989240ae4bab7d30718665",
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check (no spec in scope)",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": []
+    },
+    {
+      "timestamp": 1793542083,
+      "commit": "15ab1b92bc93f0a3a5122982f96dbf5f432672be",
+      "contract_digest": "43a9389c66fdac3a035159737a7091ed55d6a0ade7b52cdea1987d31fd1e9185",
+      "execution_digest": "32bc61f78fbf4716b1aaa7e9e3ceb68f319f7fd8b8eccdad14cce25fb132ceef",
+      "workspace_digest": "14f356384da362f3d67c16b04a67c96c643ec1d04a989240ae4bab7d30718665",
+      "acceptance_input_digest": "88c2862bdd12b06d1ecce743fb041c241dc74c8b364e970a37bef834c7cb24fc",
+      "acceptance_manifest": {
+        "schema_version": 1,
+        "entries": [
+          {
+            "path": ".github/workflows/ci.yml",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "a59f834f3b99418b02860ed5e9ccf1d1eb9fa1d1120db4cf518be4d950840ae7",
+            "entry_digest": "b57a458f96076d4ab6b4a5008d2aba64f58303ee76d23eb5616c9f8fc060ec28",
+            "owners": [
+              "@exact:delivery"
+            ]
+          },
+          {
+            "path": ".github/workflows/trust.yml",
+            "kind": "file",
+            "mode": 33188,
+            "payload_digest": "3d9fe2d42d860727d166333bcd461b8c4d405ce48eec0cedb4bad48ef127f2bd",
+            "entry_digest": "fc4d2b1c346ea2a0427445e358d529dd3509ae904c3f2304e75d075ac850f329",
+            "owners": [
+              "@exact:delivery"
+            ]
+          }
+        ]
+      },
+      "passed": true,
+      "commands": [
+        {
+          "command": "specsync check (no spec in scope)",
+          "success": true,
+          "exit_code": 0
+        }
+      ],
+      "requirement_ids": []
+    }
+  ]
+}
