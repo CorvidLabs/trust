@@ -9,7 +9,24 @@ permissions:
   contents: read
 
 jobs:
+  # Runs first. Every other job needs it, so a pull request with any open SpecSync
+  # change under .specsync/changes/ runs nothing else until the change is archived.
+  archive-gate:
+    name: Archive
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      # The archive gate inputs are newer than v6.1.1, which ignores them.
+      - uses: CorvidLabs/spec-sync@106aaa43d0bcf049f19b173ddb63815a25c3f931 # main, archive gate (#832)
+        with:
+          archive-gate-only: 'true'
+
   validate:
+    needs: archive-gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -28,6 +45,7 @@ jobs:
 
   plugin-windows:
     name: Plugin behavior (windows-latest)
+    needs: archive-gate
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -57,6 +75,7 @@ jobs:
 
   action-smoke:
     name: Action smoke (${{ matrix.profile }}, ${{ matrix.os }})
+    needs: archive-gate
     strategy:
       fail-fast: false
       matrix:
@@ -93,6 +112,7 @@ jobs:
 
   action-provenance:
     name: Action provenance (strict pass, ${{ matrix.os }})
+    needs: archive-gate
     strategy:
       fail-fast: false
       matrix:
@@ -147,6 +167,7 @@ jobs:
 
   action-atlas:
     name: Action Atlas opt-in
+    needs: archive-gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
@@ -191,6 +212,7 @@ jobs:
 
   action-fatal-paths:
     name: Action fatal path (${{ matrix.case }})
+    needs: archive-gate
     strategy:
       fail-fast: false
       matrix:
@@ -241,6 +263,7 @@ jobs:
 
   repository-trust:
     name: Repository Trust gate
+    needs: archive-gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
